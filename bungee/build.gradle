@@ -1,0 +1,82 @@
+apply plugin: "java"
+apply plugin: "signing"
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+group = "nz.co.lolnet"
+archivesBaseName = "location-bungee"
+version = "1.0.0"
+
+configurations {
+    provided {
+        compile.extendsFrom(provided)
+    }
+}
+
+repositories {
+    jcenter()
+    maven {
+        name = "sonatype"
+        url = "https://oss.sonatype.org/content/repositories/snapshots"
+    }
+}
+
+dependencies {
+    compile(project(path: ":common"))
+    provided(project(path: ":common", configuration: "provided"))
+    provided(fileTree(dir: "./libs/", include: ["*.jar"]))
+    provided("net.md-5:bungeecord-api:1.13-SNAPSHOT")
+}
+
+jar {
+    from {
+        (configurations.compile - configurations.provided).findAll({
+            it.isDirectory() || it.name.endsWith(".jar")
+        }).collect({
+            it.isDirectory() ? it : zipTree(it)
+        })
+    }
+}
+
+processResources {
+    from("LICENSE")
+    rename("LICENSE", "LICENSE-" + archivesBaseName)
+
+    from (sourceSets.main.resources.srcDirs) {
+        include("bungee.yml")
+        expand("name": "Location", "version": version)
+    }
+}
+
+task signJar {
+    doFirst {
+        if (!project.hasProperty("signing.keyStorePath") || !project.hasProperty("signing.secretKeyRingFile")) {
+            project.logger.warn("========== [WARNING] ==========")
+            project.logger.warn("")
+            project.logger.warn("   This build is not signed!   ")
+            project.logger.warn("")
+            project.logger.warn("========== [WARNING] ==========")
+            throw new StopExecutionException()
+        }
+    }
+
+    doLast {
+        jar.outputs.files.each {
+            ant.signjar(
+                jar: it,
+                alias: project.property("signing.alias"),
+                storepass: project.property("signing.keyStorePassword"),
+                keystore: project.property("signing.keyStorePath"),
+                keypass: project.property("signing.keyStorePassword"),
+                preservelastmodified: project.property("signing.preserveLastModified"),
+                tsaurl: project.property("signing.timestampAuthority"),
+                digestalg: project.property("signing.digestAlgorithm")
+            )
+            project.logger.lifecycle("JAR Signed: " + it.name)
+
+            signing.sign(it)
+            project.logger.lifecycle("PGP Signed: " + it.name)
+        }
+    }
+}
