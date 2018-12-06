@@ -46,6 +46,5 @@ public class VelocityListener {
     @Subscribe(order = PostOrder.EARLY)
     public void onDisconnect(DisconnectEvent event) {
         Location.getInstance().getUsers().removeIf(user -> user.getUniqueId().equals(event.getPlayer().getUniqueId()));
-        VelocityToolbox.removeChannel(event.getPlayer());
     }
 }
