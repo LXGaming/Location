@@ -19,11 +19,13 @@ package nz.co.lolnet.location.bungee.command;
 import com.google.common.collect.Lists;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.plugin.Command;
 import nz.co.lolnet.location.api.Location;
 import nz.co.lolnet.location.bungee.util.BungeeToolbox;
 import nz.co.lolnet.location.common.command.AbstractCommand;
 import nz.co.lolnet.location.common.manager.CommandManager;
+import nz.co.lolnet.location.common.util.Toolbox;
 
 import java.util.List;
 
@@ -39,6 +41,11 @@ public class LocationCommand extends Command {
         AbstractCommand command = CommandManager.getChildCommand(arguments).orElse(null);
         if (command == null) {
             sender.sendMessage(BungeeToolbox.getPluginInformation().create());
+            return;
+        }
+        
+        if (Toolbox.isBlank(command.getPermission()) || !sender.hasPermission(command.getPermission())) {
+            sender.sendMessage(new ComponentBuilder("You do not have permission to execute this command!").color(ChatColor.RED).create());
             return;
         }
         

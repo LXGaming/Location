@@ -25,6 +25,7 @@ import net.kyori.text.format.TextColor;
 import nz.co.lolnet.location.api.Location;
 import nz.co.lolnet.location.common.command.AbstractCommand;
 import nz.co.lolnet.location.common.manager.CommandManager;
+import nz.co.lolnet.location.common.util.Toolbox;
 import nz.co.lolnet.location.velocity.util.VelocityToolbox;
 
 import java.util.List;
@@ -37,6 +38,11 @@ public class LocationCommand implements Command {
         AbstractCommand command = CommandManager.getChildCommand(arguments).orElse(null);
         if (command == null) {
             source.sendMessage(VelocityToolbox.getPluginInformation());
+            return;
+        }
+        
+        if (Toolbox.isBlank(command.getPermission()) || !source.hasPermission(command.getPermission())) {
+            source.sendMessage(TextComponent.of("You do not have permission to execute this command!", TextColor.RED));
             return;
         }
         
