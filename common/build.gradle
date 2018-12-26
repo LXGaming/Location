@@ -6,7 +6,7 @@ targetCompatibility = 1.8
 
 group = "nz.co.lolnet"
 archivesBaseName = "location-common"
-version = "1.0.0"
+version = version
 
 configurations {
     provided {
