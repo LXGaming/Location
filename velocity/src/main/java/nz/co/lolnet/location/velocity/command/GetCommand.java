@@ -25,6 +25,7 @@ import net.kyori.text.format.TextDecoration;
 import nz.co.lolnet.location.api.Location;
 import nz.co.lolnet.location.api.data.User;
 import nz.co.lolnet.location.common.command.AbstractCommand;
+import nz.co.lolnet.location.common.manager.PacketManager;
 import nz.co.lolnet.location.velocity.VelocityPlugin;
 import nz.co.lolnet.location.velocity.util.VelocityToolbox;
 
@@ -59,9 +60,11 @@ public class GetCommand extends AbstractCommand {
             return;
         }
         
+        String protocolVersion = PacketManager.getProtocolVersion(user.getProtocolVersion()).orElse(String.valueOf(user.getProtocolVersion()));
+        
         TextComponent.Builder textBuilder = TextComponent.builder("");
         textBuilder.append(TextComponent.of(user.getUsername(), TextColor.BLUE).decoration(TextDecoration.BOLD, true))
-                .append(TextComponent.of(" (" + user.getProtocolVersion() + ")")).append(Components.newline());
+                .append(TextComponent.of(" (" + protocolVersion + ")")).append(Components.newline());
         
         textBuilder.append(TextComponent.of("Position: ", TextColor.DARK_GRAY))
                 .append(TextComponent.of(user.getX() + ", " + user.getY() + ", " + user.getZ(), TextColor.WHITE)).append(Components.newline());
