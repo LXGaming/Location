@@ -25,6 +25,7 @@ import nz.co.lolnet.location.api.data.User;
 import nz.co.lolnet.location.bungee.BungeePlugin;
 import nz.co.lolnet.location.bungee.util.BungeeToolbox;
 import nz.co.lolnet.location.common.command.AbstractCommand;
+import nz.co.lolnet.location.common.manager.PacketManager;
 
 import java.util.List;
 
@@ -57,9 +58,11 @@ public class GetCommand extends AbstractCommand {
             return;
         }
         
+        String protocolVersion = PacketManager.getProtocolVersion(user.getProtocolVersion()).orElse(String.valueOf(user.getProtocolVersion()));
+        
         ComponentBuilder componentBuilder = new ComponentBuilder("");
         componentBuilder.append(user.getUsername()).color(ChatColor.BLUE).bold(true)
-                .append(" (" + user.getProtocolVersion() + ")", ComponentBuilder.FormatRetention.NONE).color(ChatColor.WHITE).append("\n");
+                .append(" (" + protocolVersion + ")", ComponentBuilder.FormatRetention.NONE).color(ChatColor.WHITE).append("\n");
         
         componentBuilder.append("Position: ", ComponentBuilder.FormatRetention.NONE).color(ChatColor.DARK_GRAY)
                 .append(user.getX() + ", " + user.getY() + ", " + user.getZ()).color(ChatColor.WHITE).append("\n");

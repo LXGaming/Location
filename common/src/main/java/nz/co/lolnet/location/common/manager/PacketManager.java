@@ -17,17 +17,21 @@
 package nz.co.lolnet.location.common.manager;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import io.netty.buffer.ByteBuf;
 import nz.co.lolnet.location.common.data.PacketImpl;
 import nz.co.lolnet.location.common.data.UserImpl;
 import nz.co.lolnet.location.common.util.Toolbox;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 public final class PacketManager {
     
     private static final List<PacketImpl> CLIENT_PACKETS = Lists.newArrayList();
     private static final List<PacketImpl> SERVER_PACKETS = Lists.newArrayList();
+    private static final Map<Integer, String> PROTOCOL_VERSIONS = Maps.newHashMap();
     
     public static void registerPackets() {
         
@@ -96,6 +100,21 @@ public final class PacketManager {
         getServerPackets().add(PacketImpl.of(0x34, 85, 80, PacketManager::handleServerRespawn));
         getServerPackets().add(PacketImpl.of(0x33, 79, 67, PacketManager::handleServerRespawn));
         getServerPackets().add(PacketImpl.of(0x07, 66, 47, PacketManager::handleServerRespawn));
+        
+        getProtocolVersions().put(47, "1.8");
+        getProtocolVersions().put(107, "1.9");
+        getProtocolVersions().put(108, "1.9.1");
+        getProtocolVersions().put(109, "1.9.2");
+        getProtocolVersions().put(110, "1.9.4");
+        getProtocolVersions().put(210, "1.10");
+        getProtocolVersions().put(315, "1.11");
+        getProtocolVersions().put(316, "1.11.2");
+        getProtocolVersions().put(335, "1.12");
+        getProtocolVersions().put(338, "1.12.1");
+        getProtocolVersions().put(340, "1.12.2");
+        getProtocolVersions().put(393, "1.13");
+        getProtocolVersions().put(401, "1.13.1");
+        getProtocolVersions().put(404, "1.13.2");
     }
     
     public static void processClientPacket(UserImpl user, ByteBuf byteBuf) {
@@ -218,11 +237,19 @@ public final class PacketManager {
         user.setDimension(dimension);
     }
     
+    public static Optional<String> getProtocolVersion(int protocolVersion) {
+        return Optional.ofNullable(getProtocolVersions().get(protocolVersion));
+    }
+    
     private static List<PacketImpl> getClientPackets() {
         return CLIENT_PACKETS;
     }
     
     private static List<PacketImpl> getServerPackets() {
         return SERVER_PACKETS;
+    }
+    
+    private static Map<Integer, String> getProtocolVersions() {
+        return PROTOCOL_VERSIONS;
     }
 }
