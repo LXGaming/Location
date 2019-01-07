@@ -22,7 +22,7 @@ repositories {
 }
 
 dependencies {
-    provided("io.netty:netty-all:4.1.31.Final")
+    provided("io.netty:netty-all:4.1.32.Final")
 }
 
 task javadocJar(type: Jar) {

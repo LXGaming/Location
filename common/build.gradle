@@ -1,4 +1,5 @@
 apply plugin: "java"
+apply plugin: "java-library"
 apply plugin: "signing"
 
 sourceCompatibility = 1.8
@@ -12,6 +13,8 @@ configurations {
     provided {
         compile.extendsFrom(provided)
     }
+
+    compileJava.dependsOn(":api:build")
 }
 
 repositories {
@@ -19,7 +22,7 @@ repositories {
 }
 
 dependencies {
-    compile(project(path: ":api"))
+    api(project(path: ":api"))
     provided(project(path: ":api", configuration: "provided"))
     provided("com.google.code.gson:gson:2.8.5")
     provided("com.google.guava:guava:27.0-jre")
