@@ -12,6 +12,8 @@ configurations {
     provided {
         compile.extendsFrom(provided)
     }
+
+    compileJava.dependsOn(":common:build")
 }
 
 repositories {
