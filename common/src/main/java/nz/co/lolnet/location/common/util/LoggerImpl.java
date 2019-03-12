@@ -61,7 +61,7 @@ public class LoggerImpl implements Logger {
         } else {
             System.out.println(format("[{}] [{}] [{}]: {}",
                     new SimpleDateFormat("HH:mm:ss").format(Instant.now().toEpochMilli()),
-                    level.getFriendlyName(),
+                    level.toString(),
                     Thread.currentThread().getName(),
                     format(format, arguments)));
         }

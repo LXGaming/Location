@@ -34,22 +34,23 @@ public interface Logger {
     
     enum Level {
         
-        DEBUG("Debug"),
+        DEBUG("DEBUG"),
         
-        INFO("Info"),
+        INFO("INFO"),
         
-        WARN("Warn"),
+        WARN("WARN"),
         
-        ERROR("Error");
+        ERROR("ERROR");
         
-        private final String friendlyName;
+        private final String name;
         
-        Level(String friendlyName) {
-            this.friendlyName = friendlyName;
+        Level(String name) {
+            this.name = name;
         }
         
-        public String getFriendlyName() {
-            return friendlyName;
+        @Override
+        public String toString() {
+            return name;
         }
     }
 }
