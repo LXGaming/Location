@@ -36,7 +36,9 @@ public final class PacketManager {
     public static void registerPackets() {
         
         // ClientPlayerLook
-        getClientPackets().add(PacketImpl.of(0x12, 404, 389, PacketManager::handleClientPlayerLook));
+        getClientPackets().add(PacketImpl.of(0x13, 477, 477, PacketManager::handleClientPlayerLook));
+        // TODO Snapshots - https://wiki.vg/Protocol_History
+        getClientPackets().add(PacketImpl.of(0x12, 463, 389, PacketManager::handleClientPlayerLook));
         getClientPackets().add(PacketImpl.of(0x10, 388, 386, PacketManager::handleClientPlayerLook));
         getClientPackets().add(PacketImpl.of(0x0E, 385, 343, PacketManager::handleClientPlayerLook));
         getClientPackets().add(PacketImpl.of(0x0F, 342, 336, PacketManager::handleClientPlayerLook));
@@ -47,7 +49,9 @@ public final class PacketManager {
         getClientPackets().add(PacketImpl.of(0x05, 66, 47, PacketManager::handleClientPlayerLook));
         
         // ClientPlayerPosition
-        getClientPackets().add(PacketImpl.of(0x10, 404, 389, PacketManager::handleClientPlayerPosition));
+        getClientPackets().add(PacketImpl.of(0x11, 477, 477, PacketManager::handleClientPlayerPosition));
+        // TODO Snapshots - https://wiki.vg/Protocol_History
+        getClientPackets().add(PacketImpl.of(0x10, 463, 389, PacketManager::handleClientPlayerPosition));
         getClientPackets().add(PacketImpl.of(0x0E, 388, 386, PacketManager::handleClientPlayerPosition));
         getClientPackets().add(PacketImpl.of(0x0C, 385, 343, PacketManager::handleClientPlayerPosition));
         getClientPackets().add(PacketImpl.of(0x0D, 342, 336, PacketManager::handleClientPlayerPosition));
@@ -58,7 +62,9 @@ public final class PacketManager {
         getClientPackets().add(PacketImpl.of(0x04, 66, 47, PacketManager::handleClientPlayerPosition));
         
         // ClientPlayerPositionAndLook
-        getClientPackets().add(PacketImpl.of(0x11, 404, 389, PacketManager::handleClientPlayerPositionAndLook));
+        getClientPackets().add(PacketImpl.of(0x12, 477, 477, PacketManager::handleClientPlayerPositionAndLook));
+        // TODO Snapshots - https://wiki.vg/Protocol_History
+        getClientPackets().add(PacketImpl.of(0x11, 463, 389, PacketManager::handleClientPlayerPositionAndLook));
         getClientPackets().add(PacketImpl.of(0x0F, 388, 386, PacketManager::handleClientPlayerPositionAndLook));
         getClientPackets().add(PacketImpl.of(0x0D, 385, 343, PacketManager::handleClientPlayerPositionAndLook));
         getClientPackets().add(PacketImpl.of(0x0E, 342, 336, PacketManager::handleClientPlayerPositionAndLook));
@@ -69,7 +75,9 @@ public final class PacketManager {
         getClientPackets().add(PacketImpl.of(0x06, 66, 47, PacketManager::handleClientPlayerPositionAndLook));
         
         // ServerJoinGame
-        getServerPackets().add(PacketImpl.of(0x25, 404, 389, PacketManager::handleServerJoinGame));
+        getServerPackets().add(PacketImpl.of(0x25, 477, 477, PacketManager::handleServerJoinGame));
+        // TODO Snapshots - https://wiki.vg/Protocol_History
+        getServerPackets().add(PacketImpl.of(0x25, 463, 389, PacketManager::handleServerJoinGame));
         getServerPackets().add(PacketImpl.of(0x24, 388, 345, PacketManager::handleServerJoinGame));
         getServerPackets().add(PacketImpl.of(0x23, 344, 332, PacketManager::handleServerJoinGame));
         getServerPackets().add(PacketImpl.of(0x24, 331, 318, PacketManager::handleServerJoinGame));
@@ -78,7 +86,10 @@ public final class PacketManager {
         getServerPackets().add(PacketImpl.of(0x01, 66, 47, PacketManager::handleServerJoinGame));
         
         // ServerPlayerPositionAndLook
-        getServerPackets().add(PacketImpl.of(0x32, 404, 389, PacketManager::handleServerPlayerPositionAndLook));
+        getServerPackets().add(PacketImpl.of(0x35, 477, 477, PacketManager::handleServerPlayerPositionAndLook));
+        // TODO Snapshots - https://wiki.vg/Protocol_History
+        getServerPackets().add(PacketImpl.of(0x33, 463, 451, PacketManager::handleServerPlayerPositionAndLook));
+        getServerPackets().add(PacketImpl.of(0x32, 450, 389, PacketManager::handleServerPlayerPositionAndLook));
         getServerPackets().add(PacketImpl.of(0x31, 388, 352, PacketManager::handleServerPlayerPositionAndLook));
         getServerPackets().add(PacketImpl.of(0x30, 351, 345, PacketManager::handleServerPlayerPositionAndLook));
         getServerPackets().add(PacketImpl.of(0x2F, 344, 336, PacketManager::handleServerPlayerPositionAndLook));
@@ -90,7 +101,10 @@ public final class PacketManager {
         getServerPackets().add(PacketImpl.of(0x08, 66, 47, PacketManager::handleServerPlayerPositionAndLook));
         
         // ServerRespawn
-        getServerPackets().add(PacketImpl.of(0x38, 404, 389, PacketManager::handleServerRespawn));
+        getServerPackets().add(PacketImpl.of(0x3A, 477, 477, PacketManager::handleServerRespawn));
+        // TODO Snapshots - https://wiki.vg/Protocol_History
+        getServerPackets().add(PacketImpl.of(0x39, 463, 451, PacketManager::handleServerRespawn));
+        getServerPackets().add(PacketImpl.of(0x38, 450, 389, PacketManager::handleServerRespawn));
         getServerPackets().add(PacketImpl.of(0x37, 388, 352, PacketManager::handleServerRespawn));
         getServerPackets().add(PacketImpl.of(0x36, 351, 345, PacketManager::handleServerRespawn));
         getServerPackets().add(PacketImpl.of(0x35, 344, 336, PacketManager::handleServerRespawn));
@@ -115,6 +129,7 @@ public final class PacketManager {
         getProtocolVersions().put(393, "1.13");
         getProtocolVersions().put(401, "1.13.1");
         getProtocolVersions().put(404, "1.13.2");
+        getProtocolVersions().put(477, "1.14");
     }
     
     public static void processClientPacket(UserImpl user, ByteBuf byteBuf) {
