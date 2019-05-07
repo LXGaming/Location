@@ -18,7 +18,6 @@ package nz.co.lolnet.location.velocity.command;
 
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.Player;
-import net.kyori.text.Components;
 import net.kyori.text.TextComponent;
 import net.kyori.text.format.TextColor;
 import net.kyori.text.format.TextDecoration;
@@ -64,13 +63,13 @@ public class GetCommand extends AbstractCommand {
         
         TextComponent.Builder textBuilder = TextComponent.builder("");
         textBuilder.append(TextComponent.of(user.getUsername(), TextColor.BLUE).decoration(TextDecoration.BOLD, true))
-                .append(TextComponent.of(" (" + protocolVersion + ")")).append(Components.newline());
+                .append(TextComponent.of(" (" + protocolVersion + ")")).append(TextComponent.newline());
         
         textBuilder.append(TextComponent.of("Position: ", TextColor.DARK_GRAY))
-                .append(TextComponent.of(user.getX() + ", " + user.getY() + ", " + user.getZ(), TextColor.WHITE)).append(Components.newline());
+                .append(TextComponent.of(user.getX() + ", " + user.getY() + ", " + user.getZ(), TextColor.WHITE)).append(TextComponent.newline());
         
         textBuilder.append(TextComponent.of("Rotation: ", TextColor.DARK_GRAY))
-                .append(TextComponent.of(user.getYaw() + ", " + user.getPitch(), TextColor.WHITE)).append(Components.newline());
+                .append(TextComponent.of(user.getYaw() + ", " + user.getPitch(), TextColor.WHITE)).append(TextComponent.newline());
         
         textBuilder.append(TextComponent.of("Server: ", TextColor.DARK_GRAY))
                 .append(TextComponent.of(user.getServer() + " (" + user.getDimension() + ")", TextColor.WHITE));
