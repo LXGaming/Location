@@ -44,8 +44,8 @@ artifacts {
 }
 
 bintray {
-    user = System.getProperty("bintray.user")
-    key = System.getProperty("bintray.key")
+    user = System.getenv("BINTRAY_USER")
+    key = System.getenv("BINTRAY_KEY")
     publications = ["mavenPublication"]
     pkg {
         repo = "maven"
@@ -54,20 +54,18 @@ bintray {
         vcsUrl = "https://github.com/LXGaming/Location.git"
         publish = true
         version {
-            name = project.version + "." + System.getProperty("build.number")
+            name = project.version + "." + System.getenv("TRAVIS_BUILD_NUMBER")
             released = new Date()
         }
     }
 }
 
 bintrayUpload {
-    dependsOn clean
-    dependsOn build
-    build.mustRunAfter clean
-
-    onlyIf { System.getProperty("bintray.user") != null }
-    onlyIf { System.getProperty("bintray.key") != null }
-    onlyIf { System.getProperty("build.number") != null }
+    onlyIf { System.getenv("BINTRAY_KEY") != null }
+    onlyIf { System.getenv("BINTRAY_USER") != null }
+    onlyIf { System.getenv("TRAVIS_BUILD_NUMBER") ==~ /\d+\.1$ }
+    onlyIf { System.getenv("TRAVIS_JOB_NUMBER") != null }
+    onlyIf { System.getEnv("TRAVIS_PULL_REQUEST") == "false" }
 }
 
 jar {
