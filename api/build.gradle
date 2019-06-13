@@ -49,7 +49,7 @@ bintray {
     publications = ["mavenPublication"]
     pkg {
         repo = "maven"
-        name = project.archivesBaseName
+        name = "Location"
         licenses = ["Apache-2.0"]
         vcsUrl = "https://github.com/LXGaming/Location.git"
         publish = true
