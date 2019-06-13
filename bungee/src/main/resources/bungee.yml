@@ -1,6 +1,6 @@
 name: ${name}
-main: nz.co.lolnet.location.bungee.BungeePlugin
+main: io.github.lxgaming.location.bungee.BungeePlugin
 version: ${version}
 description: Player Tracking
 author: LX_Gaming
-website: https://www.lolnet.co.nz
+website: https://lxgaming.github.io/

@@ -5,7 +5,7 @@ apply plugin: "signing"
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-group = "nz.co.lolnet"
+group = "io.github.lxgaming"
 archivesBaseName = "location-api"
 version = version
 
@@ -71,14 +71,14 @@ uploadArchives {
                         packaging = "jar"
 
                         scm {
-                            url = "https://github.com/lolnetnz/Location"
-                            connection = "scm:git:https://github.com/lolnetnz/Location.git"
-                            developerConnection = "scm:git:git@github.com:lolnetnz/Location.git"
+                            url = "https://github.com/LXGaming/Location"
+                            connection = "scm:git:https://github.com/LXGaming/Location.git"
+                            developerConnection = "scm:git:git@github.com:LXGaming/Location.git"
                         }
 
                         issueManagement {
                             system = "GitHub Issues"
-                            url = "https://github.com/lolnetnz/Location/issues"
+                            url = "https://github.com/LXGaming/Location/issues"
                         }
 
                         licenses {
