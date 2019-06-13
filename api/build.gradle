@@ -1,6 +1,9 @@
-apply plugin: "java"
-apply plugin: "maven"
-apply plugin: "signing"
+plugins {
+    id "com.jfrog.bintray" version "1.8.4"
+    id "java"
+    id "maven-publish"
+    id "signing"
+}
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -25,14 +28,46 @@ dependencies {
     provided("io.netty:netty-all:4.1.36.Final")
 }
 
-task javadocJar(type: Jar) {
+task javadocJar(type: Jar, dependsOn: javadoc) {
     classifier = "javadoc"
-    from javadoc
+    from javadoc.destinationDir
 }
 
-task sourcesJar(type: Jar) {
+task sourcesJar(type: Jar, dependsOn: classes) {
     classifier = "sources"
     from sourceSets.main.allSource
+}
+
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+}
+
+bintray {
+    user = System.getProperty("bintray.user")
+    key = System.getProperty("bintray.key")
+    publications = ["mavenPublication"]
+    pkg {
+        repo = "maven"
+        name = project.archivesBaseName
+        licenses = ["Apache-2.0"]
+        vcsUrl = "https://github.com/LXGaming/Location.git"
+        publish = true
+        version {
+            name = project.version + "." + System.getProperty("build.number")
+            released = new Date()
+        }
+    }
+}
+
+bintrayUpload {
+    dependsOn clean
+    dependsOn build
+    build.mustRunAfter clean
+
+    onlyIf { System.getProperty("bintray.user") != null }
+    onlyIf { System.getProperty("bintray.key") != null }
+    onlyIf { System.getProperty("build.number") != null }
 }
 
 jar {
@@ -45,52 +80,24 @@ jar {
     }
 }
 
+javadoc {
+    failOnError = false
+}
+
 processResources {
     from("LICENSE")
     rename("LICENSE", "LICENSE-" + archivesBaseName)
 }
 
-artifacts {
-    archives javadocJar
-    archives sourcesJar
-}
-
-uploadArchives {
-    repositories {
-        if (project.hasProperty("maven.url")) {
-            mavenDeployer {
-                project.logger.lifecycle("Uploading Archives")
-                repository(url: project.property("maven.url"))
-
-                pom {
-                    groupId = project.group
-                    artifactId = project.archivesBaseName
-                    version = project.version
-                    project {
-                        name = project.archivesBaseName
-                        packaging = "jar"
-
-                        scm {
-                            url = "https://github.com/LXGaming/Location"
-                            connection = "scm:git:https://github.com/LXGaming/Location.git"
-                            developerConnection = "scm:git:git@github.com:LXGaming/Location.git"
-                        }
-
-                        issueManagement {
-                            system = "GitHub Issues"
-                            url = "https://github.com/LXGaming/Location/issues"
-                        }
-
-                        licenses {
-                            license {
-                                name = "Apache License 2.0"
-                                url = "https://opensource.org/licenses/Apache-2.0"
-                                distribution = "repo"
-                            }
-                        }
-                    }
-                }
-            }
+publishing {
+    publications {
+        mavenPublication(MavenPublication) {
+            from components.java
+            groupId group
+            artifactId archivesBaseName
+            version version
+            artifact javadocJar
+            artifact sourcesJar
         }
     }
 }
