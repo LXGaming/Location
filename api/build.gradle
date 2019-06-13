@@ -54,7 +54,7 @@ bintray {
         vcsUrl = "https://github.com/LXGaming/Location.git"
         publish = true
         version {
-            name = project.version + "." + System.getenv("TRAVIS_BUILD_NUMBER")
+            name = project.version
             released = new Date()
         }
     }
