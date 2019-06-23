@@ -27,7 +27,7 @@ dependencies {
     api(project(path: ":api"))
     provided(project(path: ":api", configuration: "provided"))
     provided("com.google.code.gson:gson:2.8.5")
-    provided("com.google.guava:guava:27.0-jre")
+    provided("com.google.guava:guava:28.0-jre")
 }
 
 jar {
