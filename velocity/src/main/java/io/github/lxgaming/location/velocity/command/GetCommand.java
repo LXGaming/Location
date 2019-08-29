@@ -18,15 +18,15 @@ package io.github.lxgaming.location.velocity.command;
 
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.Player;
-import net.kyori.text.TextComponent;
-import net.kyori.text.format.TextColor;
-import net.kyori.text.format.TextDecoration;
 import io.github.lxgaming.location.api.Location;
 import io.github.lxgaming.location.api.data.User;
 import io.github.lxgaming.location.common.command.AbstractCommand;
 import io.github.lxgaming.location.common.manager.PacketManager;
 import io.github.lxgaming.location.velocity.VelocityPlugin;
 import io.github.lxgaming.location.velocity.util.VelocityToolbox;
+import net.kyori.text.TextComponent;
+import net.kyori.text.format.TextColor;
+import net.kyori.text.format.TextDecoration;
 
 import java.util.List;
 

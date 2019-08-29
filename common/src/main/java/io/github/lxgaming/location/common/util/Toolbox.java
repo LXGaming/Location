@@ -16,8 +16,8 @@
 
 package io.github.lxgaming.location.common.util;
 
-import io.netty.buffer.ByteBuf;
 import io.github.lxgaming.location.api.util.Reference;
+import io.netty.buffer.ByteBuf;
 
 import java.lang.reflect.Field;
 import java.util.Collection;

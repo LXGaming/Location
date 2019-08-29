@@ -16,8 +16,8 @@
 
 package io.github.lxgaming.location.common.data;
 
-import io.netty.buffer.ByteBuf;
 import io.github.lxgaming.location.api.data.Packet;
+import io.netty.buffer.ByteBuf;
 
 import java.util.function.BiConsumer;
 

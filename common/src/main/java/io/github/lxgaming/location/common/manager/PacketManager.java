@@ -18,10 +18,10 @@ package io.github.lxgaming.location.common.manager;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import io.netty.buffer.ByteBuf;
 import io.github.lxgaming.location.common.data.PacketImpl;
 import io.github.lxgaming.location.common.data.UserImpl;
 import io.github.lxgaming.location.common.util.Toolbox;
+import io.netty.buffer.ByteBuf;
 
 import java.util.List;
 import java.util.Map;

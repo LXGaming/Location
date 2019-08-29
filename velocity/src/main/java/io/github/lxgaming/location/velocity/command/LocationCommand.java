@@ -20,13 +20,13 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.velocitypowered.api.command.Command;
 import com.velocitypowered.api.command.CommandSource;
-import net.kyori.text.TextComponent;
-import net.kyori.text.format.TextColor;
 import io.github.lxgaming.location.api.Location;
 import io.github.lxgaming.location.common.command.AbstractCommand;
 import io.github.lxgaming.location.common.manager.CommandManager;
 import io.github.lxgaming.location.common.util.Toolbox;
 import io.github.lxgaming.location.velocity.util.VelocityToolbox;
+import net.kyori.text.TextComponent;
+import net.kyori.text.format.TextColor;
 
 import java.util.List;
 
