@@ -17,11 +17,11 @@
 package io.github.lxgaming.location.velocity.command;
 
 import com.velocitypowered.api.command.CommandSource;
-import net.kyori.text.TextComponent;
-import net.kyori.text.format.TextColor;
 import io.github.lxgaming.location.common.LocationImpl;
 import io.github.lxgaming.location.common.command.AbstractCommand;
 import io.github.lxgaming.location.velocity.util.VelocityToolbox;
+import net.kyori.text.TextComponent;
+import net.kyori.text.format.TextColor;
 
 import java.util.List;
 

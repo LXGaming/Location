@@ -16,15 +16,15 @@
 
 package io.github.lxgaming.location.bungee.listener;
 
+import io.github.lxgaming.location.api.Location;
+import io.github.lxgaming.location.bungee.util.BungeeToolbox;
+import io.github.lxgaming.location.common.data.UserImpl;
 import net.md_5.bungee.api.event.PlayerDisconnectEvent;
 import net.md_5.bungee.api.event.PostLoginEvent;
 import net.md_5.bungee.api.event.ServerConnectedEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import net.md_5.bungee.event.EventPriority;
-import io.github.lxgaming.location.api.Location;
-import io.github.lxgaming.location.bungee.util.BungeeToolbox;
-import io.github.lxgaming.location.common.data.UserImpl;
 
 public class BungeeListener implements Listener {
     

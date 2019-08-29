@@ -16,7 +16,6 @@
 
 package io.github.lxgaming.location.bungee;
 
-import net.md_5.bungee.api.plugin.Plugin;
 import io.github.lxgaming.location.api.Location;
 import io.github.lxgaming.location.api.Platform;
 import io.github.lxgaming.location.api.util.Logger;
@@ -28,6 +27,7 @@ import io.github.lxgaming.location.bungee.listener.BungeeListener;
 import io.github.lxgaming.location.common.LocationImpl;
 import io.github.lxgaming.location.common.configuration.Config;
 import io.github.lxgaming.location.common.manager.CommandManager;
+import net.md_5.bungee.api.plugin.Plugin;
 
 import java.nio.file.Path;
 

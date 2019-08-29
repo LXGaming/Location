@@ -16,16 +16,16 @@
 
 package io.github.lxgaming.location.bungee.command;
 
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.CommandSender;
-import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
 import io.github.lxgaming.location.api.Location;
 import io.github.lxgaming.location.api.data.User;
 import io.github.lxgaming.location.bungee.BungeePlugin;
 import io.github.lxgaming.location.bungee.util.BungeeToolbox;
 import io.github.lxgaming.location.common.command.AbstractCommand;
 import io.github.lxgaming.location.common.manager.PacketManager;
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.util.List;
 

@@ -16,6 +16,11 @@
 
 package io.github.lxgaming.location.bungee.util;
 
+import io.github.lxgaming.location.api.util.Reference;
+import io.github.lxgaming.location.common.data.UserImpl;
+import io.github.lxgaming.location.common.handler.DecodeHandler;
+import io.github.lxgaming.location.common.handler.EncodeHandler;
+import io.github.lxgaming.location.common.util.Toolbox;
 import io.netty.channel.Channel;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -23,11 +28,6 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.netty.ChannelWrapper;
 import net.md_5.bungee.netty.PipelineUtils;
-import io.github.lxgaming.location.api.util.Reference;
-import io.github.lxgaming.location.common.data.UserImpl;
-import io.github.lxgaming.location.common.handler.DecodeHandler;
-import io.github.lxgaming.location.common.handler.EncodeHandler;
-import io.github.lxgaming.location.common.util.Toolbox;
 
 public class BungeeToolbox {
     

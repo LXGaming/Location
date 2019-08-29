@@ -18,17 +18,17 @@ package io.github.lxgaming.location.velocity.util;
 
 import com.velocitypowered.proxy.connection.MinecraftConnection;
 import com.velocitypowered.proxy.network.Connections;
+import io.github.lxgaming.location.api.util.Reference;
+import io.github.lxgaming.location.common.data.UserImpl;
+import io.github.lxgaming.location.common.handler.DecodeHandler;
+import io.github.lxgaming.location.common.handler.EncodeHandler;
+import io.github.lxgaming.location.common.util.Toolbox;
 import io.netty.channel.Channel;
 import net.kyori.text.TextComponent;
 import net.kyori.text.event.ClickEvent;
 import net.kyori.text.event.HoverEvent;
 import net.kyori.text.format.TextColor;
 import net.kyori.text.format.TextDecoration;
-import io.github.lxgaming.location.api.util.Reference;
-import io.github.lxgaming.location.common.data.UserImpl;
-import io.github.lxgaming.location.common.handler.DecodeHandler;
-import io.github.lxgaming.location.common.handler.EncodeHandler;
-import io.github.lxgaming.location.common.util.Toolbox;
 
 public class VelocityToolbox {
     

@@ -16,11 +16,11 @@
 
 package io.github.lxgaming.location.bungee.command;
 
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.CommandSender;
 import io.github.lxgaming.location.bungee.util.BungeeToolbox;
 import io.github.lxgaming.location.common.LocationImpl;
 import io.github.lxgaming.location.common.command.AbstractCommand;
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.CommandSender;
 
 import java.util.List;
 

@@ -17,15 +17,15 @@
 package io.github.lxgaming.location.bungee.command;
 
 import com.google.common.collect.Lists;
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.CommandSender;
-import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.plugin.Command;
 import io.github.lxgaming.location.api.Location;
 import io.github.lxgaming.location.bungee.util.BungeeToolbox;
 import io.github.lxgaming.location.common.command.AbstractCommand;
 import io.github.lxgaming.location.common.manager.CommandManager;
 import io.github.lxgaming.location.common.util.Toolbox;
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.plugin.Command;
 
 import java.util.List;
 

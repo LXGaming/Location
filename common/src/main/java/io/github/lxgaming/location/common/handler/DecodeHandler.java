@@ -16,11 +16,11 @@
 
 package io.github.lxgaming.location.common.handler;
 
+import io.github.lxgaming.location.common.data.UserImpl;
+import io.github.lxgaming.location.common.manager.PacketManager;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageDecoder;
-import io.github.lxgaming.location.common.data.UserImpl;
-import io.github.lxgaming.location.common.manager.PacketManager;
 
 import java.util.List;
 
