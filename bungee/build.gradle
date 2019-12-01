@@ -44,9 +44,6 @@ jar {
 }
 
 processResources {
-    from("LICENSE")
-    rename("LICENSE", "LICENSE-" + archivesBaseName)
-
     from (sourceSets.main.resources.srcDirs) {
         include("bungee.yml")
         expand("name": "Location", "version": version)
