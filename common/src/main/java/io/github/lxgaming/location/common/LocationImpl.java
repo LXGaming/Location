@@ -19,7 +19,6 @@ package io.github.lxgaming.location.common;
 import com.google.common.collect.Sets;
 import io.github.lxgaming.location.api.Location;
 import io.github.lxgaming.location.api.Platform;
-import io.github.lxgaming.location.api.util.Reference;
 import io.github.lxgaming.location.common.configuration.Config;
 import io.github.lxgaming.location.common.configuration.Configuration;
 import io.github.lxgaming.location.common.manager.PacketManager;
@@ -44,7 +43,7 @@ public class LocationImpl extends Location {
         getLogger().info("Initializing...");
         reloadLocation();
         PacketManager.registerPackets();
-        getLogger().info("{} v{} has loaded", Reference.NAME, Reference.VERSION);
+        getLogger().info("{} v{} has loaded", Location.NAME, Location.VERSION);
     }
     
     public boolean reloadLocation() {

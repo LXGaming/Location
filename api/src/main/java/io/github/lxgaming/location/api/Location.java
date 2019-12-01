@@ -25,6 +25,14 @@ import java.util.UUID;
 
 public abstract class Location {
     
+    public static final String ID = "location";
+    public static final String NAME = "Location";
+    public static final String VERSION = "${version}";
+    public static final String DESCRIPTION = "Player Tracking";
+    public static final String AUTHORS = "LX_Gaming";
+    public static final String SOURCE = "https://github.com/LXGaming/Location";
+    public static final String WEBSITE = "https://lxgaming.github.io/";
+    
     private static Location instance;
     protected Platform platform;
     protected Logger logger;

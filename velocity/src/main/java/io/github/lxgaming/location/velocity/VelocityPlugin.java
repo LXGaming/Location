@@ -26,7 +26,6 @@ import com.velocitypowered.api.proxy.ProxyServer;
 import io.github.lxgaming.location.api.Location;
 import io.github.lxgaming.location.api.Platform;
 import io.github.lxgaming.location.api.util.Logger;
-import io.github.lxgaming.location.api.util.Reference;
 import io.github.lxgaming.location.common.LocationImpl;
 import io.github.lxgaming.location.common.configuration.Config;
 import io.github.lxgaming.location.common.manager.CommandManager;
@@ -39,12 +38,12 @@ import org.slf4j.LoggerFactory;
 import java.nio.file.Path;
 
 @Plugin(
-        id = Reference.ID,
-        name = Reference.NAME,
-        version = Reference.VERSION,
-        description = Reference.DESCRIPTION,
-        url = Reference.WEBSITE,
-        authors = {Reference.AUTHORS}
+        id = Location.ID,
+        name = Location.NAME,
+        version = Location.VERSION,
+        description = Location.DESCRIPTION,
+        url = Location.WEBSITE,
+        authors = {Location.AUTHORS}
 )
 public class VelocityPlugin implements Platform {
     
@@ -62,12 +61,12 @@ public class VelocityPlugin implements Platform {
         instance = this;
         LocationImpl location = new LocationImpl(this);
         location.getLogger()
-                .add(Logger.Level.INFO, LoggerFactory.getLogger(Reference.NAME)::info)
-                .add(Logger.Level.WARN, LoggerFactory.getLogger(Reference.NAME)::warn)
-                .add(Logger.Level.ERROR, LoggerFactory.getLogger(Reference.NAME)::error)
+                .add(Logger.Level.INFO, LoggerFactory.getLogger(Location.NAME)::info)
+                .add(Logger.Level.WARN, LoggerFactory.getLogger(Location.NAME)::warn)
+                .add(Logger.Level.ERROR, LoggerFactory.getLogger(Location.NAME)::error)
                 .add(Logger.Level.DEBUG, message -> {
                     if (LocationImpl.getInstance().getConfig().map(Config::isDebug).orElse(false)) {
-                        LoggerFactory.getLogger(Reference.NAME).info(message);
+                        LoggerFactory.getLogger(Location.NAME).info(message);
                     }
                 });
         
@@ -81,7 +80,7 @@ public class VelocityPlugin implements Platform {
     
     @Subscribe
     public void onProxyShutdown(ProxyShutdownEvent event) {
-        Location.getInstance().getLogger().info("{} v{} unloaded", Reference.NAME, Reference.VERSION);
+        Location.getInstance().getLogger().info("{} v{} unloaded", Location.NAME, Location.VERSION);
     }
     
     @Override

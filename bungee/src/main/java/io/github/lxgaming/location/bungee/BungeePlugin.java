@@ -19,7 +19,6 @@ package io.github.lxgaming.location.bungee;
 import io.github.lxgaming.location.api.Location;
 import io.github.lxgaming.location.api.Platform;
 import io.github.lxgaming.location.api.util.Logger;
-import io.github.lxgaming.location.api.util.Reference;
 import io.github.lxgaming.location.bungee.command.GetCommand;
 import io.github.lxgaming.location.bungee.command.LocationCommand;
 import io.github.lxgaming.location.bungee.command.ReloadCommand;
@@ -59,7 +58,7 @@ public class BungeePlugin extends Plugin implements Platform {
     
     @Override
     public void onDisable() {
-        Location.getInstance().getLogger().info("{} v{} unloaded", Reference.NAME, Reference.VERSION);
+        Location.getInstance().getLogger().info("{} v{} unloaded", Location.NAME, Location.VERSION);
     }
     
     @Override

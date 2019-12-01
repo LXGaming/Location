@@ -16,7 +16,7 @@
 
 package io.github.lxgaming.location.common.util;
 
-import io.github.lxgaming.location.api.util.Reference;
+import io.github.lxgaming.location.api.Location;
 import io.netty.buffer.ByteBuf;
 
 import java.lang.reflect.Field;
@@ -25,8 +25,8 @@ import java.util.Optional;
 
 public class Toolbox {
     
-    public static final String DECODER_HANDLER = Reference.ID + "-decoder";
-    public static final String ENCODER_HANDLER = Reference.ID + "-encoder";
+    public static final String DECODER_HANDLER = Location.ID + "-decoder";
+    public static final String ENCODER_HANDLER = Location.ID + "-encoder";
     
     public static int getVarIntSize(ByteBuf byteBuf, int input) {
         for (int index = 1; index < 5; ++index) {
