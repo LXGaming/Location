@@ -16,7 +16,7 @@
 
 package io.github.lxgaming.location.bungee.util;
 
-import io.github.lxgaming.location.api.util.Reference;
+import io.github.lxgaming.location.api.Location;
 import io.github.lxgaming.location.common.data.UserImpl;
 import io.github.lxgaming.location.common.handler.DecodeHandler;
 import io.github.lxgaming.location.common.handler.EncodeHandler;
@@ -34,18 +34,18 @@ public class BungeeToolbox {
     public static ComponentBuilder getTextPrefix() {
         ComponentBuilder componentBuilder = new ComponentBuilder("");
         componentBuilder.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, getPluginInformation().create()));
-        componentBuilder.append("[" + Reference.NAME + "]").bold(true).color(ChatColor.BLUE);
+        componentBuilder.append("[" + Location.NAME + "]").bold(true).color(ChatColor.BLUE);
         componentBuilder.append(" ", ComponentBuilder.FormatRetention.NONE);
         return componentBuilder;
     }
     
     public static ComponentBuilder getPluginInformation() {
         ComponentBuilder componentBuilder = new ComponentBuilder("")
-                .append(Reference.NAME).color(ChatColor.BLUE).bold(true).append("\n")
-                .append("    Version: ", ComponentBuilder.FormatRetention.NONE).color(ChatColor.DARK_GRAY).append(Reference.VERSION).color(ChatColor.WHITE).append("\n")
-                .append("    Authors: ", ComponentBuilder.FormatRetention.NONE).color(ChatColor.DARK_GRAY).append(Reference.AUTHORS).color(ChatColor.WHITE).append("\n")
-                .append("    Source: ", ComponentBuilder.FormatRetention.NONE).color(ChatColor.DARK_GRAY).append(getURLClickEvent(Reference.SOURCE).create()).append("\n")
-                .append("    Website: ", ComponentBuilder.FormatRetention.NONE).color(ChatColor.DARK_GRAY).append(getURLClickEvent(Reference.WEBSITE).create());
+                .append(Location.NAME).color(ChatColor.BLUE).bold(true).append("\n")
+                .append("    Version: ", ComponentBuilder.FormatRetention.NONE).color(ChatColor.DARK_GRAY).append(Location.VERSION).color(ChatColor.WHITE).append("\n")
+                .append("    Authors: ", ComponentBuilder.FormatRetention.NONE).color(ChatColor.DARK_GRAY).append(Location.AUTHORS).color(ChatColor.WHITE).append("\n")
+                .append("    Source: ", ComponentBuilder.FormatRetention.NONE).color(ChatColor.DARK_GRAY).append(getURLClickEvent(Location.SOURCE).create()).append("\n")
+                .append("    Website: ", ComponentBuilder.FormatRetention.NONE).color(ChatColor.DARK_GRAY).append(getURLClickEvent(Location.WEBSITE).create());
         return componentBuilder;
     }
     
