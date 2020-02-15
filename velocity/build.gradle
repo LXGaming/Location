@@ -29,7 +29,7 @@ repositories {
 dependencies {
     compile(project(path: ":common"))
     provided(project(path: ":common", configuration: "provided"))
-    provided(fileTree(dir: "./libs/", include: ["*.jar"]))
+    provided(fileTree(dir: "libs", include: ["*.jar"]))
     annotationProcessor("com.velocitypowered:velocity-api:1.0.0-SNAPSHOT")
     provided("com.velocitypowered:velocity-api:1.0.0-SNAPSHOT")
 }
