@@ -29,7 +29,7 @@ repositories {
 dependencies {
     compile(project(path: ":common"))
     provided(project(path: ":common", configuration: "provided"))
-    provided(fileTree(dir: "./libs/", include: ["*.jar"]))
+    provided(fileTree(dir: "libs", include: ["*.jar"]))
     provided("net.md-5:bungeecord-api:1.14-SNAPSHOT")
 }
 
