@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Alex Thomson
+ * Copyright 2020 Alex Thomson
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,32 @@
  * limitations under the License.
  */
 
-package io.github.lxgaming.location.common.configuration;
+package io.github.lxgaming.location.api.entity;
 
-import com.google.gson.annotations.SerializedName;
-import io.github.lxgaming.location.common.configuration.category.GeneralCategory;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
-public class Config {
+import java.util.UUID;
+
+public interface User {
     
-    @SerializedName("general")
-    private GeneralCategory generalCategory = new GeneralCategory();
+    @NonNull UUID getUniqueId();
     
-    public GeneralCategory getGeneralCategory() {
-        return generalCategory;
-    }
+    @NonNull String getUsername();
+    
+    int getProtocolVersion();
+    
+    double getX();
+    
+    double getY();
+    
+    double getZ();
+    
+    float getPitch();
+    
+    float getYaw();
+    
+    int getDimension();
+    
+    @Nullable String getServer();
 }

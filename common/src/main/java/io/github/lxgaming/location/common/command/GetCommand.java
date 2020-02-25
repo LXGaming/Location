@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Alex Thomson
+ * Copyright 2020 Alex Thomson
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,52 +14,55 @@
  * limitations under the License.
  */
 
-package io.github.lxgaming.location.velocity.command;
+package io.github.lxgaming.location.common.command;
 
-import com.velocitypowered.api.command.CommandSource;
-import com.velocitypowered.api.proxy.Player;
 import io.github.lxgaming.location.api.Location;
-import io.github.lxgaming.location.api.data.User;
-import io.github.lxgaming.location.common.command.AbstractCommand;
+import io.github.lxgaming.location.api.entity.User;
+import io.github.lxgaming.location.common.entity.Locale;
 import io.github.lxgaming.location.common.manager.PacketManager;
-import io.github.lxgaming.location.velocity.VelocityPlugin;
-import io.github.lxgaming.location.velocity.util.VelocityToolbox;
+import io.github.lxgaming.location.common.util.StringUtils;
+import io.github.lxgaming.location.common.util.Toolbox;
+import io.github.lxgaming.location.common.util.text.adapter.LocaleAdapter;
 import net.kyori.text.TextComponent;
 import net.kyori.text.format.TextColor;
 import net.kyori.text.format.TextDecoration;
 
 import java.util.List;
+import java.util.UUID;
 
-public class GetCommand extends AbstractCommand {
+public class GetCommand extends Command {
     
-    public GetCommand() {
-        addAlias("get");
-        setPermission("location.command.get");
-        setUsage("<Player>");
+    @Override
+    public boolean prepare() {
+        addAlias("Get");
+        permission("location.get.base");
+        usage("<Player>");
+        return true;
     }
     
     @Override
-    public void execute(Object object, List<String> arguments) {
-        CommandSource source = (CommandSource) object;
+    public void execute(UUID uniqueId, List<String> arguments) throws Exception {
         if (arguments.isEmpty()) {
-            source.sendMessage(VelocityToolbox.getTextPrefix().append(TextComponent.of("Invalid arguments: " + getUsage(), TextColor.RED)));
+            LocaleAdapter.sendMessage(uniqueId, Locale.COMMAND_INVALID_ARGUMENTS, getUsage());
             return;
         }
         
         String username = arguments.remove(0);
-        Player player = VelocityPlugin.getInstance().getProxy().getPlayer(username).orElse(null);
-        if (player == null || !player.isActive()) {
-            source.sendMessage(VelocityToolbox.getTextPrefix().append(TextComponent.of(username + " is not online", TextColor.RED)));
+        if (!Toolbox.isUsername(username)) {
+            LocaleAdapter.sendMessage(uniqueId, Locale.USER_NAME_INVALID);
             return;
         }
         
-        User user = Location.getInstance().getUser(player.getUniqueId()).orElse(null);
+        User user = Location.getInstance().getUser(username).orElse(null);
         if (user == null) {
-            source.sendMessage(VelocityToolbox.getTextPrefix().append(TextComponent.of(player.getUsername() + " not found", TextColor.RED)));
+            LocaleAdapter.sendMessage(uniqueId, Locale.COMMAND_GET_USER_NOT_FOUND, username);
             return;
         }
         
-        String protocolVersion = PacketManager.getProtocolVersion(user.getProtocolVersion()).orElse(String.valueOf(user.getProtocolVersion()));
+        String protocolVersion = StringUtils.defaultIfBlank(
+                PacketManager.getProtocolVersion(user.getProtocolVersion()),
+                String.valueOf(user.getProtocolVersion())
+        );
         
         TextComponent.Builder textBuilder = TextComponent.builder("");
         textBuilder.append(TextComponent.of(user.getUsername(), TextColor.BLUE).decoration(TextDecoration.BOLD, true))
@@ -74,6 +77,6 @@ public class GetCommand extends AbstractCommand {
         textBuilder.append(TextComponent.of("Server: ", TextColor.DARK_GRAY))
                 .append(TextComponent.of(user.getServer() + " (" + user.getDimension() + ")", TextColor.WHITE));
         
-        source.sendMessage(textBuilder.build());
+        Location.getPlatform().sendMessage(uniqueId, textBuilder.build());
     }
 }

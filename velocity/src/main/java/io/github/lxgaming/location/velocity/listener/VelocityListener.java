@@ -21,30 +21,34 @@ import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.connection.DisconnectEvent;
 import com.velocitypowered.api.event.connection.PostLoginEvent;
 import com.velocitypowered.api.event.player.ServerConnectedEvent;
-import io.github.lxgaming.location.api.Location;
-import io.github.lxgaming.location.common.data.UserImpl;
+import io.github.lxgaming.location.common.LocationImpl;
+import io.github.lxgaming.location.common.entity.UserImpl;
 import io.github.lxgaming.location.velocity.util.VelocityToolbox;
 
 public class VelocityListener {
     
     @Subscribe(order = PostOrder.EARLY)
     public void onPostLogin(PostLoginEvent event) {
-        UserImpl user = UserImpl.of(event.getPlayer().getUsername(), event.getPlayer().getUniqueId(), event.getPlayer().getProtocolVersion().getProtocol());
-        Location.getInstance().getUsers().add(user);
+        UserImpl user = new UserImpl(event.getPlayer().getUsername(), event.getPlayer().getUniqueId(), event.getPlayer().getProtocolVersion().getProtocol());
+        LocationImpl.getInstance().addUser(user);
+        
         if (VelocityToolbox.addChannel(user, event.getPlayer())) {
-            Location.getInstance().getLogger().debug("Successfully added channel for {} ({})", event.getPlayer().getUsername(), event.getPlayer().getUniqueId());
+            LocationImpl.getInstance().getLogger().debug("Successfully added channel for {} ({})", event.getPlayer().getUsername(), event.getPlayer().getUniqueId());
         } else {
-            Location.getInstance().getLogger().warn("Failed to add channel for {} ({})", event.getPlayer().getUsername(), event.getPlayer().getUniqueId());
+            LocationImpl.getInstance().getLogger().warn("Failed to add channel for {} ({})", event.getPlayer().getUsername(), event.getPlayer().getUniqueId());
         }
     }
     
     @Subscribe(order = PostOrder.EARLY)
     public void onServerConnected(ServerConnectedEvent event) {
-        Location.getInstance().getUser(event.getPlayer().getUniqueId()).ifPresent(user -> user.setServer(event.getServer().getServerInfo().getName()));
+        LocationImpl.getInstance().getUser(event.getPlayer().getUniqueId())
+                .filter(user -> user instanceof UserImpl)
+                .map(user -> (UserImpl) user)
+                .ifPresent(user -> user.setServer(event.getServer().getServerInfo().getName()));
     }
     
     @Subscribe(order = PostOrder.EARLY)
     public void onDisconnect(DisconnectEvent event) {
-        Location.getInstance().getUsers().removeIf(user -> user.getUniqueId().equals(event.getPlayer().getUniqueId()));
+        LocationImpl.getInstance().getUser(event.getPlayer().getUniqueId()).ifPresent(LocationImpl.getInstance()::removeUser);
     }
 }

@@ -18,99 +18,184 @@ package io.github.lxgaming.location.common.manager;
 
 import com.google.common.collect.Sets;
 import io.github.lxgaming.location.api.Location;
-import io.github.lxgaming.location.common.command.AbstractCommand;
+import io.github.lxgaming.location.api.exception.CommandException;
+import io.github.lxgaming.location.common.LocationImpl;
+import io.github.lxgaming.location.common.command.Command;
+import io.github.lxgaming.location.common.command.DebugCommand;
+import io.github.lxgaming.location.common.command.GetCommand;
+import io.github.lxgaming.location.common.command.HelpCommand;
+import io.github.lxgaming.location.common.command.InformationCommand;
+import io.github.lxgaming.location.common.command.ReloadCommand;
+import io.github.lxgaming.location.common.entity.Locale;
+import io.github.lxgaming.location.common.util.StringUtils;
 import io.github.lxgaming.location.common.util.Toolbox;
+import io.github.lxgaming.location.common.util.text.adapter.LocaleAdapter;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 
 public final class CommandManager {
     
-    private static final Set<AbstractCommand> COMMANDS = Sets.newLinkedHashSet();
-    private static final Set<Class<? extends AbstractCommand>> COMMAND_CLASSES = Sets.newLinkedHashSet();
+    public static final Set<Command> COMMANDS = Sets.newLinkedHashSet();
+    private static final Set<Class<? extends Command>> COMMAND_CLASSES = Sets.newHashSet();
     
-    public static boolean registerAlias(AbstractCommand command, String alias) {
-        if (Toolbox.containsIgnoreCase(command.getAliases(), alias)) {
-            Location.getInstance().getLogger().warn("{} has already been registered for {}", alias, command.getClass().getSimpleName());
+    public static void prepare() {
+        registerCommand(DebugCommand.class);
+        registerCommand(GetCommand.class);
+        registerCommand(HelpCommand.class);
+        registerCommand(InformationCommand.class);
+        registerCommand(ReloadCommand.class);
+    }
+    
+    public static boolean execute(UUID uniqueId, List<String> arguments) {
+        String content = String.join(" ", arguments);
+        if (arguments.isEmpty() || StringUtils.isBlank(content)) {
+            LocaleAdapter.sendMessage(uniqueId, Locale.COMMAND_BASE, getPrefix());
+            return false;
+        }
+        
+        Command command = getCommand(arguments);
+        if (command == null) {
+            LocaleAdapter.sendMessage(uniqueId, Locale.COMMAND_NOT_FOUND);
+            return false;
+        }
+        
+        if (StringUtils.isBlank(command.getPermission()) || !LocationImpl.getPlatform().hasPermission(uniqueId, command.getPermission())) {
+            LocaleAdapter.sendMessage(uniqueId, Locale.COMMAND_NO_PERMISSION);
+            return false;
+        }
+        
+        LocationImpl.getInstance().getLogger().debug("Processing {} for {}", content, uniqueId);
+        
+        try {
+            command.execute(uniqueId, arguments);
+            return true;
+        } catch (CommandException ex) {
+            LocaleAdapter.sendMessage(uniqueId, Locale.COMMAND_ERROR, ex.getMessage());
+            return false;
+        } catch (Exception ex) {
+            LocationImpl.getInstance().getLogger().error("Encountered an error while executing {}", Toolbox.getClassSimpleName(command.getClass()), ex);
+            LocaleAdapter.sendMessage(uniqueId, Locale.COMMAND_EXCEPTION);
+            return false;
+        }
+    }
+    
+    public static boolean registerAlias(Command command, String alias) {
+        if (StringUtils.containsIgnoreCase(command.getAliases(), alias)) {
+            LocationImpl.getInstance().getLogger().warn("{} is already registered for {}", alias, Toolbox.getClassSimpleName(command.getClass()));
             return false;
         }
         
         command.getAliases().add(alias);
-        Location.getInstance().getLogger().debug("{} registered for {}", alias, command.getClass().getSimpleName());
+        LocationImpl.getInstance().getLogger().debug("{} registered for {}", alias, Toolbox.getClassSimpleName(command.getClass()));
         return true;
     }
     
-    public static boolean registerCommand(Class<? extends AbstractCommand> commandClass) {
-        if (getCommandClasses().contains(commandClass)) {
-            Location.getInstance().getLogger().warn("{} has already been registered", commandClass.getSimpleName());
-            return false;
+    public static boolean registerCommand(Class<? extends Command> commandClass) {
+        Command command = registerCommand(COMMANDS, commandClass);
+        if (command != null) {
+            LocationImpl.getInstance().getLogger().debug("{} registered", Toolbox.getClassSimpleName(commandClass));
+            return true;
         }
         
-        getCommandClasses().add(commandClass);
-        AbstractCommand command = Toolbox.newInstance(commandClass).orElse(null);
-        if (command == null) {
-            Location.getInstance().getLogger().error("{} failed to initialize", commandClass.getSimpleName());
-            return false;
-        }
-        
-        getCommands().add(command);
-        Location.getInstance().getLogger().debug("{} registered", commandClass.getSimpleName());
-        return true;
+        return false;
     }
     
-    public static boolean registerCommand(AbstractCommand parentCommand, Class<? extends AbstractCommand> commandClass) {
+    public static boolean registerCommand(Command parentCommand, Class<? extends Command> commandClass) {
         if (parentCommand.getClass() == commandClass) {
-            Location.getInstance().getLogger().warn("{} attempted to register itself", parentCommand.getClass().getSimpleName());
+            LocationImpl.getInstance().getLogger().warn("{} attempted to register itself", Toolbox.getClassSimpleName(parentCommand.getClass()));
             return false;
         }
         
-        if (getCommandClasses().contains(commandClass)) {
-            Location.getInstance().getLogger().warn("{} has already been registered", commandClass.getSimpleName());
-            return false;
+        Command command = registerCommand(parentCommand.getChildren(), commandClass);
+        if (command != null) {
+            command.parentCommand(parentCommand);
+            LocationImpl.getInstance().getLogger().debug("{} registered for {}", Toolbox.getClassSimpleName(commandClass), Toolbox.getClassSimpleName(parentCommand.getClass()));
+            return true;
         }
         
-        getCommandClasses().add(commandClass);
-        AbstractCommand command = Toolbox.newInstance(commandClass).orElse(null);
+        return false;
+    }
+    
+    private static Command registerCommand(Set<Command> commands, Class<? extends Command> commandClass) {
+        if (COMMAND_CLASSES.contains(commandClass)) {
+            LocationImpl.getInstance().getLogger().warn("{} is already registered", Toolbox.getClassSimpleName(commandClass));
+            return null;
+        }
+        
+        COMMAND_CLASSES.add(commandClass);
+        Command command = Toolbox.newInstance(commandClass);
         if (command == null) {
-            Location.getInstance().getLogger().error("{} failed to initialize", commandClass.getSimpleName());
-            return false;
+            LocationImpl.getInstance().getLogger().error("{} failed to initialize", Toolbox.getClassSimpleName(commandClass));
+            return null;
         }
         
-        parentCommand.getChildren().add(command);
-        Location.getInstance().getLogger().debug("{} registered for {}", commandClass.getSimpleName(), parentCommand.getClass().getSimpleName());
-        return true;
-    }
-    
-    public static Optional<AbstractCommand> getChildCommand(List<String> arguments) {
-        return getChildCommand(getCommands(), arguments);
-    }
-    
-    public static Optional<AbstractCommand> getChildCommand(AbstractCommand parentCommand, List<String> arguments) {
-        return getChildCommand(parentCommand.getChildren(), arguments);
-    }
-    
-    private static Optional<AbstractCommand> getChildCommand(Set<AbstractCommand> commands, List<String> arguments) {
-        if (commands.isEmpty() || arguments.isEmpty()) {
-            return Optional.empty();
+        if (!command.prepare()) {
+            LocationImpl.getInstance().getLogger().error("{} failed to prepare", Toolbox.getClassSimpleName(commandClass));
+            return null;
         }
         
-        String argument = arguments.get(0);
-        for (AbstractCommand command : commands) {
-            if (Toolbox.containsIgnoreCase(command.getAliases(), argument)) {
-                arguments.remove(0);
-                return Optional.of(getChildCommand(command.getChildren(), arguments).orElse(command));
+        if (commands.add(command)) {
+            return command;
+        }
+        
+        return null;
+    }
+    
+    public static Command getCommand(Class<? extends Command> commandClass) {
+        return getCommand(null, commandClass);
+    }
+    
+    public static Command getCommand(Command parentCommand, Class<? extends Command> commandClass) {
+        Set<Command> commands = Sets.newLinkedHashSet();
+        if (parentCommand != null) {
+            commands.addAll(parentCommand.getChildren());
+        } else {
+            commands.addAll(COMMANDS);
+        }
+        
+        for (Command command : commands) {
+            if (command.getClass() == commandClass) {
+                return command;
+            }
+            
+            Command childCommand = getCommand(command, commandClass);
+            if (childCommand != null) {
+                return childCommand;
             }
         }
         
-        return Optional.empty();
+        return null;
     }
     
-    public static Set<AbstractCommand> getCommands() {
-        return COMMANDS;
+    public static Command getCommand(List<String> arguments) {
+        return getCommand(null, arguments);
     }
     
-    private static Set<Class<? extends AbstractCommand>> getCommandClasses() {
-        return COMMAND_CLASSES;
+    private static Command getCommand(Command parentCommand, List<String> arguments) {
+        if (arguments.isEmpty()) {
+            return parentCommand;
+        }
+        
+        Set<Command> commands = Sets.newLinkedHashSet();
+        if (parentCommand != null) {
+            commands.addAll(parentCommand.getChildren());
+        } else {
+            commands.addAll(COMMANDS);
+        }
+        
+        for (Command command : commands) {
+            if (StringUtils.containsIgnoreCase(command.getAliases(), arguments.get(0))) {
+                arguments.remove(0);
+                return getCommand(command, arguments);
+            }
+        }
+        
+        return parentCommand;
+    }
+    
+    public static String getPrefix() {
+        return Location.ID;
     }
 }

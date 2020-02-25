@@ -16,46 +16,20 @@
 
 package io.github.lxgaming.location.bungee.util;
 
-import io.github.lxgaming.location.api.Location;
-import io.github.lxgaming.location.common.data.UserImpl;
+import io.github.lxgaming.location.api.Platform;
+import io.github.lxgaming.location.common.entity.UserImpl;
 import io.github.lxgaming.location.common.handler.DecodeHandler;
 import io.github.lxgaming.location.common.handler.EncodeHandler;
 import io.github.lxgaming.location.common.util.Toolbox;
 import io.netty.channel.Channel;
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.netty.ChannelWrapper;
 import net.md_5.bungee.netty.PipelineUtils;
 
+import java.util.UUID;
+
 public class BungeeToolbox {
-    
-    public static ComponentBuilder getTextPrefix() {
-        ComponentBuilder componentBuilder = new ComponentBuilder("");
-        componentBuilder.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, getPluginInformation().create()));
-        componentBuilder.append("[" + Location.NAME + "]").bold(true).color(ChatColor.BLUE);
-        componentBuilder.append(" ", ComponentBuilder.FormatRetention.NONE);
-        return componentBuilder;
-    }
-    
-    public static ComponentBuilder getPluginInformation() {
-        ComponentBuilder componentBuilder = new ComponentBuilder("")
-                .append(Location.NAME).color(ChatColor.BLUE).bold(true).append("\n")
-                .append("    Version: ", ComponentBuilder.FormatRetention.NONE).color(ChatColor.DARK_GRAY).append(Location.VERSION).color(ChatColor.WHITE).append("\n")
-                .append("    Authors: ", ComponentBuilder.FormatRetention.NONE).color(ChatColor.DARK_GRAY).append(Location.AUTHORS).color(ChatColor.WHITE).append("\n")
-                .append("    Source: ", ComponentBuilder.FormatRetention.NONE).color(ChatColor.DARK_GRAY).append(getURLClickEvent(Location.SOURCE).create()).append("\n")
-                .append("    Website: ", ComponentBuilder.FormatRetention.NONE).color(ChatColor.DARK_GRAY).append(getURLClickEvent(Location.WEBSITE).create());
-        return componentBuilder;
-    }
-    
-    public static ComponentBuilder getURLClickEvent(String url) {
-        ComponentBuilder componentBuilder = new ComponentBuilder("");
-        componentBuilder.event(new ClickEvent(ClickEvent.Action.OPEN_URL, url));
-        componentBuilder.append(url).color(ChatColor.BLUE);
-        componentBuilder.append(" ", ComponentBuilder.FormatRetention.NONE);
-        return componentBuilder;
-    }
     
     public static boolean addChannel(UserImpl user, Object object) {
         Channel channel = Toolbox.getField(object, ChannelWrapper.class).map(ChannelWrapper::getHandle).orElse(null);
@@ -77,5 +51,13 @@ public class BungeeToolbox {
         }
         
         return false;
+    }
+    
+    public static UUID getUniqueId(CommandSender sender) {
+        if (sender instanceof ProxiedPlayer) {
+            return ((ProxiedPlayer) sender).getUniqueId();
+        } else {
+            return Platform.CONSOLE_UUID;
+        }
     }
 }

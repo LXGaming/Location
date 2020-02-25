@@ -18,14 +18,13 @@ package io.github.lxgaming.location.common.manager;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import io.github.lxgaming.location.common.data.PacketImpl;
-import io.github.lxgaming.location.common.data.UserImpl;
+import io.github.lxgaming.location.common.entity.PacketImpl;
+import io.github.lxgaming.location.common.entity.UserImpl;
 import io.github.lxgaming.location.common.util.Toolbox;
 import io.netty.buffer.ByteBuf;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 public final class PacketManager {
     
@@ -33,115 +32,117 @@ public final class PacketManager {
     private static final List<PacketImpl> SERVER_PACKETS = Lists.newArrayList();
     private static final Map<Integer, String> PROTOCOL_VERSIONS = Maps.newHashMap();
     
-    public static void registerPackets() {
+    public static void prepare() {
         // https://github.com/LXGaming/Powershell/tree/master/MinecraftMapping
         
-        // ClientPlayerLook
-        getClientPackets().add(PacketImpl.of(0x13, 578, 471, PacketManager::handleClientPlayerLook));
-        getClientPackets().add(PacketImpl.of(0x14, 470, 464, PacketManager::handleClientPlayerLook));
-        getClientPackets().add(PacketImpl.of(0x12, 463, 389, PacketManager::handleClientPlayerLook));
-        getClientPackets().add(PacketImpl.of(0x10, 388, 386, PacketManager::handleClientPlayerLook));
-        getClientPackets().add(PacketImpl.of(0x0E, 385, 343, PacketManager::handleClientPlayerLook));
-        getClientPackets().add(PacketImpl.of(0x0F, 342, 336, PacketManager::handleClientPlayerLook));
-        getClientPackets().add(PacketImpl.of(0x10, 335, 332, PacketManager::handleClientPlayerLook));
-        getClientPackets().add(PacketImpl.of(0x0F, 331, 318, PacketManager::handleClientPlayerLook));
-        getClientPackets().add(PacketImpl.of(0x0E, 317, 77, PacketManager::handleClientPlayerLook));
-        getClientPackets().add(PacketImpl.of(0x0D, 76, 67, PacketManager::handleClientPlayerLook));
-        getClientPackets().add(PacketImpl.of(0x05, 66, 47, PacketManager::handleClientPlayerLook));
+        // Client
+        // - PlayerLook
+        CLIENT_PACKETS.add(new PacketImpl(0x13, 578, 471, PacketManager::handleClientPlayerLook));
+        CLIENT_PACKETS.add(new PacketImpl(0x14, 470, 464, PacketManager::handleClientPlayerLook));
+        CLIENT_PACKETS.add(new PacketImpl(0x12, 463, 389, PacketManager::handleClientPlayerLook));
+        CLIENT_PACKETS.add(new PacketImpl(0x10, 388, 386, PacketManager::handleClientPlayerLook));
+        CLIENT_PACKETS.add(new PacketImpl(0x0E, 385, 343, PacketManager::handleClientPlayerLook));
+        CLIENT_PACKETS.add(new PacketImpl(0x0F, 342, 336, PacketManager::handleClientPlayerLook));
+        CLIENT_PACKETS.add(new PacketImpl(0x10, 335, 332, PacketManager::handleClientPlayerLook));
+        CLIENT_PACKETS.add(new PacketImpl(0x0F, 331, 318, PacketManager::handleClientPlayerLook));
+        CLIENT_PACKETS.add(new PacketImpl(0x0E, 317, 77, PacketManager::handleClientPlayerLook));
+        CLIENT_PACKETS.add(new PacketImpl(0x0D, 76, 67, PacketManager::handleClientPlayerLook));
+        CLIENT_PACKETS.add(new PacketImpl(0x05, 66, 47, PacketManager::handleClientPlayerLook));
         
-        // ClientPlayerPosition
-        getClientPackets().add(PacketImpl.of(0x11, 578, 471, PacketManager::handleClientPlayerPosition));
-        getClientPackets().add(PacketImpl.of(0x12, 470, 464, PacketManager::handleClientPlayerPosition));
-        getClientPackets().add(PacketImpl.of(0x10, 463, 389, PacketManager::handleClientPlayerPosition));
-        getClientPackets().add(PacketImpl.of(0x0E, 388, 386, PacketManager::handleClientPlayerPosition));
-        getClientPackets().add(PacketImpl.of(0x0C, 385, 343, PacketManager::handleClientPlayerPosition));
-        getClientPackets().add(PacketImpl.of(0x0D, 342, 336, PacketManager::handleClientPlayerPosition));
-        getClientPackets().add(PacketImpl.of(0x0E, 335, 332, PacketManager::handleClientPlayerPosition));
-        getClientPackets().add(PacketImpl.of(0x0D, 331, 318, PacketManager::handleClientPlayerPosition));
-        getClientPackets().add(PacketImpl.of(0x0C, 317, 77, PacketManager::handleClientPlayerPosition));
-        getClientPackets().add(PacketImpl.of(0x0B, 76, 67, PacketManager::handleClientPlayerPosition));
-        getClientPackets().add(PacketImpl.of(0x04, 66, 47, PacketManager::handleClientPlayerPosition));
+        // - PlayerPosition
+        CLIENT_PACKETS.add(new PacketImpl(0x11, 578, 471, PacketManager::handleClientPlayerPosition));
+        CLIENT_PACKETS.add(new PacketImpl(0x12, 470, 464, PacketManager::handleClientPlayerPosition));
+        CLIENT_PACKETS.add(new PacketImpl(0x10, 463, 389, PacketManager::handleClientPlayerPosition));
+        CLIENT_PACKETS.add(new PacketImpl(0x0E, 388, 386, PacketManager::handleClientPlayerPosition));
+        CLIENT_PACKETS.add(new PacketImpl(0x0C, 385, 343, PacketManager::handleClientPlayerPosition));
+        CLIENT_PACKETS.add(new PacketImpl(0x0D, 342, 336, PacketManager::handleClientPlayerPosition));
+        CLIENT_PACKETS.add(new PacketImpl(0x0E, 335, 332, PacketManager::handleClientPlayerPosition));
+        CLIENT_PACKETS.add(new PacketImpl(0x0D, 331, 318, PacketManager::handleClientPlayerPosition));
+        CLIENT_PACKETS.add(new PacketImpl(0x0C, 317, 77, PacketManager::handleClientPlayerPosition));
+        CLIENT_PACKETS.add(new PacketImpl(0x0B, 76, 67, PacketManager::handleClientPlayerPosition));
+        CLIENT_PACKETS.add(new PacketImpl(0x04, 66, 47, PacketManager::handleClientPlayerPosition));
         
-        // ClientPlayerPositionAndLook
-        getClientPackets().add(PacketImpl.of(0x12, 578, 471, PacketManager::handleClientPlayerPositionAndLook));
-        getClientPackets().add(PacketImpl.of(0x13, 470, 464, PacketManager::handleClientPlayerPositionAndLook));
-        getClientPackets().add(PacketImpl.of(0x11, 463, 389, PacketManager::handleClientPlayerPositionAndLook));
-        getClientPackets().add(PacketImpl.of(0x0F, 388, 386, PacketManager::handleClientPlayerPositionAndLook));
-        getClientPackets().add(PacketImpl.of(0x0D, 385, 343, PacketManager::handleClientPlayerPositionAndLook));
-        getClientPackets().add(PacketImpl.of(0x0E, 342, 336, PacketManager::handleClientPlayerPositionAndLook));
-        getClientPackets().add(PacketImpl.of(0x0F, 335, 332, PacketManager::handleClientPlayerPositionAndLook));
-        getClientPackets().add(PacketImpl.of(0x0E, 331, 318, PacketManager::handleClientPlayerPositionAndLook));
-        getClientPackets().add(PacketImpl.of(0x0D, 317, 77, PacketManager::handleClientPlayerPositionAndLook));
-        getClientPackets().add(PacketImpl.of(0x0C, 76, 67, PacketManager::handleClientPlayerPositionAndLook));
-        getClientPackets().add(PacketImpl.of(0x06, 66, 47, PacketManager::handleClientPlayerPositionAndLook));
+        // - PlayerPositionAndLook
+        CLIENT_PACKETS.add(new PacketImpl(0x12, 578, 471, PacketManager::handleClientPlayerPositionAndLook));
+        CLIENT_PACKETS.add(new PacketImpl(0x13, 470, 464, PacketManager::handleClientPlayerPositionAndLook));
+        CLIENT_PACKETS.add(new PacketImpl(0x11, 463, 389, PacketManager::handleClientPlayerPositionAndLook));
+        CLIENT_PACKETS.add(new PacketImpl(0x0F, 388, 386, PacketManager::handleClientPlayerPositionAndLook));
+        CLIENT_PACKETS.add(new PacketImpl(0x0D, 385, 343, PacketManager::handleClientPlayerPositionAndLook));
+        CLIENT_PACKETS.add(new PacketImpl(0x0E, 342, 336, PacketManager::handleClientPlayerPositionAndLook));
+        CLIENT_PACKETS.add(new PacketImpl(0x0F, 335, 332, PacketManager::handleClientPlayerPositionAndLook));
+        CLIENT_PACKETS.add(new PacketImpl(0x0E, 331, 318, PacketManager::handleClientPlayerPositionAndLook));
+        CLIENT_PACKETS.add(new PacketImpl(0x0D, 317, 77, PacketManager::handleClientPlayerPositionAndLook));
+        CLIENT_PACKETS.add(new PacketImpl(0x0C, 76, 67, PacketManager::handleClientPlayerPositionAndLook));
+        CLIENT_PACKETS.add(new PacketImpl(0x06, 66, 47, PacketManager::handleClientPlayerPositionAndLook));
         
-        // ServerJoinGame
-        getServerPackets().add(PacketImpl.of(0x26, 578, 550, PacketManager::handleServerJoinGame));
-        getServerPackets().add(PacketImpl.of(0x25, 498, 389, PacketManager::handleServerJoinGame));
-        getServerPackets().add(PacketImpl.of(0x24, 388, 345, PacketManager::handleServerJoinGame));
-        getServerPackets().add(PacketImpl.of(0x23, 344, 332, PacketManager::handleServerJoinGame));
-        getServerPackets().add(PacketImpl.of(0x24, 331, 318, PacketManager::handleServerJoinGame));
-        getServerPackets().add(PacketImpl.of(0x23, 317, 86, PacketManager::handleServerJoinGame));
-        getServerPackets().add(PacketImpl.of(0x24, 85, 67, PacketManager::handleServerJoinGame));
-        getServerPackets().add(PacketImpl.of(0x01, 66, 47, PacketManager::handleServerJoinGame));
+        // Server
+        // - JoinGame
+        SERVER_PACKETS.add(new PacketImpl(0x26, 578, 550, PacketManager::handleServerJoinGame));
+        SERVER_PACKETS.add(new PacketImpl(0x25, 498, 389, PacketManager::handleServerJoinGame));
+        SERVER_PACKETS.add(new PacketImpl(0x24, 388, 345, PacketManager::handleServerJoinGame));
+        SERVER_PACKETS.add(new PacketImpl(0x23, 344, 332, PacketManager::handleServerJoinGame));
+        SERVER_PACKETS.add(new PacketImpl(0x24, 331, 318, PacketManager::handleServerJoinGame));
+        SERVER_PACKETS.add(new PacketImpl(0x23, 317, 86, PacketManager::handleServerJoinGame));
+        SERVER_PACKETS.add(new PacketImpl(0x24, 85, 67, PacketManager::handleServerJoinGame));
+        SERVER_PACKETS.add(new PacketImpl(0x01, 66, 47, PacketManager::handleServerJoinGame));
         
-        // ServerPlayerPositionAndLook
-        getServerPackets().add(PacketImpl.of(0x36, 578, 550, PacketManager::handleServerPlayerPositionAndLook));
-        getServerPackets().add(PacketImpl.of(0x35, 498, 471, PacketManager::handleServerPlayerPositionAndLook));
-        getServerPackets().add(PacketImpl.of(0x33, 470, 451, PacketManager::handleServerPlayerPositionAndLook));
-        getServerPackets().add(PacketImpl.of(0x32, 450, 389, PacketManager::handleServerPlayerPositionAndLook));
-        getServerPackets().add(PacketImpl.of(0x31, 388, 352, PacketManager::handleServerPlayerPositionAndLook));
-        getServerPackets().add(PacketImpl.of(0x30, 351, 345, PacketManager::handleServerPlayerPositionAndLook));
-        getServerPackets().add(PacketImpl.of(0x2F, 344, 336, PacketManager::handleServerPlayerPositionAndLook));
-        getServerPackets().add(PacketImpl.of(0x2E, 335, 332, PacketManager::handleServerPlayerPositionAndLook));
-        getServerPackets().add(PacketImpl.of(0x2F, 331, 318, PacketManager::handleServerPlayerPositionAndLook));
-        getServerPackets().add(PacketImpl.of(0x2E, 317, 86, PacketManager::handleServerPlayerPositionAndLook));
-        getServerPackets().add(PacketImpl.of(0x2F, 85, 80, PacketManager::handleServerPlayerPositionAndLook));
-        getServerPackets().add(PacketImpl.of(0x2E, 79, 67, PacketManager::handleServerPlayerPositionAndLook));
-        getServerPackets().add(PacketImpl.of(0x08, 66, 47, PacketManager::handleServerPlayerPositionAndLook));
+        // - PlayerPositionAndLook
+        SERVER_PACKETS.add(new PacketImpl(0x36, 578, 550, PacketManager::handleServerPlayerPositionAndLook));
+        SERVER_PACKETS.add(new PacketImpl(0x35, 498, 471, PacketManager::handleServerPlayerPositionAndLook));
+        SERVER_PACKETS.add(new PacketImpl(0x33, 470, 451, PacketManager::handleServerPlayerPositionAndLook));
+        SERVER_PACKETS.add(new PacketImpl(0x32, 450, 389, PacketManager::handleServerPlayerPositionAndLook));
+        SERVER_PACKETS.add(new PacketImpl(0x31, 388, 352, PacketManager::handleServerPlayerPositionAndLook));
+        SERVER_PACKETS.add(new PacketImpl(0x30, 351, 345, PacketManager::handleServerPlayerPositionAndLook));
+        SERVER_PACKETS.add(new PacketImpl(0x2F, 344, 336, PacketManager::handleServerPlayerPositionAndLook));
+        SERVER_PACKETS.add(new PacketImpl(0x2E, 335, 332, PacketManager::handleServerPlayerPositionAndLook));
+        SERVER_PACKETS.add(new PacketImpl(0x2F, 331, 318, PacketManager::handleServerPlayerPositionAndLook));
+        SERVER_PACKETS.add(new PacketImpl(0x2E, 317, 86, PacketManager::handleServerPlayerPositionAndLook));
+        SERVER_PACKETS.add(new PacketImpl(0x2F, 85, 80, PacketManager::handleServerPlayerPositionAndLook));
+        SERVER_PACKETS.add(new PacketImpl(0x2E, 79, 67, PacketManager::handleServerPlayerPositionAndLook));
+        SERVER_PACKETS.add(new PacketImpl(0x08, 66, 47, PacketManager::handleServerPlayerPositionAndLook));
         
-        // ServerRespawn
-        getServerPackets().add(PacketImpl.of(0x3B, 578, 550, PacketManager::handleServerRespawn));
-        getServerPackets().add(PacketImpl.of(0x3A, 498, 471, PacketManager::handleServerRespawn));
-        getServerPackets().add(PacketImpl.of(0x39, 470, 451, PacketManager::handleServerRespawn));
-        getServerPackets().add(PacketImpl.of(0x38, 450, 389, PacketManager::handleServerRespawn));
-        getServerPackets().add(PacketImpl.of(0x37, 388, 352, PacketManager::handleServerRespawn));
-        getServerPackets().add(PacketImpl.of(0x36, 351, 345, PacketManager::handleServerRespawn));
-        getServerPackets().add(PacketImpl.of(0x35, 344, 336, PacketManager::handleServerRespawn));
-        getServerPackets().add(PacketImpl.of(0x34, 335, 332, PacketManager::handleServerRespawn));
-        getServerPackets().add(PacketImpl.of(0x35, 331, 318, PacketManager::handleServerRespawn));
-        getServerPackets().add(PacketImpl.of(0x33, 317, 86, PacketManager::handleServerRespawn));
-        getServerPackets().add(PacketImpl.of(0x34, 85, 80, PacketManager::handleServerRespawn));
-        getServerPackets().add(PacketImpl.of(0x33, 79, 67, PacketManager::handleServerRespawn));
-        getServerPackets().add(PacketImpl.of(0x07, 66, 47, PacketManager::handleServerRespawn));
+        // - Respawn
+        SERVER_PACKETS.add(new PacketImpl(0x3B, 578, 550, PacketManager::handleServerRespawn));
+        SERVER_PACKETS.add(new PacketImpl(0x3A, 498, 471, PacketManager::handleServerRespawn));
+        SERVER_PACKETS.add(new PacketImpl(0x39, 470, 451, PacketManager::handleServerRespawn));
+        SERVER_PACKETS.add(new PacketImpl(0x38, 450, 389, PacketManager::handleServerRespawn));
+        SERVER_PACKETS.add(new PacketImpl(0x37, 388, 352, PacketManager::handleServerRespawn));
+        SERVER_PACKETS.add(new PacketImpl(0x36, 351, 345, PacketManager::handleServerRespawn));
+        SERVER_PACKETS.add(new PacketImpl(0x35, 344, 336, PacketManager::handleServerRespawn));
+        SERVER_PACKETS.add(new PacketImpl(0x34, 335, 332, PacketManager::handleServerRespawn));
+        SERVER_PACKETS.add(new PacketImpl(0x35, 331, 318, PacketManager::handleServerRespawn));
+        SERVER_PACKETS.add(new PacketImpl(0x33, 317, 86, PacketManager::handleServerRespawn));
+        SERVER_PACKETS.add(new PacketImpl(0x34, 85, 80, PacketManager::handleServerRespawn));
+        SERVER_PACKETS.add(new PacketImpl(0x33, 79, 67, PacketManager::handleServerRespawn));
+        SERVER_PACKETS.add(new PacketImpl(0x07, 66, 47, PacketManager::handleServerRespawn));
         
-        getProtocolVersions().put(47, "1.8");
-        getProtocolVersions().put(107, "1.9");
-        getProtocolVersions().put(108, "1.9.1");
-        getProtocolVersions().put(109, "1.9.2");
-        getProtocolVersions().put(110, "1.9.4");
-        getProtocolVersions().put(210, "1.10");
-        getProtocolVersions().put(315, "1.11");
-        getProtocolVersions().put(316, "1.11.2");
-        getProtocolVersions().put(335, "1.12");
-        getProtocolVersions().put(338, "1.12.1");
-        getProtocolVersions().put(340, "1.12.2");
-        getProtocolVersions().put(393, "1.13");
-        getProtocolVersions().put(401, "1.13.1");
-        getProtocolVersions().put(404, "1.13.2");
-        getProtocolVersions().put(477, "1.14");
-        getProtocolVersions().put(480, "1.14.1");
-        getProtocolVersions().put(485, "1.14.2");
-        getProtocolVersions().put(490, "1.14.3");
-        getProtocolVersions().put(498, "1.14.4");
-        getProtocolVersions().put(573, "1.15");
-        getProtocolVersions().put(575, "1.15.1");
-        getProtocolVersions().put(578, "1.15.2");
+        PROTOCOL_VERSIONS.put(47, "1.8");
+        PROTOCOL_VERSIONS.put(107, "1.9");
+        PROTOCOL_VERSIONS.put(108, "1.9.1");
+        PROTOCOL_VERSIONS.put(109, "1.9.2");
+        PROTOCOL_VERSIONS.put(110, "1.9.4");
+        PROTOCOL_VERSIONS.put(210, "1.10");
+        PROTOCOL_VERSIONS.put(315, "1.11");
+        PROTOCOL_VERSIONS.put(316, "1.11.2");
+        PROTOCOL_VERSIONS.put(335, "1.12");
+        PROTOCOL_VERSIONS.put(338, "1.12.1");
+        PROTOCOL_VERSIONS.put(340, "1.12.2");
+        PROTOCOL_VERSIONS.put(393, "1.13");
+        PROTOCOL_VERSIONS.put(401, "1.13.1");
+        PROTOCOL_VERSIONS.put(404, "1.13.2");
+        PROTOCOL_VERSIONS.put(477, "1.14");
+        PROTOCOL_VERSIONS.put(480, "1.14.1");
+        PROTOCOL_VERSIONS.put(485, "1.14.2");
+        PROTOCOL_VERSIONS.put(490, "1.14.3");
+        PROTOCOL_VERSIONS.put(498, "1.14.4");
+        PROTOCOL_VERSIONS.put(573, "1.15");
+        PROTOCOL_VERSIONS.put(575, "1.15.1");
+        PROTOCOL_VERSIONS.put(578, "1.15.2");
     }
     
     public static void processClientPacket(UserImpl user, ByteBuf byteBuf) {
         int packetId = Toolbox.readVarInt(byteBuf);
-        for (PacketImpl packet : getClientPackets()) {
+        for (PacketImpl packet : CLIENT_PACKETS) {
             if (packet.getId() != packetId) {
                 continue;
             }
@@ -155,7 +156,7 @@ public final class PacketManager {
     
     public static void processServerPacket(UserImpl user, ByteBuf byteBuf) {
         int packetId = Toolbox.readVarInt(byteBuf);
-        for (PacketImpl packet : getServerPackets()) {
+        for (PacketImpl packet : SERVER_PACKETS) {
             if (packet.getId() != packetId) {
                 continue;
             }
@@ -259,19 +260,7 @@ public final class PacketManager {
         user.setDimension(dimension);
     }
     
-    public static Optional<String> getProtocolVersion(int protocolVersion) {
-        return Optional.ofNullable(getProtocolVersions().get(protocolVersion));
-    }
-    
-    private static List<PacketImpl> getClientPackets() {
-        return CLIENT_PACKETS;
-    }
-    
-    private static List<PacketImpl> getServerPackets() {
-        return SERVER_PACKETS;
-    }
-    
-    private static Map<Integer, String> getProtocolVersions() {
-        return PROTOCOL_VERSIONS;
+    public static String getProtocolVersion(int protocolVersion) {
+        return PROTOCOL_VERSIONS.get(protocolVersion);
     }
 }

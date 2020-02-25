@@ -1,4 +1,5 @@
 plugins {
+    id "com.github.johnrengelman.shadow" version "5.2.0"
     id "java"
     id "signing"
 }
@@ -15,7 +16,10 @@ configurations {
         compile.extendsFrom(provided)
     }
 
+    build.dependsOn("signJar")
     compileJava.dependsOn(":common:build")
+    jar.enabled = false
+    jar.dependsOn("shadowJar")
 }
 
 repositories {
@@ -27,10 +31,19 @@ repositories {
 }
 
 dependencies {
-    compile(project(path: ":common"))
-    provided(project(path: ":common", configuration: "provided"))
+    shadow(project(path: ":common", configuration: "shadow"))
     provided(fileTree(dir: "libs", include: ["*.jar"]))
-    provided("net.md-5:bungeecord-api:1.14-SNAPSHOT")
+    provided("net.md-5:bungeecord-api:${bungeecordVersion}")
+    shadow("net.kyori:text-api:${textVersion}")
+    shadow("net.kyori:text-serializer-gson:${textVersion}") {
+        exclude(module: "gson")
+    }
+    shadow("net.kyori:text-serializer-legacy:${textVersion}")
+    shadow("net.kyori:text-adapter-bungeecord:3.0.4-SNAPSHOT") {
+        transitive = false
+    }
+    shadow("org.checkerframework:checker-qual:${checkerqualVersion}")
+    provided("org.slf4j:slf4j-api:${slf4jVersion}")
 }
 
 jar {
@@ -48,6 +61,13 @@ processResources {
         include("bungee.yml")
         expand("name": "Location", "version": version)
     }
+}
+
+shadowJar {
+    archiveClassifier.set(null)
+    configurations = [project.configurations.shadow]
+    relocate("net.kyori.text", "io.github.lxgaming.location.lib.text")
+    relocate("org.checkerframework", "io.github.lxgaming.location.lib.checkerframework")
 }
 
 task signJar {

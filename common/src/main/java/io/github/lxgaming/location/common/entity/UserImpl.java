@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Alex Thomson
+ * Copyright 2020 Alex Thomson
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,16 +14,18 @@
  * limitations under the License.
  */
 
-package io.github.lxgaming.location.common.data;
+package io.github.lxgaming.location.common.entity;
 
-import io.github.lxgaming.location.api.data.User;
+import io.github.lxgaming.location.api.entity.User;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.UUID;
 
 public class UserImpl implements User {
     
-    private final String username;
     private final UUID uniqueId;
+    private final String username;
     private final int protocolVersion;
     private double x;
     private double y;
@@ -33,23 +35,19 @@ public class UserImpl implements User {
     private int dimension;
     private String server;
     
-    private UserImpl(String username, UUID uniqueId, int protocolVersion) {
+    public UserImpl(String username, UUID uniqueId, int protocolVersion) {
         this.username = username;
         this.uniqueId = uniqueId;
         this.protocolVersion = protocolVersion;
     }
     
-    public static UserImpl of(String username, UUID uniqueId, int protocolVersion) {
-        return new UserImpl(username, uniqueId, protocolVersion);
-    }
-    
     @Override
-    public String getUsername() {
+    public @NonNull String getUsername() {
         return username;
     }
     
     @Override
-    public UUID getUniqueId() {
+    public @NonNull UUID getUniqueId() {
         return uniqueId;
     }
     
@@ -113,11 +111,10 @@ public class UserImpl implements User {
     }
     
     @Override
-    public String getServer() {
+    public @Nullable String getServer() {
         return server;
     }
     
-    @Override
     public void setServer(String server) {
         this.server = server;
     }

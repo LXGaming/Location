@@ -16,8 +16,10 @@
 
 package io.github.lxgaming.location.api;
 
-import io.github.lxgaming.location.api.data.User;
-import io.github.lxgaming.location.api.util.Logger;
+import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableSet;
+import io.github.lxgaming.location.api.entity.User;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Optional;
 import java.util.Set;
@@ -34,33 +36,48 @@ public abstract class Location {
     public static final String WEBSITE = "https://lxgaming.github.io/";
     
     private static Location instance;
-    protected Platform platform;
-    protected Logger logger;
+    private static Platform platform;
     protected Set<User> users;
     
-    public Location() {
-        instance = this;
+    public Location(Platform platform) {
+        Location.instance = this;
+        Location.platform = platform;
     }
     
-    public static Location getInstance() {
+    private static <T> T check(@Nullable T instance) {
+        Preconditions.checkState(instance != null, "%s has not been initialized!", Location.NAME);
         return instance;
     }
     
-    public Platform getPlatform() {
-        return platform;
+    public static boolean isAvailable() {
+        return instance != null;
     }
     
-    public Logger getLogger() {
-        return logger;
+    public static Location getInstance() {
+        return check(instance);
+    }
+    
+    public static Platform getPlatform() {
+        return check(platform);
     }
     
     public Set<User> getUsers() {
-        return users;
+        return ImmutableSet.copyOf(this.users);
     }
     
     public Optional<User> getUser(UUID uniqueId) {
-        for (User user : getUsers()) {
+        for (User user : this.users) {
             if (user.getUniqueId().equals(uniqueId)) {
+                return Optional.of(user);
+            }
+        }
+        
+        return Optional.empty();
+    }
+    
+    public Optional<User> getUser(String username) {
+        for (User user : this.users) {
+            if (user.getUsername().equals(username)) {
                 return Optional.of(user);
             }
         }

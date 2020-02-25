@@ -19,51 +19,78 @@ package io.github.lxgaming.location.common;
 import com.google.common.collect.Sets;
 import io.github.lxgaming.location.api.Location;
 import io.github.lxgaming.location.api.Platform;
+import io.github.lxgaming.location.api.entity.User;
 import io.github.lxgaming.location.common.configuration.Config;
 import io.github.lxgaming.location.common.configuration.Configuration;
+import io.github.lxgaming.location.common.configuration.category.GeneralCategory;
+import io.github.lxgaming.location.common.manager.CommandManager;
+import io.github.lxgaming.location.common.manager.LocaleManager;
 import io.github.lxgaming.location.common.manager.PacketManager;
-import io.github.lxgaming.location.common.util.LoggerImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.Collections;
 import java.util.Optional;
 
 public class LocationImpl extends Location {
     
+    private final Logger logger;
     private final Configuration configuration;
     
     public LocationImpl(Platform platform) {
-        super();
-        this.platform = platform;
-        this.logger = new LoggerImpl();
-        this.users = Collections.synchronizedSet(Sets.newHashSet());
-        this.configuration = new Configuration();
+        super(platform);
+        this.users = Sets.newConcurrentHashSet();
+        this.logger = LoggerFactory.getLogger(Location.NAME);
+        this.configuration = new Configuration(platform.getPath());
     }
     
-    public void loadLocation() {
+    public void load() {
         getLogger().info("Initializing...");
-        reloadLocation();
-        PacketManager.registerPackets();
+        if (!reload()) {
+            getLogger().error("Failed to load");
+            return;
+        }
+        
+        PacketManager.prepare();
+        LocaleManager.prepare();
+        CommandManager.prepare();
+        
         getLogger().info("{} v{} has loaded", Location.NAME, Location.VERSION);
     }
     
-    public boolean reloadLocation() {
+    public boolean reload() {
         getConfiguration().loadConfiguration();
         if (!getConfig().isPresent()) {
             return false;
         }
         
         getConfiguration().saveConfiguration();
-        if (getConfig().map(Config::isDebug).orElse(false)) {
-            getLogger().debug("Debug mode enabled");
-        } else {
-            getLogger().info("Debug mode disabled");
-        }
+        reloadLogger();
         
         return true;
     }
     
+    public void reloadLogger() {
+        if (getConfig().map(Config::getGeneralCategory).map(GeneralCategory::isDebug).orElse(false)) {
+            getLogger().debug("Debug mode enabled");
+        } else {
+            getLogger().info("Debug mode disabled");
+        }
+    }
+    
+    public boolean addUser(User user) {
+        return this.users.add(user);
+    }
+    
+    public boolean removeUser(User user) {
+        return this.users.remove(user);
+    }
+    
     public static LocationImpl getInstance() {
         return (LocationImpl) Location.getInstance();
+    }
+    
+    public Logger getLogger() {
+        return logger;
     }
     
     public Configuration getConfiguration() {
@@ -71,10 +98,6 @@ public class LocationImpl extends Location {
     }
     
     public Optional<? extends Config> getConfig() {
-        if (getConfiguration() != null) {
-            return Optional.ofNullable(getConfiguration().getConfig());
-        }
-        
-        return Optional.empty();
+        return Optional.ofNullable(getConfiguration().getConfig());
     }
 }

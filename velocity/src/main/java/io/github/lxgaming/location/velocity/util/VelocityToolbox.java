@@ -16,45 +16,20 @@
 
 package io.github.lxgaming.location.velocity.util;
 
+import com.velocitypowered.api.command.CommandSource;
+import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.proxy.connection.MinecraftConnection;
 import com.velocitypowered.proxy.network.Connections;
-import io.github.lxgaming.location.api.Location;
-import io.github.lxgaming.location.common.data.UserImpl;
+import io.github.lxgaming.location.api.Platform;
+import io.github.lxgaming.location.common.entity.UserImpl;
 import io.github.lxgaming.location.common.handler.DecodeHandler;
 import io.github.lxgaming.location.common.handler.EncodeHandler;
 import io.github.lxgaming.location.common.util.Toolbox;
 import io.netty.channel.Channel;
-import net.kyori.text.TextComponent;
-import net.kyori.text.event.ClickEvent;
-import net.kyori.text.event.HoverEvent;
-import net.kyori.text.format.TextColor;
-import net.kyori.text.format.TextDecoration;
+
+import java.util.UUID;
 
 public class VelocityToolbox {
-    
-    public static TextComponent getTextPrefix() {
-        TextComponent.Builder textBuilder = TextComponent.builder();
-        textBuilder.hoverEvent(HoverEvent.of(HoverEvent.Action.SHOW_TEXT, getPluginInformation()));
-        textBuilder.content("[" + Location.NAME + "]").color(TextColor.BLUE).decoration(TextDecoration.BOLD, true);
-        return TextComponent.of("").append(textBuilder.build()).append(TextComponent.of(" "));
-    }
-    
-    public static TextComponent getPluginInformation() {
-        TextComponent.Builder textBuilder = TextComponent.builder("");
-        textBuilder.append(TextComponent.of(Location.NAME, TextColor.BLUE).decoration(TextDecoration.BOLD, true)).append(TextComponent.newline());
-        textBuilder.append(TextComponent.of("    Version: ", TextColor.DARK_GRAY)).append(TextComponent.of(Location.VERSION, TextColor.WHITE)).append(TextComponent.newline());
-        textBuilder.append(TextComponent.of("    Authors: ", TextColor.DARK_GRAY)).append(TextComponent.of(Location.AUTHORS, TextColor.WHITE)).append(TextComponent.newline());
-        textBuilder.append(TextComponent.of("    Source: ", TextColor.DARK_GRAY)).append(getURLTextAction(Location.SOURCE)).append(TextComponent.newline());
-        textBuilder.append(TextComponent.of("    Website: ", TextColor.DARK_GRAY)).append(getURLTextAction(Location.WEBSITE));
-        return textBuilder.build();
-    }
-    
-    public static TextComponent getURLTextAction(String url) {
-        TextComponent.Builder textBuilder = TextComponent.builder();
-        textBuilder.clickEvent(ClickEvent.of(ClickEvent.Action.OPEN_URL, url));
-        textBuilder.content(url).color(TextColor.BLUE);
-        return textBuilder.build();
-    }
     
     public static boolean addChannel(UserImpl user, Object object) {
         Channel channel = Toolbox.getField(object, MinecraftConnection.class).map(MinecraftConnection::getChannel).orElse(null);
@@ -76,5 +51,13 @@ public class VelocityToolbox {
         }
         
         return false;
+    }
+    
+    public static UUID getUniqueId(CommandSource source) {
+        if (source instanceof Player) {
+            return ((Player) source).getUniqueId();
+        } else {
+            return Platform.CONSOLE_UUID;
+        }
     }
 }

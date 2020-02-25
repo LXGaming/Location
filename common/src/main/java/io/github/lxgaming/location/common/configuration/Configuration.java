@@ -18,7 +18,7 @@ package io.github.lxgaming.location.common.configuration;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import io.github.lxgaming.location.api.Location;
+import io.github.lxgaming.location.common.LocationImpl;
 import io.github.lxgaming.location.common.util.Toolbox;
 
 import java.io.Reader;
@@ -27,22 +27,27 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
-import java.util.Optional;
 
 public class Configuration {
     
     private static final Gson GSON = new GsonBuilder()
             .disableHtmlEscaping()
             .enableComplexMapKeySerialization()
+            .serializeNulls()
             .setPrettyPrinting()
             .create();
     
+    private Path path;
     private Config config;
     
+    public Configuration(Path path) {
+        this.path = path;
+    }
+    
     public boolean loadConfiguration() {
-        Optional<Config> config = loadFile(Location.getInstance().getPlatform().getPath().resolve("config.json"), Config.class);
-        if (config.isPresent()) {
-            this.config = config.get();
+        Config config = loadFile(this.path.resolve("config.json"), Config.class);
+        if (config != null) {
+            this.config = config;
             return true;
         }
         
@@ -50,15 +55,20 @@ public class Configuration {
     }
     
     public boolean saveConfiguration() {
-        return saveFile(Location.getInstance().getPlatform().getPath().resolve("config.json"), config);
+        return saveFile(this.path.resolve("config.json"), config);
     }
     
-    public static <T> Optional<T> loadFile(Path path, Class<T> typeOfT) {
+    public static <T> T loadFile(Path path, Class<T> type) {
         if (Files.exists(path)) {
-            return deserializeFile(path, typeOfT);
+            return deserializeFile(path, type);
         }
         
-        return Toolbox.newInstance(typeOfT).filter(object -> saveFile(path, object));
+        T object = Toolbox.newInstance(type);
+        if (object != null && saveFile(path, object)) {
+            return object;
+        }
+        
+        return null;
     }
     
     public static boolean saveFile(Path path, Object object) {
@@ -69,21 +79,21 @@ public class Configuration {
         return false;
     }
     
-    public static <T> Optional<T> deserializeFile(Path path, Class<T> typeOfT) {
+    public static <T> T deserializeFile(Path path, Class<T> type) {
         try (Reader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
-            return Optional.ofNullable(getGson().fromJson(reader, typeOfT));
+            return GSON.fromJson(reader, type);
         } catch (Exception ex) {
-            Location.getInstance().getLogger().error("Encountered an error while deserializing {}", path, ex);
-            return Optional.empty();
+            LocationImpl.getInstance().getLogger().error("Encountered an error while deserializing {}", path, ex);
+            return null;
         }
     }
     
     public static boolean serializeFile(Path path, Object object) {
         try (Writer writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE)) {
-            getGson().toJson(object, writer);
+            GSON.toJson(object, writer);
             return true;
         } catch (Exception ex) {
-            Location.getInstance().getLogger().error("Encountered an error while serializing {}", path, ex);
+            LocationImpl.getInstance().getLogger().error("Encountered an error while serializing {}", path, ex);
             return false;
         }
     }
@@ -97,13 +107,9 @@ public class Configuration {
             Files.createFile(path);
             return true;
         } catch (Exception ex) {
-            Location.getInstance().getLogger().error("Encountered an error while creating {}", path, ex);
+            LocationImpl.getInstance().getLogger().error("Encountered an error while creating {}", path, ex);
             return false;
         }
-    }
-    
-    public static Gson getGson() {
-        return GSON;
     }
     
     public Config getConfig() {
