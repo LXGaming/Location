@@ -16,7 +16,7 @@
 
 package io.github.lxgaming.location.common.handler;
 
-import io.github.lxgaming.location.common.data.UserImpl;
+import io.github.lxgaming.location.common.entity.UserImpl;
 import io.github.lxgaming.location.common.manager.PacketManager;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;

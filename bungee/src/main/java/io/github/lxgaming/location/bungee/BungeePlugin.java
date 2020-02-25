@@ -18,17 +18,19 @@ package io.github.lxgaming.location.bungee;
 
 import io.github.lxgaming.location.api.Location;
 import io.github.lxgaming.location.api.Platform;
-import io.github.lxgaming.location.api.util.Logger;
-import io.github.lxgaming.location.bungee.command.GetCommand;
 import io.github.lxgaming.location.bungee.command.LocationCommand;
-import io.github.lxgaming.location.bungee.command.ReloadCommand;
 import io.github.lxgaming.location.bungee.listener.BungeeListener;
 import io.github.lxgaming.location.common.LocationImpl;
-import io.github.lxgaming.location.common.configuration.Config;
-import io.github.lxgaming.location.common.manager.CommandManager;
+import net.kyori.text.Component;
+import net.kyori.text.adapter.bungeecord.TextAdapter;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.nio.file.Path;
+import java.util.UUID;
 
 public class BungeePlugin extends Plugin implements Platform {
     
@@ -37,32 +39,82 @@ public class BungeePlugin extends Plugin implements Platform {
     @Override
     public void onEnable() {
         instance = this;
+        
+        if (getProxy().getName().equalsIgnoreCase("BungeeCord")) {
+            getLogger().severe("\n\n"
+                    + "  BungeeCord is not supported - https://github.com/SpigotMC/BungeeCord/pull/1877\n"
+                    + "\n"
+                    + "  Use Waterfall - https://github.com/PaperMC/Waterfall\n"
+            );
+            return;
+        }
+        
         LocationImpl location = new LocationImpl(this);
-        location.getLogger()
-                .add(Logger.Level.INFO, getLogger()::info)
-                .add(Logger.Level.WARN, getLogger()::warning)
-                .add(Logger.Level.ERROR, getLogger()::severe)
-                .add(Logger.Level.DEBUG, message -> {
-                    if (LocationImpl.getInstance().getConfig().map(Config::isDebug).orElse(false)) {
-                        getLogger().info(message);
-                    }
-                });
+        location.load();
         
-        location.loadLocation();
-        
-        CommandManager.registerCommand(GetCommand.class);
-        CommandManager.registerCommand(ReloadCommand.class);
         getProxy().getPluginManager().registerCommand(getInstance(), new LocationCommand());
         getProxy().getPluginManager().registerListener(getInstance(), new BungeeListener());
     }
     
     @Override
     public void onDisable() {
-        Location.getInstance().getLogger().info("{} v{} unloaded", Location.NAME, Location.VERSION);
+        if (!Location.isAvailable()) {
+            return;
+        }
+        
+        LocationImpl.getInstance().getLogger().info("{} v{} unloaded", Location.NAME, Location.VERSION);
     }
     
     @Override
-    public Path getPath() {
+    public boolean hasPermission(@NonNull UUID uniqueId, @NonNull String permission) {
+        if (uniqueId.equals(Platform.CONSOLE_UUID)) {
+            return true;
+        }
+        
+        ProxiedPlayer player = ProxyServer.getInstance().getPlayer(uniqueId);
+        if (player == null) {
+            return false;
+        }
+        
+        return player.hasPermission(permission);
+    }
+    
+    @Override
+    public void sendMessage(@NonNull UUID uniqueId, @NonNull Component component) {
+        sendMessage(uniqueId, ChatMessageType.SYSTEM, component);
+    }
+    
+    @Override
+    public void sendChatMessage(@NonNull UUID uniqueId, @NonNull Component component) {
+        sendMessage(uniqueId, ChatMessageType.CHAT, component);
+    }
+    
+    @Override
+    public void sendStatusMessage(@NonNull UUID uniqueId, @NonNull Component component) {
+        sendMessage(uniqueId, ChatMessageType.ACTION_BAR, component);
+    }
+    
+    private void sendMessage(@NonNull UUID uniqueId, @NonNull ChatMessageType chatType, @NonNull Component component) {
+        if (uniqueId.equals(Platform.CONSOLE_UUID)) {
+            getProxy().getConsole().sendMessage(TextAdapter.toBungeeCord(component));
+            return;
+        }
+        
+        ProxiedPlayer player = ProxyServer.getInstance().getPlayer(uniqueId);
+        if (player == null) {
+            return;
+        }
+        
+        player.sendMessage(chatType, TextAdapter.toBungeeCord(component));
+    }
+    
+    @Override
+    public @NonNull Type getType() {
+        return Type.BUNGEECORD;
+    }
+    
+    @Override
+    public @NonNull Path getPath() {
         return getDataFolder().toPath();
     }
     

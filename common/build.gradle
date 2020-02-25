@@ -1,7 +1,6 @@
 plugins {
+    id "com.github.johnrengelman.shadow" version "5.2.0"
     id "java"
-    id "java-library"
-    id "signing"
 }
 
 sourceCompatibility = 1.8
@@ -17,6 +16,8 @@ configurations {
     }
 
     compileJava.dependsOn(":api:build")
+    jar.enabled = false
+    jar.dependsOn("shadowJar")
 }
 
 repositories {
@@ -24,10 +25,15 @@ repositories {
 }
 
 dependencies {
-    api(project(path: ":api"))
-    provided(project(path: ":api", configuration: "provided"))
-    provided("com.google.code.gson:gson:2.8.6")
-    provided("com.google.guava:guava:28.1-jre")
+    shadow(project(path: ":api")) {
+        transitive = false
+    }
+    provided(project(path: ":api"))
+    provided("com.google.code.gson:gson:${gsonVersion}")
+    provided("io.netty:netty-all:${nettyVersion}")
+    provided("net.kyori:text-serializer-legacy:${textVersion}")
+    testCompile("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
+    provided("org.slf4j:slf4j-api:${slf4jVersion}")
 }
 
 jar {
@@ -38,4 +44,18 @@ jar {
             it.isDirectory() ? it : zipTree(it)
         })
     }
+}
+
+shadowJar {
+    archiveClassifier.set(null)
+    configurations = [project.configurations.shadow]
+}
+
+test {
+    testLogging {
+        exceptionFormat = "full"
+        showStandardStreams = true
+    }
+
+    useJUnitPlatform()
 }

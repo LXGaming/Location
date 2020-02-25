@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Alex Thomson
+ * Copyright 2020 Alex Thomson
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,19 @@
  * limitations under the License.
  */
 
-package io.github.lxgaming.location.common.configuration;
+package io.github.lxgaming.location.api.exception;
 
-import com.google.gson.annotations.SerializedName;
-import io.github.lxgaming.location.common.configuration.category.GeneralCategory;
-
-public class Config {
+public class LocaleException extends Exception {
     
-    @SerializedName("general")
-    private GeneralCategory generalCategory = new GeneralCategory();
+    public LocaleException(String message) {
+        super(message);
+    }
     
-    public GeneralCategory getGeneralCategory() {
-        return generalCategory;
+    public LocaleException(String message, Throwable cause) {
+        super(message, cause);
+    }
+    
+    public LocaleException(Throwable cause) {
+        super(cause);
     }
 }

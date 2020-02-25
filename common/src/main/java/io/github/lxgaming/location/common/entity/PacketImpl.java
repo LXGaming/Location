@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Alex Thomson
+ * Copyright 2020 Alex Thomson
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package io.github.lxgaming.location.common.data;
+package io.github.lxgaming.location.common.entity;
 
-import io.github.lxgaming.location.api.data.Packet;
+import io.github.lxgaming.location.api.entity.Packet;
 import io.netty.buffer.ByteBuf;
 
 import java.util.function.BiConsumer;
@@ -28,15 +28,11 @@ public class PacketImpl implements Packet {
     private final int minProtocol;
     private final BiConsumer<UserImpl, ByteBuf> consumer;
     
-    private PacketImpl(int id, int maxProtocol, int minProtocol, BiConsumer<UserImpl, ByteBuf> consumer) {
+    public PacketImpl(int id, int maxProtocol, int minProtocol, BiConsumer<UserImpl, ByteBuf> consumer) {
         this.id = id;
         this.maxProtocol = maxProtocol;
         this.minProtocol = minProtocol;
         this.consumer = consumer;
-    }
-    
-    public static PacketImpl of(int id, int maxProtocol, int minProtocol, BiConsumer<UserImpl, ByteBuf> consumer) {
-        return new PacketImpl(id, maxProtocol, minProtocol, consumer);
     }
     
     @Override
@@ -54,7 +50,6 @@ public class PacketImpl implements Packet {
         return minProtocol;
     }
     
-    @Override
     public BiConsumer<UserImpl, ByteBuf> getConsumer() {
         return consumer;
     }

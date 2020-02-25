@@ -16,17 +16,26 @@
 
 package io.github.lxgaming.location.common.util;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import io.github.lxgaming.location.api.Location;
 import io.netty.buffer.ByteBuf;
 
 import java.lang.reflect.Field;
-import java.util.Collection;
 import java.util.Optional;
 
 public class Toolbox {
     
     public static final String DECODER_HANDLER = Location.ID + "-decoder";
     public static final String ENCODER_HANDLER = Location.ID + "-encoder";
+    public static final Gson GSON = new GsonBuilder()
+            .disableHtmlEscaping()
+            .enableComplexMapKeySerialization()
+            .create();
+    
+    public static boolean isUsername(String string) {
+        return string.matches("^[a-zA-Z0-9_]{3,16}$");
+    }
     
     public static int getVarIntSize(ByteBuf byteBuf, int input) {
         for (int index = 1; index < 5; ++index) {
@@ -61,39 +70,6 @@ public class Toolbox {
         return result;
     }
     
-    public static boolean isBlank(CharSequence charSequence) {
-        int stringLength;
-        if (charSequence == null || (stringLength = charSequence.length()) == 0) {
-            return true;
-        }
-        
-        for (int index = 0; index < stringLength; index++) {
-            if (!Character.isWhitespace(charSequence.charAt(index))) {
-                return false;
-            }
-        }
-        
-        return true;
-    }
-    
-    public static boolean isNotBlank(CharSequence charSequence) {
-        return !isBlank(charSequence);
-    }
-    
-    public static boolean containsIgnoreCase(Collection<String> list, String targetString) {
-        if (list == null || list.isEmpty()) {
-            return false;
-        }
-        
-        for (String string : list) {
-            if (string.equalsIgnoreCase(targetString)) {
-                return true;
-            }
-        }
-        
-        return false;
-    }
-    
     public static <T> Optional<T> getField(Object instance, Class<T> typeOfT) {
         try {
             for (Field field : instance.getClass().getDeclaredFields()) {
@@ -109,11 +85,19 @@ public class Toolbox {
         }
     }
     
-    public static <T> Optional<T> newInstance(Class<? extends T> typeOfT) {
+    public static String getClassSimpleName(Class<?> type) {
+        if (type.getEnclosingClass() != null) {
+            return getClassSimpleName(type.getEnclosingClass()) + "." + type.getSimpleName();
+        }
+        
+        return type.getSimpleName();
+    }
+    
+    public static <T> T newInstance(Class<? extends T> type) {
         try {
-            return Optional.of(typeOfT.newInstance());
-        } catch (Exception ex) {
-            return Optional.empty();
+            return type.newInstance();
+        } catch (Throwable ex) {
+            return null;
         }
     }
 }

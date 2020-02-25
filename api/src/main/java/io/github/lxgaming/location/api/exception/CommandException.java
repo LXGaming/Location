@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Alex Thomson
+ * Copyright 2020 Alex Thomson
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,31 +14,19 @@
  * limitations under the License.
  */
 
-package io.github.lxgaming.location.api.data;
+package io.github.lxgaming.location.api.exception;
 
-import java.util.UUID;
-
-public interface User {
+public class CommandException extends Exception {
     
-    String getUsername();
+    public CommandException(String message) {
+        super(message);
+    }
     
-    UUID getUniqueId();
+    public CommandException(String message, Throwable cause) {
+        super(message, cause);
+    }
     
-    int getProtocolVersion();
-    
-    double getX();
-    
-    double getY();
-    
-    double getZ();
-    
-    float getPitch();
-    
-    float getYaw();
-    
-    int getDimension();
-    
-    String getServer();
-    
-    void setServer(String server);
+    public CommandException(Throwable cause) {
+        super(cause);
+    }
 }

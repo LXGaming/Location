@@ -1,8 +1,8 @@
 plugins {
     id "com.jfrog.bintray" version "1.8.4"
     id "java"
+    id "java-library"
     id "maven-publish"
-    id "signing"
 }
 
 sourceCompatibility = 1.8
@@ -25,7 +25,9 @@ repositories {
 }
 
 dependencies {
-    provided("io.netty:netty-all:4.1.43.Final")
+    api("com.google.guava:guava:${guavaVersion}")
+    api("net.kyori:text-api:${textVersion}")
+    api("org.checkerframework:checker-qual:${checkerqualVersion}")
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {

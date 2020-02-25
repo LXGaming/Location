@@ -16,9 +16,9 @@
 
 package io.github.lxgaming.location.bungee.listener;
 
-import io.github.lxgaming.location.api.Location;
 import io.github.lxgaming.location.bungee.util.BungeeToolbox;
-import io.github.lxgaming.location.common.data.UserImpl;
+import io.github.lxgaming.location.common.LocationImpl;
+import io.github.lxgaming.location.common.entity.UserImpl;
 import net.md_5.bungee.api.event.PlayerDisconnectEvent;
 import net.md_5.bungee.api.event.PostLoginEvent;
 import net.md_5.bungee.api.event.ServerConnectedEvent;
@@ -30,28 +30,32 @@ public class BungeeListener implements Listener {
     
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPostLogin(PostLoginEvent event) {
-        UserImpl user = UserImpl.of(event.getPlayer().getName(), event.getPlayer().getUniqueId(), event.getPlayer().getPendingConnection().getVersion());
-        Location.getInstance().getUsers().add(user);
+        UserImpl user = new UserImpl(event.getPlayer().getName(), event.getPlayer().getUniqueId(), event.getPlayer().getPendingConnection().getVersion());
+        LocationImpl.getInstance().addUser(user);
         
         if (BungeeToolbox.addChannel(user, event.getPlayer())) {
-            Location.getInstance().getLogger().debug("Successfully added channel for {} ({})", event.getPlayer().getName(), event.getPlayer().getUniqueId());
+            LocationImpl.getInstance().getLogger().debug("Successfully added channel for {} ({})", event.getPlayer().getName(), event.getPlayer().getUniqueId());
         } else {
-            Location.getInstance().getLogger().warn("Failed to add channel for {} ({})", event.getPlayer().getName(), event.getPlayer().getUniqueId());
+            LocationImpl.getInstance().getLogger().warn("Failed to add channel for {} ({})", event.getPlayer().getName(), event.getPlayer().getUniqueId());
         }
     }
     
     @EventHandler(priority = EventPriority.LOWEST)
     public void onServerConnected(ServerConnectedEvent event) {
-        Location.getInstance().getUser(event.getPlayer().getUniqueId()).ifPresent(user -> user.setServer(event.getServer().getInfo().getName()));
+        LocationImpl.getInstance().getUser(event.getPlayer().getUniqueId())
+                .filter(user -> user instanceof UserImpl)
+                .map(user -> (UserImpl) user)
+                .ifPresent(user -> user.setServer(event.getServer().getInfo().getName()));
     }
     
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerDisconnect(PlayerDisconnectEvent event) {
-        Location.getInstance().getUsers().removeIf(user -> user.getUniqueId().equals(event.getPlayer().getUniqueId()));
+        LocationImpl.getInstance().getUser(event.getPlayer().getUniqueId()).ifPresent(LocationImpl.getInstance()::removeUser);
+        
         if (BungeeToolbox.removeChannel(event.getPlayer())) {
-            Location.getInstance().getLogger().debug("Successfully removed channel for {} ({})", event.getPlayer().getName(), event.getPlayer().getUniqueId());
+            LocationImpl.getInstance().getLogger().debug("Successfully removed channel for {} ({})", event.getPlayer().getName(), event.getPlayer().getUniqueId());
         } else {
-            Location.getInstance().getLogger().warn("Failed to remove channel for {} ({})", event.getPlayer().getName(), event.getPlayer().getUniqueId());
+            LocationImpl.getInstance().getLogger().warn("Failed to remove channel for {} ({})", event.getPlayer().getName(), event.getPlayer().getUniqueId());
         }
     }
 }

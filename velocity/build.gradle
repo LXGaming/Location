@@ -1,4 +1,5 @@
 plugins {
+    id "com.github.johnrengelman.shadow" version "5.2.0"
     id "java"
     id "signing"
 }
@@ -15,7 +16,10 @@ configurations {
         compile.extendsFrom(provided)
     }
 
+    build.dependsOn("signJar")
     compileJava.dependsOn(":common:build")
+    jar.enabled = false
+    jar.dependsOn("shadowJar")
 }
 
 repositories {
@@ -27,11 +31,10 @@ repositories {
 }
 
 dependencies {
-    compile(project(path: ":common"))
-    provided(project(path: ":common", configuration: "provided"))
+    shadow(project(path: ":common", configuration: "shadow"))
     provided(fileTree(dir: "libs", include: ["*.jar"]))
-    annotationProcessor("com.velocitypowered:velocity-api:1.0.0-SNAPSHOT")
-    provided("com.velocitypowered:velocity-api:1.0.0-SNAPSHOT")
+    annotationProcessor("com.velocitypowered:velocity-api:${velocityVersion}")
+    provided("com.velocitypowered:velocity-api:${velocityVersion}")
 }
 
 jar {
@@ -42,6 +45,11 @@ jar {
             it.isDirectory() ? it : zipTree(it)
         })
     }
+}
+
+shadowJar {
+    archiveClassifier.set(null)
+    configurations = [project.configurations.shadow]
 }
 
 task signJar {
