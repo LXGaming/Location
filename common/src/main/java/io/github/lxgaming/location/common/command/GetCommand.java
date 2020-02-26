@@ -23,9 +23,6 @@ import io.github.lxgaming.location.common.manager.PacketManager;
 import io.github.lxgaming.location.common.util.StringUtils;
 import io.github.lxgaming.location.common.util.Toolbox;
 import io.github.lxgaming.location.common.util.text.adapter.LocaleAdapter;
-import net.kyori.text.TextComponent;
-import net.kyori.text.format.TextColor;
-import net.kyori.text.format.TextDecoration;
 
 import java.util.List;
 import java.util.UUID;
@@ -64,19 +61,11 @@ public class GetCommand extends Command {
                 String.valueOf(user.getProtocolVersion())
         );
         
-        TextComponent.Builder textBuilder = TextComponent.builder("");
-        textBuilder.append(TextComponent.of(user.getUsername(), TextColor.BLUE).decoration(TextDecoration.BOLD, true))
-                .append(TextComponent.of(" (" + protocolVersion + ")")).append(TextComponent.newline());
-        
-        textBuilder.append(TextComponent.of("Position: ", TextColor.DARK_GRAY))
-                .append(TextComponent.of(user.getX() + ", " + user.getY() + ", " + user.getZ(), TextColor.WHITE)).append(TextComponent.newline());
-        
-        textBuilder.append(TextComponent.of("Rotation: ", TextColor.DARK_GRAY))
-                .append(TextComponent.of(user.getYaw() + ", " + user.getPitch(), TextColor.WHITE)).append(TextComponent.newline());
-        
-        textBuilder.append(TextComponent.of("Server: ", TextColor.DARK_GRAY))
-                .append(TextComponent.of(user.getServer() + " (" + user.getDimension() + ")", TextColor.WHITE));
-        
-        Location.getPlatform().sendMessage(uniqueId, textBuilder.build());
+        LocaleAdapter.sendMessage(uniqueId, Locale.COMMAND_GET,
+                user.getUsername(), protocolVersion,
+                user.getX(), user.getY(), user.getZ(),
+                user.getYaw(), user.getPitch(),
+                user.getServer(), user.getDimension()
+        );
     }
 }

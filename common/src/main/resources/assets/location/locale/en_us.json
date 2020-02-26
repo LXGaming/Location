@@ -7,7 +7,24 @@
   "command.not_found": "{general.prefix} &cCommand not found.",
   "command.debug.disable": "{general.prefix} &cDebugging disabled",
   "command.debug.enable": "{general.prefix} &aDebugging enabled",
+  "command.get": [
+    "&9&l{}&r ({})",
+    "&8Position: &f{}, {}, {}",
+    "&8Rotation: &f{}, {}",
+    "&8Server: &f{} ({})"
+  ],
   "command.get.user_not_found": "&f{} &cnot found",
+  "command.help": [
+    "&9> &a{}"
+  ],
+  "command.help.hover": [
+    "&bCommand: &2{}",
+    "&bDescription: &2{}",
+    "&bUsage: &2{}",
+    "&bPermission: &2{}",
+    "",
+    "&7Click to auto-complete."
+  ],
   "command.reload.failure": "&cAn error occurred. Please check the console",
   "command.reload.success": "&aSuccessfully reloaded",
   "configuration.error": "{general.prefix} &cConfiguration error.",

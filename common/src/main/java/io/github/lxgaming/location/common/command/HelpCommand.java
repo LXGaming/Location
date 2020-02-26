@@ -19,12 +19,12 @@ package io.github.lxgaming.location.common.command;
 import io.github.lxgaming.location.api.Location;
 import io.github.lxgaming.location.common.entity.Locale;
 import io.github.lxgaming.location.common.manager.CommandManager;
+import io.github.lxgaming.location.common.manager.LocaleManager;
 import io.github.lxgaming.location.common.util.StringUtils;
 import io.github.lxgaming.location.common.util.text.adapter.LocaleAdapter;
 import net.kyori.text.TextComponent;
 import net.kyori.text.event.ClickEvent;
 import net.kyori.text.event.HoverEvent;
-import net.kyori.text.format.TextColor;
 
 import java.util.List;
 import java.util.UUID;
@@ -47,39 +47,25 @@ public class HelpCommand extends Command {
                 continue;
             }
             
-            TextComponent.Builder textBuilder = TextComponent.builder("");
-            textBuilder.clickEvent(ClickEvent.of(ClickEvent.Action.SUGGEST_COMMAND, "/" + CommandManager.getPrefix() + " " + String.join(" ", command.getPath()).toLowerCase()));
-            textBuilder.hoverEvent(HoverEvent.of(HoverEvent.Action.SHOW_TEXT, buildDescription(command)));
-            textBuilder.append(TextComponent.of("> ", TextColor.BLUE));
-            textBuilder.append(TextComponent.of("/" + CommandManager.getPrefix() + " " + String.join(" ", command.getPath()).toLowerCase(), TextColor.GREEN));
+            String usage = "/" + CommandManager.getPrefix() + " " + String.join(" ", command.getPath()).toLowerCase();
             if (StringUtils.isNotBlank(command.getUsage())) {
-                textBuilder.append(TextComponent.of(" " + command.getUsage(), TextColor.GREEN));
+                usage += " " + command.getUsage();
             }
             
-            Location.getPlatform().sendMessage(uniqueId, textBuilder.build());
+            TextComponent description = LocaleManager.serialize(Locale.COMMAND_HELP_HOVER,
+                    command.getPrimaryAlias().orElse("unknown"),
+                    StringUtils.defaultIfEmpty(command.getDescription(), "No description provided"),
+                    usage,
+                    StringUtils.defaultIfEmpty(command.getPermission(), "None")
+            );
+            
+            TextComponent component = TextComponent.builder()
+                    .clickEvent(ClickEvent.of(ClickEvent.Action.SUGGEST_COMMAND, "/" + CommandManager.getPrefix() + " " + String.join(" ", command.getPath()).toLowerCase()))
+                    .hoverEvent(HoverEvent.of(HoverEvent.Action.SHOW_TEXT, description))
+                    .append(LocaleManager.serialize(Locale.COMMAND_HELP, usage))
+                    .build();
+            
+            Location.getPlatform().sendMessage(uniqueId, component);
         }
-    }
-    
-    private TextComponent buildDescription(Command command) {
-        TextComponent.Builder textBuilder = TextComponent.builder("");
-        textBuilder.append(TextComponent.of("Command: ", TextColor.AQUA));
-        textBuilder.append(TextComponent.of(command.getPrimaryAlias().orElse("unknown"), TextColor.DARK_GREEN));
-        textBuilder.append(TextComponent.newline());
-        textBuilder.append(TextComponent.of("Description: ", TextColor.AQUA));
-        textBuilder.append(TextComponent.of(StringUtils.defaultIfEmpty(command.getDescription(), "No description provided"), TextColor.DARK_GREEN));
-        textBuilder.append(TextComponent.newline());
-        textBuilder.append(TextComponent.of("Usage: ", TextColor.AQUA));
-        textBuilder.append(TextComponent.of("/" + CommandManager.getPrefix() + " " + String.join(" ", command.getPath()).toLowerCase(), TextColor.DARK_GREEN));
-        if (StringUtils.isNotBlank(command.getUsage())) {
-            textBuilder.append(TextComponent.of(" " + command.getUsage(), TextColor.DARK_GREEN));
-        }
-        
-        textBuilder.append(TextComponent.newline());
-        textBuilder.append(TextComponent.of("Permission: ", TextColor.AQUA));
-        textBuilder.append(TextComponent.of(StringUtils.defaultIfEmpty(command.getPermission(), "None"), TextColor.DARK_GREEN));
-        textBuilder.append(TextComponent.newline());
-        textBuilder.append(TextComponent.newline());
-        textBuilder.append(TextComponent.of("Click to auto-complete.", TextColor.GRAY));
-        return textBuilder.build();
     }
 }
