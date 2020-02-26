@@ -28,7 +28,11 @@ public enum Locale {
     COMMAND_DEBUG_DISABLE("command.debug.disable"),
     COMMAND_DEBUG_ENABLE("command.debug.enable"),
     
+    COMMAND_GET("command.get"),
     COMMAND_GET_USER_NOT_FOUND("command.get.user_not_found"),
+    
+    COMMAND_HELP("command.help"),
+    COMMAND_HELP_HOVER("command.help.hover"),
     
     COMMAND_RELOAD_FAILURE("command.reload.failure"),
     COMMAND_RELOAD_SUCCESS("command.reload.success"),

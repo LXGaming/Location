@@ -143,8 +143,6 @@ public final class LocaleManager {
         
         try (Reader reader = new BufferedReader(new InputStreamReader(inputStream))) {
             JsonObject jsonObject = Toolbox.GSON.fromJson(reader, JsonObject.class);
-            
-            // noinspection ConstantConditions
             if (jsonObject == null) {
                 throw new JsonParseException(String.format("Failed to parse locale %s", name));
             }
