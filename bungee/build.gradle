@@ -39,7 +39,7 @@ dependencies {
         exclude(module: "gson")
     }
     shadow("net.kyori:text-serializer-legacy:${textVersion}")
-    shadow("net.kyori:text-adapter-bungeecord:3.0.4-SNAPSHOT") {
+    shadow("net.kyori:text-adapter-bungeecord:3.0.6-SNAPSHOT") {
         transitive = false
     }
     shadow("org.checkerframework:checker-qual:${checkerqualVersion}")
