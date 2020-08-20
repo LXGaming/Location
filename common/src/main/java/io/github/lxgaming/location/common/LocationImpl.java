@@ -25,7 +25,6 @@ import io.github.lxgaming.location.common.configuration.Configuration;
 import io.github.lxgaming.location.common.configuration.category.GeneralCategory;
 import io.github.lxgaming.location.common.manager.CommandManager;
 import io.github.lxgaming.location.common.manager.LocaleManager;
-import io.github.lxgaming.location.common.manager.PacketManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,7 +49,6 @@ public class LocationImpl extends Location {
             return;
         }
         
-        PacketManager.prepare();
         LocaleManager.prepare();
         CommandManager.prepare();
         

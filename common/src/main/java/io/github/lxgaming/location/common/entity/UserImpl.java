@@ -16,28 +16,31 @@
 
 package io.github.lxgaming.location.common.entity;
 
+import io.github.lxgaming.location.api.entity.Dimension;
+import io.github.lxgaming.location.api.entity.ProtocolVersion;
 import io.github.lxgaming.location.api.entity.User;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+import java.util.Objects;
 import java.util.UUID;
 
 public class UserImpl implements User {
     
     private final UUID uniqueId;
     private final String username;
-    private final int protocolVersion;
+    private final ProtocolVersion protocolVersion;
     private double x;
     private double y;
     private double z;
     private float pitch;
     private float yaw;
-    private int dimension;
+    private Dimension dimension;
     private String server;
     
-    public UserImpl(String username, UUID uniqueId, int protocolVersion) {
-        this.username = username;
+    public UserImpl(UUID uniqueId, String username, ProtocolVersion protocolVersion) {
         this.uniqueId = uniqueId;
+        this.username = username;
         this.protocolVersion = protocolVersion;
     }
     
@@ -52,7 +55,7 @@ public class UserImpl implements User {
     }
     
     @Override
-    public int getProtocolVersion() {
+    public @NonNull ProtocolVersion getProtocolVersion() {
         return protocolVersion;
     }
     
@@ -102,11 +105,11 @@ public class UserImpl implements User {
     }
     
     @Override
-    public int getDimension() {
+    public @Nullable Dimension getDimension() {
         return dimension;
     }
     
-    public void setDimension(int dimension) {
+    public void setDimension(Dimension dimension) {
         this.dimension = dimension;
     }
     
@@ -117,5 +120,29 @@ public class UserImpl implements User {
     
     public void setServer(String server) {
         this.server = server;
+    }
+    
+    @Override
+    public int hashCode() {
+        return Objects.hash(getUniqueId());
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        
+        UserImpl user = (UserImpl) obj;
+        return Objects.equals(getUniqueId(), user.getUniqueId());
+    }
+    
+    @Override
+    public String toString() {
+        return getUsername() + " (" + getUniqueId() + ")";
     }
 }

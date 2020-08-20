@@ -17,9 +17,9 @@
 package io.github.lxgaming.location.bungee.util;
 
 import io.github.lxgaming.location.api.Platform;
+import io.github.lxgaming.location.bungee.network.netty.PacketHandlerImpl;
 import io.github.lxgaming.location.common.entity.UserImpl;
-import io.github.lxgaming.location.common.handler.DecodeHandler;
-import io.github.lxgaming.location.common.handler.EncodeHandler;
+import io.github.lxgaming.location.common.network.netty.PacketHandler;
 import io.github.lxgaming.location.common.util.Toolbox;
 import io.netty.channel.Channel;
 import net.md_5.bungee.api.CommandSender;
@@ -33,9 +33,8 @@ public class BungeeToolbox {
     
     public static boolean addChannel(UserImpl user, Object object) {
         Channel channel = Toolbox.getField(object, ChannelWrapper.class).map(ChannelWrapper::getHandle).orElse(null);
-        if (channel != null && channel.pipeline().get(Toolbox.DECODER_HANDLER) == null && channel.pipeline().get(Toolbox.ENCODER_HANDLER) == null) {
-            channel.pipeline().addBefore(PipelineUtils.PACKET_DECODER, Toolbox.DECODER_HANDLER, new DecodeHandler(user));
-            channel.pipeline().addBefore(PipelineUtils.PACKET_ENCODER, Toolbox.ENCODER_HANDLER, new EncodeHandler(user));
+        if (channel != null && channel.pipeline().get(PacketHandler.NAME) == null) {
+            channel.pipeline().addBefore(PipelineUtils.BOSS_HANDLER, PacketHandler.NAME, new PacketHandlerImpl(user));
             return true;
         }
         
@@ -44,9 +43,8 @@ public class BungeeToolbox {
     
     public static boolean removeChannel(Object object) {
         Channel channel = Toolbox.getField(object, ChannelWrapper.class).map(ChannelWrapper::getHandle).orElse(null);
-        if (channel != null && channel.pipeline().get(Toolbox.DECODER_HANDLER) != null && channel.pipeline().get(Toolbox.ENCODER_HANDLER) != null) {
-            channel.pipeline().remove(Toolbox.DECODER_HANDLER);
-            channel.pipeline().remove(Toolbox.ENCODER_HANDLER);
+        if (channel != null && channel.pipeline().get(PacketHandler.NAME) != null) {
+            channel.pipeline().remove(PacketHandler.NAME);
             return true;
         }
         

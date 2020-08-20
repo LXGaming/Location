@@ -19,7 +19,6 @@ package io.github.lxgaming.location.common.command;
 import io.github.lxgaming.location.api.Location;
 import io.github.lxgaming.location.api.entity.User;
 import io.github.lxgaming.location.common.entity.Locale;
-import io.github.lxgaming.location.common.manager.PacketManager;
 import io.github.lxgaming.location.common.util.StringUtils;
 import io.github.lxgaming.location.common.util.Toolbox;
 import io.github.lxgaming.location.common.util.text.adapter.LocaleAdapter;
@@ -56,16 +55,27 @@ public class GetCommand extends Command {
             return;
         }
         
-        String protocolVersion = StringUtils.defaultIfBlank(
-                PacketManager.getProtocolVersion(user.getProtocolVersion()),
-                String.valueOf(user.getProtocolVersion())
+        String version = StringUtils.defaultIfBlank(
+                user.getProtocolVersion().getName(),
+                String.valueOf(user.getProtocolVersion().getId())
         );
         
+        String dimension;
+        if (user.getDimension() != null) {
+            dimension = StringUtils.defaultIfBlank(
+                    user.getDimension().getName(),
+                    String.valueOf(user.getDimension().getId())
+            );
+        } else {
+            dimension = null;
+        }
+        
         LocaleAdapter.sendMessage(uniqueId, Locale.COMMAND_GET,
-                user.getUsername(), protocolVersion,
+                user.getUsername(), version,
                 user.getX(), user.getY(), user.getZ(),
                 user.getYaw(), user.getPitch(),
-                user.getServer(), user.getDimension()
+                dimension,
+                user.getServer()
         );
     }
 }

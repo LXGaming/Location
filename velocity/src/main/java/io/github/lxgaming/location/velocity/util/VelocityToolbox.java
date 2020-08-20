@@ -19,23 +19,45 @@ package io.github.lxgaming.location.velocity.util;
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.proxy.connection.MinecraftConnection;
+import com.velocitypowered.proxy.connection.registry.DimensionInfo;
 import com.velocitypowered.proxy.network.Connections;
+import com.velocitypowered.proxy.protocol.packet.Respawn;
 import io.github.lxgaming.location.api.Platform;
 import io.github.lxgaming.location.common.entity.UserImpl;
-import io.github.lxgaming.location.common.handler.DecodeHandler;
-import io.github.lxgaming.location.common.handler.EncodeHandler;
+import io.github.lxgaming.location.common.network.netty.PacketHandler;
 import io.github.lxgaming.location.common.util.Toolbox;
+import io.github.lxgaming.location.velocity.network.netty.PacketHandlerImpl;
 import io.netty.channel.Channel;
 
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.reflect.Field;
 import java.util.UUID;
 
 public class VelocityToolbox {
     
+    private static final MethodHandle dimensionInfoMethodHandle;
+    
+    static {
+        MethodHandles.Lookup lookup = MethodHandles.lookup();
+        MethodHandle dimensionInfoMethodHandleTemporary;
+        
+        try {
+            Field field = Respawn.class.getDeclaredField("dimensionInfo");
+            field.setAccessible(true);
+            
+            dimensionInfoMethodHandleTemporary = lookup.unreflectGetter(field);
+        } catch (Throwable throwable) {
+            dimensionInfoMethodHandleTemporary = null;
+        }
+        
+        dimensionInfoMethodHandle = dimensionInfoMethodHandleTemporary;
+    }
+    
     public static boolean addChannel(UserImpl user, Object object) {
         Channel channel = Toolbox.getField(object, MinecraftConnection.class).map(MinecraftConnection::getChannel).orElse(null);
-        if (channel != null && channel.pipeline().get(Toolbox.DECODER_HANDLER) == null && channel.pipeline().get(Toolbox.ENCODER_HANDLER) == null) {
-            channel.pipeline().addBefore(Connections.MINECRAFT_DECODER, Toolbox.DECODER_HANDLER, new DecodeHandler(user));
-            channel.pipeline().addBefore(Connections.MINECRAFT_ENCODER, Toolbox.ENCODER_HANDLER, new EncodeHandler(user));
+        if (channel != null && channel.pipeline().get(PacketHandler.NAME) == null) {
+            channel.pipeline().addBefore(Connections.HANDLER, PacketHandler.NAME, new PacketHandlerImpl(user));
             return true;
         }
         
@@ -44,13 +66,29 @@ public class VelocityToolbox {
     
     public static boolean removeChannel(Object object) {
         Channel channel = Toolbox.getField(object, MinecraftConnection.class).map(MinecraftConnection::getChannel).orElse(null);
-        if (channel != null && channel.pipeline().get(Toolbox.DECODER_HANDLER) != null && channel.pipeline().get(Toolbox.ENCODER_HANDLER) != null) {
-            channel.pipeline().remove(Toolbox.DECODER_HANDLER);
-            channel.pipeline().remove(Toolbox.ENCODER_HANDLER);
+        if (channel != null && channel.pipeline().get(PacketHandler.NAME) != null) {
+            channel.pipeline().remove(PacketHandler.NAME);
             return true;
         }
         
         return false;
+    }
+    
+    public static DimensionInfo getDimensionInfo(Respawn respawn) {
+        try {
+            if (dimensionInfoMethodHandle == null) {
+                return null;
+            }
+            
+            Object object = dimensionInfoMethodHandle.invoke(respawn);
+            if (object != null) {
+                return (DimensionInfo) object;
+            }
+            
+            return null;
+        } catch (Throwable ex) {
+            return null;
+        }
     }
     
     public static UUID getUniqueId(CommandSource source) {

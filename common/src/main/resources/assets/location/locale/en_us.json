@@ -11,7 +11,8 @@
     "&9&l{}&r ({})",
     "&8Position: &f{}, {}, {}",
     "&8Rotation: &f{}, {}",
-    "&8Server: &f{} ({})"
+    "&8Dimension: &f{}",
+    "&8Server: &f{}"
   ],
   "command.get.user_not_found": "&f{} &cnot found",
   "command.help": [

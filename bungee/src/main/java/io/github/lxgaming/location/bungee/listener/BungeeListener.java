@@ -18,6 +18,7 @@ package io.github.lxgaming.location.bungee.listener;
 
 import io.github.lxgaming.location.bungee.util.BungeeToolbox;
 import io.github.lxgaming.location.common.LocationImpl;
+import io.github.lxgaming.location.common.entity.ProtocolVersionImpl;
 import io.github.lxgaming.location.common.entity.UserImpl;
 import net.md_5.bungee.api.event.PlayerDisconnectEvent;
 import net.md_5.bungee.api.event.PostLoginEvent;
@@ -30,7 +31,10 @@ public class BungeeListener implements Listener {
     
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPostLogin(PostLoginEvent event) {
-        UserImpl user = new UserImpl(event.getPlayer().getName(), event.getPlayer().getUniqueId(), event.getPlayer().getPendingConnection().getVersion());
+        UserImpl user = new UserImpl(
+                event.getPlayer().getUniqueId(),
+                event.getPlayer().getName(),
+                ProtocolVersionImpl.getProtocolVersion(event.getPlayer().getPendingConnection().getVersion()));
         LocationImpl.getInstance().addUser(user);
         
         if (BungeeToolbox.addChannel(user, event.getPlayer())) {

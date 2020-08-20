@@ -16,30 +16,11 @@
 
 package io.github.lxgaming.location.api.entity;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-import java.util.UUID;
-
-public interface User {
+public interface ProtocolVersion {
     
-    @NonNull UUID getUniqueId();
+    int getId();
     
-    @NonNull String getUsername();
-    
-    @NonNull ProtocolVersion getProtocolVersion();
-    
-    double getX();
-    
-    double getY();
-    
-    double getZ();
-    
-    float getPitch();
-    
-    float getYaw();
-    
-    @Nullable Dimension getDimension();
-    
-    @Nullable String getServer();
+    @Nullable String getName();
 }
