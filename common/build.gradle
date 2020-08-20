@@ -1,6 +1,6 @@
 plugins {
-    id "com.github.johnrengelman.shadow" version "5.2.0"
     id "java"
+    id "java-library"
 }
 
 sourceCompatibility = 1.8
@@ -11,13 +11,7 @@ archivesBaseName = "location-common"
 version = version
 
 configurations {
-    provided {
-        compile.extendsFrom(provided)
-    }
-
     compileJava.dependsOn(":api:build")
-    jar.enabled = false
-    jar.dependsOn("shadowJar")
 }
 
 repositories {
@@ -25,37 +19,14 @@ repositories {
 }
 
 dependencies {
-    shadow(project(path: ":api")) {
-        transitive = false
-    }
-    provided(project(path: ":api"))
-    provided("com.google.code.gson:gson:${gsonVersion}")
-    provided("io.netty:netty-all:${nettyVersion}")
-    provided("net.kyori:text-serializer-legacy:${textVersion}")
+    api(project(path: ":api"))
+    api("com.google.code.gson:gson:${gsonVersion}")
+    api("io.netty:netty-all:${nettyVersion}")
+    api("net.kyori:text-serializer-legacy:${textVersion}")
     testCompile("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
-    provided("org.slf4j:slf4j-api:${slf4jVersion}")
-}
-
-jar {
-    from {
-        (configurations.compile - configurations.provided).findAll({
-            it.isDirectory() || it.name.endsWith(".jar")
-        }).collect({
-            it.isDirectory() ? it : zipTree(it)
-        })
-    }
-}
-
-shadowJar {
-    archiveClassifier.set(null)
-    configurations = [project.configurations.shadow]
+    api("org.slf4j:slf4j-api:${slf4jVersion}")
 }
 
 test {
-    testLogging {
-        exceptionFormat = "full"
-        showStandardStreams = true
-    }
-
     useJUnitPlatform()
 }

@@ -12,10 +12,6 @@ archivesBaseName = "location-bungee"
 version = version
 
 configurations {
-    provided {
-        compile.extendsFrom(provided)
-    }
-
     build.dependsOn("signJar")
     compileJava.dependsOn(":common:build")
     jar.enabled = false
@@ -31,29 +27,21 @@ repositories {
 }
 
 dependencies {
-    shadow(project(path: ":common", configuration: "shadow"))
-    provided(fileTree(dir: "libs", include: ["*.jar"]))
-    provided("net.md-5:bungeecord-api:${bungeecordVersion}")
-    shadow("net.kyori:text-api:${textVersion}")
+    shadow(project(path: ":common")) {
+        exclude(module: "gson")
+        exclude(module: "guava")
+        exclude(module: "netty-all")
+        exclude(module: "slf4j-api")
+    }
+    compile(fileTree(dir: "libs", include: ["*.jar"]))
+    compile("net.md-5:bungeecord-api:${bungeecordVersion}")
     shadow("net.kyori:text-serializer-gson:${textVersion}") {
         exclude(module: "gson")
     }
-    shadow("net.kyori:text-serializer-legacy:${textVersion}")
     shadow("net.kyori:text-adapter-bungeecord:3.0.6-SNAPSHOT") {
         transitive = false
     }
-    shadow("org.checkerframework:checker-qual:${checkerqualVersion}")
-    provided("org.slf4j:slf4j-api:${slf4jVersion}")
-}
-
-jar {
-    from {
-        (configurations.compile - configurations.provided).findAll({
-            it.isDirectory() || it.name.endsWith(".jar")
-        }).collect({
-            it.isDirectory() ? it : zipTree(it)
-        })
-    }
+    compile("org.slf4j:slf4j-api:${slf4jVersion}")
 }
 
 processResources {
