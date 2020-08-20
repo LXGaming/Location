@@ -14,43 +14,40 @@
  * limitations under the License.
  */
 
-package io.github.lxgaming.location.common.entity;
+package io.github.lxgaming.location.common.network;
 
-import io.github.lxgaming.location.api.entity.Packet;
+import io.github.lxgaming.location.common.network.netty.PacketHandler;
 import io.netty.buffer.ByteBuf;
 
 import java.util.function.BiConsumer;
 
-public class PacketImpl implements Packet {
+public class Packet {
     
     private final int id;
-    private final int maxProtocol;
-    private final int minProtocol;
-    private final BiConsumer<UserImpl, ByteBuf> consumer;
+    private final int maximumProtocol;
+    private final int minimumProtocol;
+    private final BiConsumer<PacketHandler, ByteBuf> consumer;
     
-    public PacketImpl(int id, int maxProtocol, int minProtocol, BiConsumer<UserImpl, ByteBuf> consumer) {
+    public Packet(int id, int maximumProtocol, int minimumProtocol, BiConsumer<PacketHandler, ByteBuf> consumer) {
         this.id = id;
-        this.maxProtocol = maxProtocol;
-        this.minProtocol = minProtocol;
+        this.maximumProtocol = maximumProtocol;
+        this.minimumProtocol = minimumProtocol;
         this.consumer = consumer;
     }
     
-    @Override
     public int getId() {
         return id;
     }
     
-    @Override
-    public int getMaxProtocol() {
-        return maxProtocol;
+    public int getMaximumProtocol() {
+        return maximumProtocol;
     }
     
-    @Override
-    public int getMinProtocol() {
-        return minProtocol;
+    public int getMinimumProtocol() {
+        return minimumProtocol;
     }
     
-    public BiConsumer<UserImpl, ByteBuf> getConsumer() {
+    public BiConsumer<PacketHandler, ByteBuf> getConsumer() {
         return consumer;
     }
 }

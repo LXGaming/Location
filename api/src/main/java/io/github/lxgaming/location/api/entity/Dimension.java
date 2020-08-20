@@ -16,11 +16,11 @@
 
 package io.github.lxgaming.location.api.entity;
 
-public interface Packet {
+import org.checkerframework.checker.nullness.qual.Nullable;
+
+public interface Dimension {
     
     int getId();
     
-    int getMaxProtocol();
-    
-    int getMinProtocol();
+    @Nullable String getName();
 }

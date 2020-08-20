@@ -16,7 +16,6 @@
 
 package io.github.lxgaming.location.common.util;
 
-import io.github.lxgaming.location.common.util.Toolbox;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -42,5 +41,15 @@ public class ToolboxTest {
         Assertions.assertFalse(Toolbox.isUsername("[]\\{}|"));
         Assertions.assertFalse(Toolbox.isUsername("::'"));
         Assertions.assertFalse(Toolbox.isUsername("<>?,./"));
+    }
+    
+    @Test
+    public void testNormalizeYaw() {
+        Assertions.assertEquals(0, Toolbox.normalizeYaw(0));
+        Assertions.assertEquals(180, Toolbox.normalizeYaw(180));
+        Assertions.assertEquals(0, Toolbox.normalizeYaw(360));
+        Assertions.assertEquals(90, Toolbox.normalizeYaw(450));
+        Assertions.assertEquals(180, Toolbox.normalizeYaw(-180));
+        Assertions.assertEquals(270, Toolbox.normalizeYaw(-450));
     }
 }

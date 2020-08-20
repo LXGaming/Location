@@ -22,6 +22,7 @@ import com.velocitypowered.api.event.connection.DisconnectEvent;
 import com.velocitypowered.api.event.connection.PostLoginEvent;
 import com.velocitypowered.api.event.player.ServerConnectedEvent;
 import io.github.lxgaming.location.common.LocationImpl;
+import io.github.lxgaming.location.common.entity.ProtocolVersionImpl;
 import io.github.lxgaming.location.common.entity.UserImpl;
 import io.github.lxgaming.location.velocity.util.VelocityToolbox;
 
@@ -29,7 +30,10 @@ public class VelocityListener {
     
     @Subscribe(order = PostOrder.EARLY)
     public void onPostLogin(PostLoginEvent event) {
-        UserImpl user = new UserImpl(event.getPlayer().getUsername(), event.getPlayer().getUniqueId(), event.getPlayer().getProtocolVersion().getProtocol());
+        UserImpl user = new UserImpl(
+                event.getPlayer().getUniqueId(),
+                event.getPlayer().getUsername(),
+                ProtocolVersionImpl.getProtocolVersion(event.getPlayer().getProtocolVersion().getProtocol(), event.getPlayer().getProtocolVersion().getName()));
         LocationImpl.getInstance().addUser(user);
         
         if (VelocityToolbox.addChannel(user, event.getPlayer())) {
