@@ -1,8 +1,9 @@
 plugins {
-    id "com.jfrog.bintray" version "1.8.4"
+    id "com.jfrog.bintray" version "1.8.5"
     id "java"
     id "java-library"
     id "maven-publish"
+    id "net.kyori.blossom" version "1.1.0"
 }
 
 sourceCompatibility = 1.8
@@ -12,12 +13,11 @@ group = "io.github.lxgaming"
 archivesBaseName = "location-api"
 version = version
 
-configurations {
-    provided {
-        compile.extendsFrom(provided)
-    }
+blossom {
+    replaceToken("@version@", version)
+}
 
-    compileJava.dependsOn("filterJava")
+configurations {
 }
 
 repositories {
@@ -67,22 +67,6 @@ bintrayUpload {
     onlyIf { System.getenv("BINTRAY_USER") != null }
 }
 
-compileJava {
-    doFirst {
-        source = filterJava.outputs
-    }
-}
-
-jar {
-    from {
-        (configurations.compile - configurations.provided).findAll({
-            it.isDirectory() || it.name.endsWith(".jar")
-        }).collect({
-            it.isDirectory() ? it : zipTree(it)
-        })
-    }
-}
-
 javadoc {
     failOnError = false
 }
@@ -103,11 +87,4 @@ publishing {
             artifact sourcesJar
         }
     }
-}
-
-task filterJava(type: Sync) {
-    from(sourceSets.main.java)
-    into("$buildDir/tmp/$name")
-
-    expand(version: version)
 }

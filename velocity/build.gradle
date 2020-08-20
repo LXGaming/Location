@@ -12,10 +12,6 @@ archivesBaseName = "location-velocity"
 version = version
 
 configurations {
-    provided {
-        compile.extendsFrom(provided)
-    }
-
     build.dependsOn("signJar")
     compileJava.dependsOn(":common:build")
     jar.enabled = false
@@ -31,20 +27,18 @@ repositories {
 }
 
 dependencies {
-    shadow(project(path: ":common", configuration: "shadow"))
-    provided(fileTree(dir: "libs", include: ["*.jar"]))
-    annotationProcessor("com.velocitypowered:velocity-api:${velocityVersion}")
-    provided("com.velocitypowered:velocity-api:${velocityVersion}")
-}
-
-jar {
-    from {
-        (configurations.compile - configurations.provided).findAll({
-            it.isDirectory() || it.name.endsWith(".jar")
-        }).collect({
-            it.isDirectory() ? it : zipTree(it)
-        })
+    shadow(project(path: ":common")) {
+        exclude(module: "checker-qual")
+        exclude(module: "gson")
+        exclude(module: "guava")
+        exclude(module: "netty-all")
+        exclude(module: "slf4j-api")
+        exclude(module: "text-api")
+        exclude(module: "text-serializer-legacy")
     }
+    compile(fileTree(dir: "libs", include: ["*.jar"]))
+    annotationProcessor("com.velocitypowered:velocity-api:${velocityVersion}")
+    compile("com.velocitypowered:velocity-api:${velocityVersion}")
 }
 
 shadowJar {
