@@ -1,9 +1,9 @@
 plugins {
-    id "com.jfrog.bintray" version "1.8.5"
+    id "com.jfrog.bintray"
     id "java"
     id "java-library"
     id "maven-publish"
-    id "net.kyori.blossom" version "1.1.0"
+    id "net.kyori.blossom"
 }
 
 sourceCompatibility = 1.8
@@ -21,7 +21,6 @@ configurations {
 }
 
 repositories {
-    jcenter()
 }
 
 dependencies {

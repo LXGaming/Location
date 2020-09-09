@@ -11,15 +11,14 @@ archivesBaseName = "location-common"
 version = version
 
 configurations {
-    compileJava.dependsOn(":api:build")
+    compileJava.dependsOn(":location-api:build")
 }
 
 repositories {
-    jcenter()
 }
 
 dependencies {
-    api(project(path: ":api"))
+    api(project(path: ":location-api"))
     api("com.google.code.gson:gson:${gsonVersion}")
     api("io.netty:netty-all:${nettyVersion}")
     api("net.kyori:text-serializer-legacy:${textVersion}")

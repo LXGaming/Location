@@ -2,3 +2,12 @@ include "api"
 include "bungee"
 include "common"
 include "velocity"
+
+[
+    "api",
+    "bungee",
+    "common",
+    "velocity"
+].each {
+    findProject(":$it")?.name = "location-$it"
+}
