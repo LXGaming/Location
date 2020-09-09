@@ -1,5 +1,5 @@
 plugins {
-    id "com.github.johnrengelman.shadow" version "5.2.0"
+    id "com.github.johnrengelman.shadow"
     id "java"
     id "signing"
 }
@@ -13,13 +13,12 @@ version = version
 
 configurations {
     build.dependsOn("signJar")
-    compileJava.dependsOn(":common:build")
+    compileJava.dependsOn(":location-common:build")
     jar.enabled = false
     jar.dependsOn("shadowJar")
 }
 
 repositories {
-    jcenter()
     maven {
         name = "sonatype"
         url = "https://oss.sonatype.org/content/repositories/snapshots"
@@ -27,7 +26,7 @@ repositories {
 }
 
 dependencies {
-    shadow(project(path: ":common")) {
+    shadow(project(path: ":location-common")) {
         exclude(module: "gson")
         exclude(module: "guava")
         exclude(module: "netty-all")
