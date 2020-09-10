@@ -135,7 +135,11 @@ public enum PacketRegistry {
     }
     
     public void process(PacketHandler packetHandler, ByteBuf byteBuf) {
-        int packetId = ProtocolUtils.readVarInt(byteBuf);
+        int packetId = ProtocolUtils.readVarIntSafely(byteBuf);
+        if (packetId == Integer.MIN_VALUE) {
+            return;
+        }
+        
         for (Packet packet : packets) {
             if (packet.getId() != packetId) {
                 continue;
