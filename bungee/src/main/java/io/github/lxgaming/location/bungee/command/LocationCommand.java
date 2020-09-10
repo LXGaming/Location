@@ -16,8 +16,7 @@
 
 package io.github.lxgaming.location.bungee.command;
 
-import com.google.common.collect.Lists;
-import io.github.lxgaming.location.bungee.util.BungeeToolbox;
+import io.github.lxgaming.location.bungee.entity.BungeeSource;
 import io.github.lxgaming.location.common.manager.CommandManager;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.plugin.Command;
@@ -30,6 +29,9 @@ public class LocationCommand extends Command {
     
     @Override
     public void execute(CommandSender sender, String[] args) {
-        CommandManager.execute(BungeeToolbox.getUniqueId(sender), Lists.newArrayList(args));
+        String arguments = String.join(" ", args);
+        BungeeSource source = new BungeeSource(sender);
+        
+        CommandManager.execute(source, arguments);
     }
 }

@@ -16,12 +16,11 @@
 
 package io.github.lxgaming.location.common.command;
 
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import io.github.lxgaming.location.api.Location;
+import io.github.lxgaming.location.api.entity.Source;
 import io.github.lxgaming.location.common.entity.Locale;
 import io.github.lxgaming.location.common.util.text.adapter.LocaleAdapter;
-
-import java.util.List;
-import java.util.UUID;
 
 public class InformationCommand extends Command {
     
@@ -35,9 +34,19 @@ public class InformationCommand extends Command {
     }
     
     @Override
-    public void execute(UUID uniqueId, List<String> arguments) throws Exception {
-        LocaleAdapter.sendMessage(uniqueId, Locale.GENERAL_INFORMATION,
+    public void register(LiteralArgumentBuilder<Source> argumentBuilder) {
+        argumentBuilder
+                .requires(source -> source.hasPermission(getPermission()))
+                .executes(context -> {
+                    return execute(context.getSource());
+                });
+    }
+    
+    private int execute(Source source) {
+        LocaleAdapter.sendSystemMessage(source, Locale.GENERAL_INFORMATION,
                 Location.VERSION, Location.AUTHORS, Location.SOURCE, Location.WEBSITE
         );
+        
+        return 1;
     }
 }

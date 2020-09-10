@@ -16,18 +16,24 @@
 
 package io.github.lxgaming.location.common.command;
 
-import io.github.lxgaming.location.api.Location;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Sets;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import com.mojang.brigadier.tree.CommandNode;
+import io.github.lxgaming.location.api.entity.Source;
 import io.github.lxgaming.location.common.entity.Locale;
 import io.github.lxgaming.location.common.manager.CommandManager;
 import io.github.lxgaming.location.common.manager.LocaleManager;
 import io.github.lxgaming.location.common.util.StringUtils;
+import io.github.lxgaming.location.common.util.brigadier.adapter.CommandAdapter;
 import io.github.lxgaming.location.common.util.text.adapter.LocaleAdapter;
-import net.kyori.text.TextComponent;
-import net.kyori.text.event.ClickEvent;
-import net.kyori.text.event.HoverEvent;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
 
-import java.util.List;
-import java.util.UUID;
+import java.util.Map;
+import java.util.Set;
 
 public class HelpCommand extends Command {
     
@@ -40,32 +46,50 @@ public class HelpCommand extends Command {
     }
     
     @Override
-    public void execute(UUID uniqueId, List<String> arguments) throws Exception {
-        LocaleAdapter.sendMessage(uniqueId, Locale.GENERAL_PREFIX);
-        for (Command command : CommandManager.COMMANDS) {
-            if (command == this || !(StringUtils.isNotBlank(command.getPermission()) && Location.getPlatform().hasPermission(uniqueId, command.getPermission()))) {
+    public void register(LiteralArgumentBuilder<Source> argumentBuilder) {
+        argumentBuilder
+                .requires(source -> source.hasPermission(getPermission()))
+                .executes(context -> {
+                    return execute(context.getSource());
+                });
+    }
+    
+    private int execute(Source source) {
+        LocaleAdapter.sendSystemMessage(source, Locale.GENERAL_PREFIX);
+        
+        Set<Class<? extends Command>> commandClasses = Sets.newHashSet();
+        commandClasses.add(getClass());
+        
+        Map<CommandNode<Source>, String> usages = CommandManager.DISPATCHER.getSmartUsage(CommandManager.DISPATCHER.getRoot(), source);
+        for (Map.Entry<CommandNode<Source>, String> entry : usages.entrySet()) {
+            if (!(entry.getKey().getCommand() instanceof CommandAdapter)) {
                 continue;
             }
             
-            String usage = "/" + CommandManager.getPrefix() + " " + String.join(" ", command.getPath()).toLowerCase();
-            if (StringUtils.isNotBlank(command.getUsage())) {
-                usage += " " + command.getUsage();
+            Command command = ((CommandAdapter<Source>) entry.getKey().getCommand()).getCommand();
+            if (commandClasses.contains(command.getClass()) || !(StringUtils.isNotBlank(command.getPermission()) && source.hasPermission(command.getPermission()))) {
+                continue;
             }
             
-            TextComponent description = LocaleManager.serialize(Locale.COMMAND_HELP_HOVER,
-                    command.getPrimaryAlias().orElse("unknown"),
+            commandClasses.add(command.getClass());
+            
+            String usage = "/" + CommandManager.getPrefix() + " " + entry.getValue();
+            Component description = LocaleManager.serialize(Locale.COMMAND_HELP_HOVER,
+                    Iterables.getFirst(command.getAliases(), "Unknown"),
                     StringUtils.defaultIfEmpty(command.getDescription(), "No description provided"),
                     usage,
                     StringUtils.defaultIfEmpty(command.getPermission(), "None")
             );
             
             TextComponent component = TextComponent.builder()
-                    .clickEvent(ClickEvent.of(ClickEvent.Action.SUGGEST_COMMAND, "/" + CommandManager.getPrefix() + " " + String.join(" ", command.getPath()).toLowerCase()))
+                    .clickEvent(ClickEvent.of(ClickEvent.Action.SUGGEST_COMMAND, usage))
                     .hoverEvent(HoverEvent.of(HoverEvent.Action.SHOW_TEXT, description))
                     .append(LocaleManager.serialize(Locale.COMMAND_HELP, usage))
                     .build();
             
-            Location.getPlatform().sendMessage(uniqueId, component);
+            source.sendSystemMessage(component);
         }
+        
+        return 1;
     }
 }

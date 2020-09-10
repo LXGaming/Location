@@ -20,8 +20,9 @@ repositories {
 dependencies {
     api(project(path: ":location-api"))
     api("com.google.code.gson:gson:${gsonVersion}")
+    api("com.mojang:brigadier:${brigadierVersion}")
     api("io.netty:netty-all:${nettyVersion}")
-    api("net.kyori:text-serializer-legacy:${textVersion}")
+    api("net.kyori:adventure-text-serializer-legacy:${adventureVersion}")
     testCompile("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
     api("org.slf4j:slf4j-api:${slf4jVersion}")
 }
