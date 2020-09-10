@@ -16,49 +16,50 @@
 
 package io.github.lxgaming.location.common.command;
 
-import io.github.lxgaming.location.api.exception.CommandException;
+import com.mojang.brigadier.arguments.BoolArgumentType;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import io.github.lxgaming.location.api.entity.Source;
 import io.github.lxgaming.location.common.LocationImpl;
 import io.github.lxgaming.location.common.configuration.Config;
 import io.github.lxgaming.location.common.configuration.category.GeneralCategory;
 import io.github.lxgaming.location.common.entity.Locale;
-import io.github.lxgaming.location.common.util.StringUtils;
 import io.github.lxgaming.location.common.util.text.adapter.LocaleAdapter;
 
-import java.util.List;
-import java.util.UUID;
-
 public class DebugCommand extends Command {
+    
+    private static final String STATE_ARGUMENT = "state";
     
     @Override
     public boolean prepare() {
         addAlias("Debug");
-        description("For development purposes.");
+        description("For development purposes");
         permission("location.debug.base");
-        usage("[State]");
         return true;
     }
     
     @Override
-    public void execute(UUID uniqueId, List<String> arguments) throws Exception {
+    public void register(LiteralArgumentBuilder<Source> argumentBuilder) {
+        argumentBuilder
+                .requires(source -> source.hasPermission(getPermission()))
+                .executes(context -> {
+                    return execute(context.getSource());
+                })
+                .then(argument(STATE_ARGUMENT, BoolArgumentType.bool())
+                        .executes(context -> {
+                            return execute(context.getSource(), BoolArgumentType.getBool(context, STATE_ARGUMENT));
+                        })
+                );
+    }
+    
+    private int execute(Source source) {
+        return execute(source, null);
+    }
+    
+    private int execute(Source source, Boolean state) {
         GeneralCategory generalCategory = LocationImpl.getInstance().getConfig().map(Config::getGeneralCategory).orElse(null);
         if (generalCategory == null) {
-            LocaleAdapter.sendMessage(uniqueId, Locale.CONFIGURATION_ERROR);
-            return;
-        }
-        
-        Boolean state;
-        if (!arguments.isEmpty()) {
-            String argument = arguments.remove(0);
-            if (StringUtils.isNotBlank(argument)) {
-                state = StringUtils.toBooleanObject(argument);
-                if (state == null) {
-                    throw new CommandException(String.format("Failed to parse %s as a boolean", argument));
-                }
-            } else {
-                state = null;
-            }
-        } else {
-            state = null;
+            LocaleAdapter.sendSystemMessage(source, Locale.CONFIGURATION_ERROR);
+            return 0;
         }
         
         if (state != null) {
@@ -68,9 +69,11 @@ public class DebugCommand extends Command {
         }
         
         if (generalCategory.isDebug()) {
-            LocaleAdapter.sendMessage(uniqueId, Locale.COMMAND_DEBUG_ENABLE);
+            LocaleAdapter.sendSystemMessage(source, Locale.COMMAND_DEBUG_ENABLE);
         } else {
-            LocaleAdapter.sendMessage(uniqueId, Locale.COMMAND_DEBUG_DISABLE);
+            LocaleAdapter.sendSystemMessage(source, Locale.COMMAND_DEBUG_DISABLE);
         }
+        
+        return 1;
     }
 }

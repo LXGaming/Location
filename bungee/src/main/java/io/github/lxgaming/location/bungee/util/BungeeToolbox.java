@@ -16,18 +16,13 @@
 
 package io.github.lxgaming.location.bungee.util;
 
-import io.github.lxgaming.location.api.Platform;
 import io.github.lxgaming.location.bungee.network.netty.PacketHandlerImpl;
 import io.github.lxgaming.location.common.entity.UserImpl;
 import io.github.lxgaming.location.common.network.netty.PacketHandler;
 import io.github.lxgaming.location.common.util.Toolbox;
 import io.netty.channel.Channel;
-import net.md_5.bungee.api.CommandSender;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.netty.ChannelWrapper;
 import net.md_5.bungee.netty.PipelineUtils;
-
-import java.util.UUID;
 
 public class BungeeToolbox {
     
@@ -49,13 +44,5 @@ public class BungeeToolbox {
         }
         
         return false;
-    }
-    
-    public static UUID getUniqueId(CommandSender sender) {
-        if (sender instanceof ProxiedPlayer) {
-            return ((ProxiedPlayer) sender).getUniqueId();
-        } else {
-            return Platform.CONSOLE_UUID;
-        }
     }
 }

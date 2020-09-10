@@ -16,43 +16,60 @@
 
 package io.github.lxgaming.location.common.command;
 
+import com.mojang.brigadier.arguments.StringArgumentType;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import io.github.lxgaming.location.api.Location;
+import io.github.lxgaming.location.api.entity.Source;
 import io.github.lxgaming.location.api.entity.User;
 import io.github.lxgaming.location.common.entity.Locale;
 import io.github.lxgaming.location.common.util.StringUtils;
 import io.github.lxgaming.location.common.util.Toolbox;
 import io.github.lxgaming.location.common.util.text.adapter.LocaleAdapter;
 
-import java.util.List;
-import java.util.UUID;
-
 public class GetCommand extends Command {
+    
+    private static final String USERNAME_ARGUMENT = "username";
     
     @Override
     public boolean prepare() {
         addAlias("Get");
         permission("location.get.base");
-        usage("<Player>");
         return true;
     }
     
     @Override
-    public void execute(UUID uniqueId, List<String> arguments) throws Exception {
-        if (arguments.isEmpty()) {
-            LocaleAdapter.sendMessage(uniqueId, Locale.COMMAND_INVALID_ARGUMENTS, getUsage());
-            return;
-        }
-        
-        String username = arguments.remove(0);
+    public void register(LiteralArgumentBuilder<Source> argumentBuilder) {
+        argumentBuilder
+                .requires(source -> source.hasPermission(getPermission()))
+                .executes(context -> {
+                    return execute(context.getSource());
+                })
+                .then(argument(USERNAME_ARGUMENT, StringArgumentType.word())
+                        .suggests((context, builder) -> {
+                            Location.getPlatform().getUsernames().forEach(builder::suggest);
+                            return builder.buildFuture();
+                        })
+                        .executes(context -> {
+                            return execute(context.getSource(), StringArgumentType.getString(context, USERNAME_ARGUMENT));
+                        })
+                );
+    }
+    
+    private int execute(Source source) {
+        LocaleAdapter.sendSystemMessage(source, Locale.COMMAND_INVALID_ARGUMENTS, "<Player>");
+        return 0;
+    }
+    
+    private int execute(Source source, String username) {
         if (!Toolbox.isUsername(username)) {
-            LocaleAdapter.sendMessage(uniqueId, Locale.USER_NAME_INVALID);
-            return;
+            LocaleAdapter.sendSystemMessage(source, Locale.USER_NAME_INVALID);
+            return 0;
         }
         
         User user = Location.getInstance().getUser(username).orElse(null);
         if (user == null) {
-            LocaleAdapter.sendMessage(uniqueId, Locale.COMMAND_GET_USER_NOT_FOUND, username);
-            return;
+            LocaleAdapter.sendSystemMessage(source, Locale.COMMAND_GET_USER_NOT_FOUND, username);
+            return 0;
         }
         
         String version = StringUtils.defaultIfBlank(
@@ -70,12 +87,14 @@ public class GetCommand extends Command {
             dimension = null;
         }
         
-        LocaleAdapter.sendMessage(uniqueId, Locale.COMMAND_GET,
+        LocaleAdapter.sendSystemMessage(source, Locale.COMMAND_GET,
                 user.getUsername(), version,
                 user.getX(), user.getY(), user.getZ(),
                 user.getYaw(), user.getPitch(),
                 dimension,
                 user.getServer()
         );
+        
+        return 1;
     }
 }

@@ -27,6 +27,7 @@ repositories {
 
 dependencies {
     shadow(project(path: ":location-common")) {
+        exclude(module: "brigadier")
         exclude(module: "gson")
         exclude(module: "guava")
         exclude(module: "netty-all")
@@ -34,11 +35,11 @@ dependencies {
     }
     compile(fileTree(dir: "libs", include: ["*.jar"]))
     compile("net.md-5:bungeecord-api:${bungeecordVersion}")
-    shadow("net.kyori:text-serializer-gson:${textVersion}") {
-        exclude(module: "gson")
-    }
-    shadow("net.kyori:text-adapter-bungeecord:3.0.6-SNAPSHOT") {
+    shadow("net.kyori:adventure-text-serializer-bungeecord:${adventureVersion}") {
         transitive = false
+    }
+    shadow("net.kyori:adventure-text-serializer-gson:${adventureVersion}") {
+        exclude(module: "gson")
     }
     compile("org.slf4j:slf4j-api:${slf4jVersion}")
 }
@@ -53,7 +54,8 @@ processResources {
 shadowJar {
     archiveClassifier.set(null)
     configurations = [project.configurations.shadow]
-    relocate("net.kyori.text", "io.github.lxgaming.location.lib.text")
+    relocate("net.kyori.adventure", "io.github.lxgaming.location.lib.adventure")
+    relocate("net.kyori.examination", "io.github.lxgaming.location.lib.examination")
     relocate("org.checkerframework", "io.github.lxgaming.location.lib.checkerframework")
 }
 

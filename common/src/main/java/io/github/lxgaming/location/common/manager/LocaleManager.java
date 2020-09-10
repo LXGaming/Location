@@ -27,9 +27,10 @@ import io.github.lxgaming.location.common.configuration.category.GeneralCategory
 import io.github.lxgaming.location.common.entity.Locale;
 import io.github.lxgaming.location.common.util.StringUtils;
 import io.github.lxgaming.location.common.util.Toolbox;
-import net.kyori.text.TextComponent;
-import net.kyori.text.format.TextColor;
-import net.kyori.text.serializer.legacy.LegacyComponentSerializer;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -41,9 +42,11 @@ import java.util.Map;
 public final class LocaleManager {
     
     public static final char CHARACTER = '&';
+    public static final char HEX_CHARACTER = '#';
     public static final String PLACEHOLDER_START = "{";
     public static final String PLACEHOLDER_END = "}";
     private static final Map<String, String> LOCALE = Maps.newHashMap();
+    private static LegacyComponentSerializer legacyComponentSerializer;
     
     public static void prepare() {
         if (loadLocale(GeneralCategory.DEFAULT_LOCALE)) {
@@ -64,16 +67,23 @@ public final class LocaleManager {
         for (Map.Entry<String, List<String>> entry : generalCategory.getLocaleOverrides().entrySet()) {
             LOCALE.put(entry.getKey(), String.join("\n", entry.getValue()));
         }
+        
+        legacyComponentSerializer = LegacyComponentSerializer.builder()
+                .hexColors()
+                .hexCharacter(HEX_CHARACTER)
+                .extractUrls()
+                .character(CHARACTER)
+                .build();
     }
     
-    public static TextComponent serialize(Locale locale, Object... arguments) {
+    public static Component serialize(Locale locale, Object... arguments) {
         return serialize(locale.getKey(), arguments);
     }
     
-    public static TextComponent serialize(String key, Object... arguments) {
+    public static Component serialize(String key, Object... arguments) {
         String translation = getTranslation(key);
         if (translation == null) {
-            return TextComponent.of("Failed to translate message", TextColor.RED);
+            return TextComponent.of("Failed to translate message", NamedTextColor.RED);
         }
         
         int matches = StringUtils.countMatches(translation, PLACEHOLDER_START + PLACEHOLDER_END);
@@ -83,10 +93,10 @@ public final class LocaleManager {
         
         String format = format(translation, arguments);
         if (StringUtils.isEmpty(format)) {
-            return TextComponent.of("Failed to format message", TextColor.RED);
+            return TextComponent.of("Failed to format message", NamedTextColor.RED);
         }
         
-        return LegacyComponentSerializer.legacyLinking().deserialize(format, CHARACTER);
+        return legacyComponentSerializer.deserialize(format);
     }
     
     private static String format(String format, Object... arguments) {

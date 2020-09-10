@@ -16,13 +16,10 @@
 
 package io.github.lxgaming.location.velocity.util;
 
-import com.velocitypowered.api.command.CommandSource;
-import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.proxy.connection.MinecraftConnection;
 import com.velocitypowered.proxy.connection.registry.DimensionInfo;
 import com.velocitypowered.proxy.network.Connections;
 import com.velocitypowered.proxy.protocol.packet.Respawn;
-import io.github.lxgaming.location.api.Platform;
 import io.github.lxgaming.location.common.entity.UserImpl;
 import io.github.lxgaming.location.common.network.netty.PacketHandler;
 import io.github.lxgaming.location.common.util.Toolbox;
@@ -32,7 +29,6 @@ import io.netty.channel.Channel;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Field;
-import java.util.UUID;
 
 public class VelocityToolbox {
     
@@ -88,14 +84,6 @@ public class VelocityToolbox {
             return null;
         } catch (Throwable ex) {
             return null;
-        }
-    }
-    
-    public static UUID getUniqueId(CommandSource source) {
-        if (source instanceof Player) {
-            return ((Player) source).getUniqueId();
-        } else {
-            return Platform.CONSOLE_UUID;
         }
     }
 }

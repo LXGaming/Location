@@ -25,7 +25,7 @@ repositories {
 
 dependencies {
     api("com.google.guava:guava:${guavaVersion}")
-    api("net.kyori:text-api:${textVersion}")
+    api("net.kyori:adventure-api:${adventureVersion}")
     api("org.checkerframework:checker-qual:${checkerqualVersion}")
 }
 

@@ -16,21 +16,19 @@
 
 package io.github.lxgaming.location.bungee;
 
+import com.google.common.collect.Lists;
 import io.github.lxgaming.location.api.Location;
 import io.github.lxgaming.location.api.Platform;
 import io.github.lxgaming.location.bungee.command.LocationCommand;
 import io.github.lxgaming.location.bungee.listener.BungeeListener;
 import io.github.lxgaming.location.common.LocationImpl;
-import net.kyori.text.Component;
-import net.kyori.text.adapter.bungeecord.TextAdapter;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.nio.file.Path;
-import java.util.UUID;
+import java.util.Collection;
+import java.util.List;
 
 public class BungeePlugin extends Plugin implements Platform {
     
@@ -66,46 +64,13 @@ public class BungeePlugin extends Plugin implements Platform {
     }
     
     @Override
-    public boolean hasPermission(@NonNull UUID uniqueId, @NonNull String permission) {
-        if (uniqueId.equals(Platform.CONSOLE_UUID)) {
-            return true;
+    public @NonNull Collection<String> getUsernames() {
+        List<String> usernames = Lists.newArrayList();
+        for (ProxiedPlayer player : getProxy().getPlayers()) {
+            usernames.add(player.getName());
         }
         
-        ProxiedPlayer player = ProxyServer.getInstance().getPlayer(uniqueId);
-        if (player == null) {
-            return false;
-        }
-        
-        return player.hasPermission(permission);
-    }
-    
-    @Override
-    public void sendMessage(@NonNull UUID uniqueId, @NonNull Component component) {
-        sendMessage(uniqueId, ChatMessageType.SYSTEM, component);
-    }
-    
-    @Override
-    public void sendChatMessage(@NonNull UUID uniqueId, @NonNull Component component) {
-        sendMessage(uniqueId, ChatMessageType.CHAT, component);
-    }
-    
-    @Override
-    public void sendStatusMessage(@NonNull UUID uniqueId, @NonNull Component component) {
-        sendMessage(uniqueId, ChatMessageType.ACTION_BAR, component);
-    }
-    
-    private void sendMessage(@NonNull UUID uniqueId, @NonNull ChatMessageType chatType, @NonNull Component component) {
-        if (uniqueId.equals(Platform.CONSOLE_UUID)) {
-            getProxy().getConsole().sendMessage(TextAdapter.toBungeeCord(component));
-            return;
-        }
-        
-        ProxiedPlayer player = ProxyServer.getInstance().getPlayer(uniqueId);
-        if (player == null) {
-            return;
-        }
-        
-        player.sendMessage(chatType, TextAdapter.toBungeeCord(component));
+        return usernames;
     }
     
     @Override

@@ -16,27 +16,18 @@
 
 package io.github.lxgaming.location.api;
 
-import net.kyori.text.Component;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.nio.file.Path;
-import java.util.UUID;
+import java.util.Collection;
 
 public interface Platform {
     
-    UUID CONSOLE_UUID = UUID.fromString("00000000-0000-0000-0000-000000000000");
-    
-    boolean hasPermission(@NonNull UUID uniqueId, @NonNull String permission);
-    
-    void sendMessage(@NonNull UUID uniqueId, @NonNull Component component);
-    
-    void sendChatMessage(@NonNull UUID uniqueId, @NonNull Component component);
-    
-    void sendStatusMessage(@NonNull UUID uniqueId, @NonNull Component component);
-    
-    @NonNull Type getType();
+    @NonNull Collection<String> getUsernames();
     
     @NonNull Path getPath();
+    
+    @NonNull Type getType();
     
     enum Type {
         

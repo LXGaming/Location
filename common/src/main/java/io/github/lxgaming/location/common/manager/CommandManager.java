@@ -16,9 +16,14 @@
 
 package io.github.lxgaming.location.common.manager;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.brigadier.tree.CommandNode;
 import io.github.lxgaming.location.api.Location;
-import io.github.lxgaming.location.api.exception.CommandException;
+import io.github.lxgaming.location.api.entity.Source;
 import io.github.lxgaming.location.common.LocationImpl;
 import io.github.lxgaming.location.common.command.Command;
 import io.github.lxgaming.location.common.command.DebugCommand;
@@ -29,15 +34,17 @@ import io.github.lxgaming.location.common.command.ReloadCommand;
 import io.github.lxgaming.location.common.entity.Locale;
 import io.github.lxgaming.location.common.util.StringUtils;
 import io.github.lxgaming.location.common.util.Toolbox;
+import io.github.lxgaming.location.common.util.brigadier.adapter.CommandAdapter;
 import io.github.lxgaming.location.common.util.text.adapter.LocaleAdapter;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 public final class CommandManager {
     
-    public static final Set<Command> COMMANDS = Sets.newLinkedHashSet();
+    public static final CommandDispatcher<Source> DISPATCHER = new CommandDispatcher<>();
+    private static final Set<Command> COMMANDS = Sets.newLinkedHashSet();
     private static final Set<Class<? extends Command>> COMMAND_CLASSES = Sets.newHashSet();
     
     public static void prepare() {
@@ -46,37 +53,29 @@ public final class CommandManager {
         registerCommand(HelpCommand.class);
         registerCommand(InformationCommand.class);
         registerCommand(ReloadCommand.class);
+        
+        for (Command command : CommandManager.COMMANDS) {
+            register(command).forEach(DISPATCHER.getRoot()::addChild);
+        }
     }
     
-    public static boolean execute(UUID uniqueId, List<String> arguments) {
-        String content = String.join(" ", arguments);
-        if (arguments.isEmpty() || StringUtils.isBlank(content)) {
-            LocaleAdapter.sendMessage(uniqueId, Locale.COMMAND_BASE, getPrefix());
+    public static boolean execute(Source source, String message) {
+        if (StringUtils.isBlank(message)) {
+            LocaleAdapter.sendSystemMessage(source, Locale.COMMAND_BASE, getPrefix());
             return false;
         }
         
-        Command command = getCommand(arguments);
-        if (command == null) {
-            LocaleAdapter.sendMessage(uniqueId, Locale.COMMAND_NOT_FOUND);
-            return false;
-        }
-        
-        if (StringUtils.isBlank(command.getPermission()) || !LocationImpl.getPlatform().hasPermission(uniqueId, command.getPermission())) {
-            LocaleAdapter.sendMessage(uniqueId, Locale.COMMAND_NO_PERMISSION);
-            return false;
-        }
-        
-        LocationImpl.getInstance().getLogger().debug("Processing {} for {}", content, uniqueId);
+        LocationImpl.getInstance().getLogger().debug("Processing {} for {} ({})", message, source.getUsername(), source.getUniqueId());
         
         try {
-            command.execute(uniqueId, arguments);
+            CommandManager.DISPATCHER.execute(message, source);
             return true;
-        } catch (CommandException ex) {
-            LocaleAdapter.sendMessage(uniqueId, Locale.COMMAND_ERROR, ex.getMessage());
+        } catch (CommandSyntaxException ex) {
+            LocaleAdapter.sendSystemMessage(source, Locale.COMMAND_ERROR, ex.getMessage());
             return false;
         } catch (Exception ex) {
-            LocationImpl.getInstance().getLogger().error("Encountered an error while executing {}", Toolbox.getClassSimpleName(command.getClass()), ex);
-            LocaleAdapter.sendMessage(uniqueId, Locale.COMMAND_EXCEPTION);
+            LocationImpl.getInstance().getLogger().error("Encountered an error while executing {}", message, ex);
+            LocaleAdapter.sendSystemMessage(source, Locale.COMMAND_EXCEPTION);
             return false;
         }
     }
@@ -110,7 +109,6 @@ public final class CommandManager {
         
         Command command = registerCommand(parentCommand.getChildren(), commandClass);
         if (command != null) {
-            command.parentCommand(parentCommand);
             LocationImpl.getInstance().getLogger().debug("{} registered for {}", Toolbox.getClassSimpleName(commandClass), Toolbox.getClassSimpleName(parentCommand.getClass()));
             return true;
         }
@@ -118,7 +116,7 @@ public final class CommandManager {
         return false;
     }
     
-    private static Command registerCommand(Set<Command> commands, Class<? extends Command> commandClass) {
+    private static Command registerCommand(Collection<Command> commands, Class<? extends Command> commandClass) {
         if (COMMAND_CLASSES.contains(commandClass)) {
             LocationImpl.getInstance().getLogger().warn("{} is already registered", Toolbox.getClassSimpleName(commandClass));
             return null;
@@ -131,8 +129,13 @@ public final class CommandManager {
             return null;
         }
         
-        if (!command.prepare()) {
-            LocationImpl.getInstance().getLogger().error("{} failed to prepare", Toolbox.getClassSimpleName(commandClass));
+        try {
+            if (!command.prepare()) {
+                LocationImpl.getInstance().getLogger().warn("{} failed to prepare", Toolbox.getClassSimpleName(commandClass));
+                return null;
+            }
+        } catch (Exception ex) {
+            LocationImpl.getInstance().getLogger().error("Encountered an error while preparing {}", Toolbox.getClassSimpleName(commandClass), ex);
             return null;
         }
         
@@ -143,59 +146,39 @@ public final class CommandManager {
         return null;
     }
     
-    public static Command getCommand(Class<? extends Command> commandClass) {
-        return getCommand(null, commandClass);
-    }
-    
-    public static Command getCommand(Command parentCommand, Class<? extends Command> commandClass) {
-        Set<Command> commands = Sets.newLinkedHashSet();
-        if (parentCommand != null) {
-            commands.addAll(parentCommand.getChildren());
-        } else {
-            commands.addAll(COMMANDS);
-        }
-        
-        for (Command command : commands) {
-            if (command.getClass() == commandClass) {
-                return command;
-            }
-            
-            Command childCommand = getCommand(command, commandClass);
-            if (childCommand != null) {
-                return childCommand;
-            }
-        }
-        
-        return null;
-    }
-    
-    public static Command getCommand(List<String> arguments) {
-        return getCommand(null, arguments);
-    }
-    
-    private static Command getCommand(Command parentCommand, List<String> arguments) {
-        if (arguments.isEmpty()) {
-            return parentCommand;
-        }
-        
-        Set<Command> commands = Sets.newLinkedHashSet();
-        if (parentCommand != null) {
-            commands.addAll(parentCommand.getChildren());
-        } else {
-            commands.addAll(COMMANDS);
-        }
-        
-        for (Command command : commands) {
-            if (StringUtils.containsIgnoreCase(command.getAliases(), arguments.get(0))) {
-                arguments.remove(0);
-                return getCommand(command, arguments);
-            }
-        }
-        
-        return parentCommand;
-    }
-    
     public static String getPrefix() {
         return Location.ID;
+    }
+    
+    private static Collection<CommandNode<Source>> register(Command command) {
+        List<CommandNode<Source>> commandNodes = Lists.newArrayList();
+        for (String alias : command.getAliases()) {
+            LiteralArgumentBuilder<Source> argumentBuilder = Command.literal(alias.toLowerCase());
+            command.register(argumentBuilder);
+            if (argumentBuilder.getCommand() != null) {
+                argumentBuilder.executes(new CommandAdapter<>(command, argumentBuilder.getCommand()));
+            }
+            
+            commandNodes.add(argumentBuilder.build());
+        }
+        
+        for (Command childCommand : command.getChildren()) {
+            Collection<CommandNode<Source>> childCommandNodes = register(childCommand);
+            addChildren(commandNodes, childCommandNodes);
+        }
+        
+        return commandNodes;
+    }
+    
+    private static <T> void addChildren(Collection<CommandNode<T>> parentCommandNodes, Collection<CommandNode<T>> childCommandNodes) {
+        if (parentCommandNodes.isEmpty() || childCommandNodes.isEmpty()) {
+            return;
+        }
+        
+        for (CommandNode<T> parentCommandNode : parentCommandNodes) {
+            for (CommandNode<T> childCommandNode : childCommandNodes) {
+                parentCommandNode.addChild(childCommandNode);
+            }
+        }
     }
 }

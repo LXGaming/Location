@@ -16,13 +16,12 @@
 
 package io.github.lxgaming.location.common.command;
 
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import io.github.lxgaming.location.api.entity.Source;
 import io.github.lxgaming.location.common.LocationImpl;
 import io.github.lxgaming.location.common.entity.Locale;
 import io.github.lxgaming.location.common.manager.LocaleManager;
 import io.github.lxgaming.location.common.util.text.adapter.LocaleAdapter;
-
-import java.util.List;
-import java.util.UUID;
 
 public class ReloadCommand extends Command {
     
@@ -34,13 +33,22 @@ public class ReloadCommand extends Command {
     }
     
     @Override
-    public void execute(UUID uniqueId, List<String> arguments) throws Exception {
+    public void register(LiteralArgumentBuilder<Source> argumentBuilder) {
+        argumentBuilder
+                .requires(source -> source.hasPermission(getPermission()))
+                .executes(context -> {
+                    return execute(context.getSource());
+                });
+    }
+    
+    private int execute(Source source) {
         if (LocationImpl.getInstance().reload()) {
             LocaleManager.prepare();
-            LocaleAdapter.sendMessage(uniqueId, Locale.COMMAND_RELOAD_SUCCESS);
-            return;
+            LocaleAdapter.sendSystemMessage(source, Locale.COMMAND_RELOAD_SUCCESS);
+            return 1;
         }
         
-        LocaleAdapter.sendMessage(uniqueId, Locale.COMMAND_RELOAD_FAILURE);
+        LocaleAdapter.sendSystemMessage(source, Locale.COMMAND_RELOAD_FAILURE);
+        return 0;
     }
 }

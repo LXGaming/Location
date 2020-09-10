@@ -16,23 +16,21 @@
 
 package io.github.lxgaming.location.common.util.text.adapter;
 
-import io.github.lxgaming.location.api.Location;
+import io.github.lxgaming.location.api.entity.Source;
 import io.github.lxgaming.location.common.entity.Locale;
 import io.github.lxgaming.location.common.manager.LocaleManager;
 
-import java.util.UUID;
-
 public class LocaleAdapter {
     
-    public static void sendMessage(UUID uniqueId, Locale locale, Object... arguments) {
-        Location.getPlatform().sendMessage(uniqueId, LocaleManager.serialize(locale, arguments));
+    public static void sendActionBar(Source source, Locale locale, Object... arguments) {
+        source.sendActionBar(LocaleManager.serialize(locale, arguments));
     }
     
-    public static void sendChatMessage(UUID uniqueId, Locale locale, Object... arguments) {
-        Location.getPlatform().sendChatMessage(uniqueId, LocaleManager.serialize(locale, arguments));
+    public static void sendChatMessage(Source source, Locale locale, Object... arguments) {
+        source.sendChatMessage(LocaleManager.serialize(locale, arguments));
     }
     
-    public static void sendStatusMessage(UUID uniqueId, Locale locale, Object... arguments) {
-        Location.getPlatform().sendStatusMessage(uniqueId, LocaleManager.serialize(locale, arguments));
+    public static void sendSystemMessage(Source source, Locale locale, Object... arguments) {
+        source.sendSystemMessage(LocaleManager.serialize(locale, arguments));
     }
 }

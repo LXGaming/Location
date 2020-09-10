@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Alex Thomson
+ * Copyright 2020 Alex Thomson
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,27 +18,44 @@ package io.github.lxgaming.location.velocity.command;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-import com.velocitypowered.api.command.Command;
-import com.velocitypowered.api.command.CommandSource;
+import com.mojang.brigadier.ParseResults;
+import com.mojang.brigadier.suggestion.Suggestion;
+import com.velocitypowered.api.command.RawCommand;
+import io.github.lxgaming.location.api.entity.Source;
+import io.github.lxgaming.location.common.LocationImpl;
 import io.github.lxgaming.location.common.manager.CommandManager;
-import io.github.lxgaming.location.velocity.util.VelocityToolbox;
+import io.github.lxgaming.location.velocity.entity.VelocitySource;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
-public class LocationCommand implements Command {
+public class LocationCommand implements RawCommand {
     
     @Override
-    public void execute(CommandSource source, String[] args) {
-        CommandManager.execute(VelocityToolbox.getUniqueId(source), Lists.newArrayList(args));
+    public void execute(Invocation invocation) {
+        String arguments = invocation.arguments();
+        VelocitySource source = new VelocitySource(invocation.source());
+        
+        CommandManager.execute(source, arguments);
     }
     
     @Override
-    public List<String> suggest(CommandSource source, String[] currentArgs) {
-        return ImmutableList.of();
+    public List<String> suggest(Invocation invocation) {
+        try {
+            return suggestAsync(invocation).get();
+        } catch (Exception ex) {
+            LocationImpl.getInstance().getLogger().error("Encountered an error while getting suggestions", ex);
+            return ImmutableList.of();
+        }
     }
     
     @Override
-    public boolean hasPermission(CommandSource source, String[] args) {
-        return true;
+    public CompletableFuture<List<String>> suggestAsync(Invocation invocation) {
+        String arguments = invocation.arguments();
+        VelocitySource source = new VelocitySource(invocation.source());
+        
+        ParseResults<Source> parseResults = CommandManager.DISPATCHER.parse(arguments, source);
+        return CommandManager.DISPATCHER.getCompletionSuggestions(parseResults)
+                .thenApply(suggestions -> Lists.transform(suggestions.getList(), Suggestion::getText));
     }
 }
