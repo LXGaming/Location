@@ -74,13 +74,13 @@ public class BungeePlugin extends Plugin implements Platform {
     }
     
     @Override
-    public @NonNull Type getType() {
-        return Type.BUNGEECORD;
+    public @NonNull Path getPath() {
+        return getDataFolder().toPath();
     }
     
     @Override
-    public @NonNull Path getPath() {
-        return getDataFolder().toPath();
+    public @NonNull Type getType() {
+        return Type.BUNGEECORD;
     }
     
     public static BungeePlugin getInstance() {

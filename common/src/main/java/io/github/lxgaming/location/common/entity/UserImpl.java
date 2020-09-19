@@ -45,13 +45,13 @@ public class UserImpl implements User {
     }
     
     @Override
-    public @NonNull String getUsername() {
-        return username;
+    public @NonNull UUID getUniqueId() {
+        return uniqueId;
     }
     
     @Override
-    public @NonNull UUID getUniqueId() {
-        return uniqueId;
+    public @NonNull String getUsername() {
+        return username;
     }
     
     @Override
