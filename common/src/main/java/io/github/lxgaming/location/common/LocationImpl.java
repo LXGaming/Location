@@ -22,7 +22,6 @@ import io.github.lxgaming.location.api.Platform;
 import io.github.lxgaming.location.api.entity.User;
 import io.github.lxgaming.location.common.configuration.Config;
 import io.github.lxgaming.location.common.configuration.Configuration;
-import io.github.lxgaming.location.common.configuration.category.GeneralCategory;
 import io.github.lxgaming.location.common.manager.CommandManager;
 import io.github.lxgaming.location.common.manager.LocaleManager;
 import org.slf4j.Logger;
@@ -56,23 +55,12 @@ public class LocationImpl extends Location {
     }
     
     public boolean reload() {
-        getConfiguration().loadConfiguration();
-        if (!getConfig().isPresent()) {
+        if (!getConfiguration().loadConfiguration()) {
             return false;
         }
         
         getConfiguration().saveConfiguration();
-        reloadLogger();
-        
         return true;
-    }
-    
-    public void reloadLogger() {
-        if (getConfig().map(Config::getGeneralCategory).map(GeneralCategory::isDebug).orElse(false)) {
-            getLogger().debug("Debug mode enabled");
-        } else {
-            getLogger().info("Debug mode disabled");
-        }
     }
     
     public boolean addUser(User user) {

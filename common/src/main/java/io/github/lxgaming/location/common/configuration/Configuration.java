@@ -37,7 +37,7 @@ public class Configuration {
             .setPrettyPrinting()
             .create();
     
-    private Path path;
+    private final Path path;
     private Config config;
     
     public Configuration(Path path) {
