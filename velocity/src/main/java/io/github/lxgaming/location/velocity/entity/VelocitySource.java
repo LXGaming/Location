@@ -43,7 +43,7 @@ public class VelocitySource implements Source {
     }
     
     @Override
-    public @NonNull String getUsername() {
+    public @NonNull String getName() {
         if (commandSource instanceof Player) {
             return ((Player) commandSource).getUsername();
         }

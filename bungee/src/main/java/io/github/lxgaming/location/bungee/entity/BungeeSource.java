@@ -45,7 +45,7 @@ public class BungeeSource implements Source {
     }
     
     @Override
-    public @NonNull String getUsername() {
+    public @NonNull String getName() {
         return commandSender.getName();
     }
     
