@@ -28,7 +28,7 @@ public interface Source {
     
     @NonNull UUID getUniqueId();
     
-    @NonNull String getUsername();
+    @NonNull String getName();
     
     boolean hasPermission(@NonNull String permission);
     

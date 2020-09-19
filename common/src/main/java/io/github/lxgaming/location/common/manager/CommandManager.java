@@ -65,7 +65,7 @@ public final class CommandManager {
             return false;
         }
         
-        LocationImpl.getInstance().getLogger().debug("Processing {} for {} ({})", message, source.getUsername(), source.getUniqueId());
+        LocationImpl.getInstance().getLogger().debug("Processing {} for {} ({})", message, source.getName(), source.getUniqueId());
         
         try {
             CommandManager.DISPATCHER.execute(message, source);
