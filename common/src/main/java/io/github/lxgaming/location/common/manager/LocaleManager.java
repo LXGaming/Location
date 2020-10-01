@@ -83,7 +83,7 @@ public final class LocaleManager {
     public static Component serialize(String key, Object... arguments) {
         String translation = getTranslation(key);
         if (translation == null) {
-            return TextComponent.of("Failed to translate message", NamedTextColor.RED);
+            return Component.text("Failed to translate message", NamedTextColor.RED);
         }
         
         int matches = StringUtils.countMatches(translation, PLACEHOLDER_START + PLACEHOLDER_END);
@@ -93,7 +93,7 @@ public final class LocaleManager {
         
         String format = format(translation, arguments);
         if (StringUtils.isEmpty(format)) {
-            return TextComponent.of("Failed to format message", NamedTextColor.RED);
+            return Component.text("Failed to format message", NamedTextColor.RED);
         }
         
         return legacyComponentSerializer.deserialize(format);

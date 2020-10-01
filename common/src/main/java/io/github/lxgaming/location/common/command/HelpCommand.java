@@ -81,9 +81,9 @@ public class HelpCommand extends Command {
                     StringUtils.defaultIfEmpty(command.getPermission(), "None")
             );
             
-            TextComponent component = TextComponent.builder()
-                    .clickEvent(ClickEvent.of(ClickEvent.Action.SUGGEST_COMMAND, usage))
-                    .hoverEvent(HoverEvent.of(HoverEvent.Action.SHOW_TEXT, description))
+            TextComponent component = Component.text()
+                    .clickEvent(ClickEvent.suggestCommand(usage))
+                    .hoverEvent(HoverEvent.showText(description))
                     .append(LocaleManager.serialize(Locale.COMMAND_HELP, usage))
                     .build();
             
