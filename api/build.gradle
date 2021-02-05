@@ -1,9 +1,8 @@
 plugins {
-    id "com.jfrog.bintray"
     id "java"
     id "java-library"
-    id "maven-publish"
     id "net.kyori.blossom"
+    id "net.kyori.indra.publishing.sonatype"
 }
 
 sourceCompatibility = 1.8
@@ -29,41 +28,9 @@ dependencies {
     api("org.checkerframework:checker-qual:${checkerqualVersion}")
 }
 
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    archiveClassifier.set("javadoc")
-    from javadoc.destinationDir
-}
-
-task sourcesJar(type: Jar, dependsOn: classes) {
-    archiveClassifier.set("sources")
-    from sourceSets.main.allSource
-}
-
-artifacts {
-    archives javadocJar
-    archives sourcesJar
-}
-
-bintray {
-    user = System.getenv("BINTRAY_USER")
-    key = System.getenv("BINTRAY_KEY")
-    publications = ["mavenPublication"]
-    pkg {
-        repo = "maven"
-        name = "Location"
-        licenses = ["Apache-2.0"]
-        vcsUrl = "https://github.com/LXGaming/Location.git"
-        publish = true
-        version {
-            name = project.version
-            released = new Date()
-        }
-    }
-}
-
-bintrayUpload {
-    onlyIf { System.getenv("BINTRAY_KEY") != null }
-    onlyIf { System.getenv("BINTRAY_USER") != null }
+indra {
+    github("LXGaming", "Location")
+    apache2License()
 }
 
 javadoc {
@@ -73,17 +40,4 @@ javadoc {
 processResources {
     from("../LICENSE")
     rename("LICENSE", "LICENSE-Location")
-}
-
-publishing {
-    publications {
-        mavenPublication(MavenPublication) {
-            from components.java
-            groupId group
-            artifactId archivesBaseName
-            version version
-            artifact javadocJar
-            artifact sourcesJar
-        }
-    }
 }
