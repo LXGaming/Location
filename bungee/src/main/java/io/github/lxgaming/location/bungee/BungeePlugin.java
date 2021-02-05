@@ -22,6 +22,7 @@ import io.github.lxgaming.location.api.Platform;
 import io.github.lxgaming.location.bungee.command.LocationCommand;
 import io.github.lxgaming.location.bungee.listener.BungeeListener;
 import io.github.lxgaming.location.common.LocationImpl;
+import net.kyori.adventure.platform.bungeecord.BungeeAudiences;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -33,10 +34,12 @@ import java.util.List;
 public class BungeePlugin extends Plugin implements Platform {
     
     private static BungeePlugin instance;
+    private BungeeAudiences audiences;
     
     @Override
     public void onEnable() {
         instance = this;
+        audiences = BungeeAudiences.create(this);
         
         if (getProxy().getName().equalsIgnoreCase("BungeeCord")) {
             getLogger().severe("\n\n"
@@ -85,5 +88,9 @@ public class BungeePlugin extends Plugin implements Platform {
     
     public static BungeePlugin getInstance() {
         return instance;
+    }
+    
+    public BungeeAudiences getAudiences() {
+        return audiences;
     }
 }
