@@ -17,10 +17,11 @@
 package io.github.lxgaming.location.bungee.entity;
 
 import io.github.lxgaming.location.api.entity.Source;
+import io.github.lxgaming.location.bungee.BungeePlugin;
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.audience.MessageType;
+import net.kyori.adventure.identity.Identity;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
-import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -29,9 +30,11 @@ import java.util.UUID;
 
 public class BungeeSource implements Source {
     
+    private final Audience audience;
     private final CommandSender commandSender;
     
     public BungeeSource(CommandSender commandSender) {
+        this.audience = BungeePlugin.getInstance().getAudiences().sender(commandSender);
         this.commandSender = commandSender;
     }
     
@@ -56,29 +59,11 @@ public class BungeeSource implements Source {
     
     @Override
     public void sendActionBar(@NonNull Component component) {
-        if (!(commandSender instanceof ProxiedPlayer)) {
-            commandSender.sendMessage(BungeeComponentSerializer.get().serialize(component));
-            return;
-        }
-        
-        ProxiedPlayer player = (ProxiedPlayer) commandSender;
-        player.sendMessage(ChatMessageType.ACTION_BAR, BungeeComponentSerializer.get().serialize(component));
+        audience.sendActionBar(component);
     }
     
     @Override
     public void sendMessage(Component component, MessageType messageType) {
-        if (!(commandSender instanceof ProxiedPlayer)) {
-            commandSender.sendMessage(BungeeComponentSerializer.get().serialize(component));
-            return;
-        }
-        
-        ProxiedPlayer player = (ProxiedPlayer) commandSender;
-        if (messageType == MessageType.CHAT) {
-            player.sendMessage(ChatMessageType.CHAT, BungeeComponentSerializer.get().serialize(component));
-        } else if (messageType == MessageType.SYSTEM) {
-            player.sendMessage(ChatMessageType.SYSTEM, BungeeComponentSerializer.get().serialize(component));
-        } else {
-            throw new UnsupportedOperationException(String.format("%s is not supported", messageType));
-        }
+        audience.sendMessage(Identity.nil(), component, messageType);
     }
 }

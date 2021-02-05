@@ -35,10 +35,7 @@ dependencies {
     }
     compile(fileTree(dir: "libs", include: ["*.jar"]))
     compile("net.md-5:bungeecord-api:${bungeecordVersion}")
-    shadow("net.kyori:adventure-text-serializer-bungeecord:${adventureVersion}") {
-        transitive = false
-    }
-    shadow("net.kyori:adventure-text-serializer-gson:${adventureVersion}") {
+    shadow("net.kyori:adventure-platform-bungeecord:4.0.0-SNAPSHOT") {
         exclude(module: "gson")
     }
     compile("org.slf4j:slf4j-api:${slf4jVersion}")
