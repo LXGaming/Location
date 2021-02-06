@@ -1,8 +1,9 @@
 plugins {
     id "java"
     id "java-library"
+    id "maven-publish"
     id "net.kyori.blossom"
-    id "net.kyori.indra.publishing.sonatype"
+    id "signing"
 }
 
 sourceCompatibility = 1.8
@@ -28,9 +29,19 @@ dependencies {
     api("org.checkerframework:checker-qual:${checkerqualVersion}")
 }
 
-indra {
-    github("LXGaming", "Location")
-    apache2License()
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    archiveClassifier.set("javadoc")
+    from javadoc.destinationDir
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    archiveClassifier.set("sources")
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives javadocJar
+    archives sourcesJar
 }
 
 javadoc {
@@ -40,4 +51,59 @@ javadoc {
 processResources {
     from("../LICENSE")
     rename("LICENSE", "LICENSE-Location")
+}
+
+publishing {
+    publications {
+        mavenPublication(MavenPublication) {
+            from components.java
+            groupId group
+            artifactId archivesBaseName
+            version version
+            artifact javadocJar
+            artifact sourcesJar
+            pom {
+                name = "Location"
+                description = "Player location tracking for Waterfall and Velocity"
+                url = "https://github.com/LXGaming/Location"
+                developers {
+                    developer {
+                        id = "lxgaming"
+                        name = "LXGaming"
+                    }
+                }
+                issueManagement {
+                    system = "GitHub Issues"
+                    url = "https://github.com/LXGaming/Location/issues"
+                }
+                licenses {
+                    license {
+                        name = "The Apache License, Version 2.0"
+                        url = "http://www.apache.org/licenses/LICENSE-2.0.txt"
+                    }
+                }
+                scm {
+                    connection = "scm:git@github.com:LXGaming/Location.git"
+                    developerConnection = "scm:git@github.com:LXGaming/Location.git"
+                    url = "https://github.com/LXGaming/Location"
+                }
+            }
+        }
+    }
+    repositories {
+        if (project.hasProperty("sonatype.username") && project.hasProperty("sonatype.password")) {
+            maven {
+                name = "sonatype"
+                url = version.contains("-SNAPSHOT") ? "https://oss.sonatype.org/content/repositories/snapshots" : "https://oss.sonatype.org/service/local/staging/deploy/maven2"
+                credentials {
+                    username project.property("sonatype.username")
+                    password project.property("sonatype.password")
+                }
+            }
+        }
+    }
+}
+
+signing {
+    sign publishing.publications
 }
