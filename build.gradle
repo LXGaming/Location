@@ -1,22 +1,63 @@
 plugins {
-    id "com.github.johnrengelman.shadow" version "6.1.0" apply false
-    id "net.kyori.blossom" version "1.1.0" apply false
+    id "com.github.johnrengelman.shadow" version "7.0.0" apply false
+    id "net.kyori.blossom" version "1.3.0" apply false
 }
 
 subprojects {
+    apply plugin: "java"
+    apply plugin: "signing"
+
+    group = "io.github.lxgaming"
+
     repositories {
         mavenCentral()
+        maven {
+            name = "md-5"
+            url = "https://repo.md-5.net/content/repositories/releases"
+        }
         maven {
             name = "mojang"
             url = "https://libraries.minecraft.net"
         }
         maven {
             name = "sonatype"
-            url = "https://oss.sonatype.org/content/groups/public"
+            url = "https://oss.sonatype.org/content/repositories/snapshots"
         }
         maven {
-            name = "sonatype"
-            url = "https://oss.sonatype.org/content/repositories/snapshots"
+            name = "velocity"
+            url = "https://nexus.velocitypowered.com/repository/maven-public"
+        }
+    }
+
+    task signJar {
+        doFirst {
+            if (!project.hasProperty("signing.keyStorePath") || !project.hasProperty("signing.secretKeyRingFile")) {
+                project.logger.warn("========== [WARNING] ==========")
+                project.logger.warn("")
+                project.logger.warn("   This build is not signed!   ")
+                project.logger.warn("")
+                project.logger.warn("========== [WARNING] ==========")
+                throw new StopExecutionException()
+            }
+        }
+
+        doLast {
+            configurations.archives.allArtifacts.files.each {
+                ant.signjar(
+                        jar: it,
+                        alias: project.property("signing.alias"),
+                        storepass: project.property("signing.keyStorePassword"),
+                        keystore: project.property("signing.keyStorePath"),
+                        keypass: project.property("signing.keyStorePassword"),
+                        preservelastmodified: project.property("signing.preserveLastModified"),
+                        tsaurl: project.property("signing.timestampAuthority"),
+                        digestalg: project.property("signing.digestAlgorithm")
+                )
+                project.logger.lifecycle("JAR Signed: ${it.name}")
+
+                signing.sign(it)
+                project.logger.lifecycle("PGP Signed: ${it.name}")
+            }
         }
     }
 }

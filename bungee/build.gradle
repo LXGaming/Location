@@ -1,28 +1,16 @@
 plugins {
     id "com.github.johnrengelman.shadow"
-    id "java"
-    id "signing"
 }
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-group = "io.github.lxgaming"
 archivesBaseName = "location-bungee"
-version = version
 
 configurations {
-    build.dependsOn("signJar")
-    compileJava.dependsOn(":location-common:build")
-    jar.enabled = false
-    jar.dependsOn("shadowJar")
 }
 
 repositories {
-    maven {
-        name = "sonatype"
-        url = "https://oss.sonatype.org/content/repositories/snapshots"
-    }
 }
 
 dependencies {
@@ -33,15 +21,29 @@ dependencies {
         exclude(module: "netty-all")
         exclude(module: "slf4j-api")
     }
-    compile(fileTree(dir: "libs", include: ["*.jar"]))
-    compile("net.md-5:bungeecord-api:${bungeecordVersion}")
+    compileOnly(fileTree(dir: "libs", include: ["*.jar"]))
+    compileOnly("net.md-5:bungeecord-api:${bungeecordVersion}")
     shadow("net.kyori:adventure-platform-bungeecord:4.0.0-SNAPSHOT") {
         exclude(module: "gson")
     }
-    compile("org.slf4j:slf4j-api:${slf4jVersion}")
+    compileOnly("org.slf4j:slf4j-api:${slf4jVersion}")
+}
+
+build {
+    dependsOn("signJar")
+}
+
+compileJava {
+    dependsOn(":location-common:build")
+}
+
+jar {
+    enabled = false
+    dependsOn("shadowJar")
 }
 
 processResources {
+    duplicatesStrategy(DuplicatesStrategy.INCLUDE)
     from (sourceSets.main.resources.srcDirs) {
         include("bungee.yml")
         expand("name": "Location", "version": version)
@@ -54,36 +56,4 @@ shadowJar {
     relocate("net.kyori.adventure", "io.github.lxgaming.location.lib.adventure")
     relocate("net.kyori.examination", "io.github.lxgaming.location.lib.examination")
     relocate("org.checkerframework", "io.github.lxgaming.location.lib.checkerframework")
-}
-
-task signJar {
-    doFirst {
-        if (!project.hasProperty("signing.keyStorePath") || !project.hasProperty("signing.secretKeyRingFile")) {
-            project.logger.warn("========== [WARNING] ==========")
-            project.logger.warn("")
-            project.logger.warn("   This build is not signed!   ")
-            project.logger.warn("")
-            project.logger.warn("========== [WARNING] ==========")
-            throw new StopExecutionException()
-        }
-    }
-
-    doLast {
-        configurations.archives.allArtifacts.files.each {
-            ant.signjar(
-                jar: it,
-                alias: project.property("signing.alias"),
-                storepass: project.property("signing.keyStorePassword"),
-                keystore: project.property("signing.keyStorePath"),
-                keypass: project.property("signing.keyStorePassword"),
-                preservelastmodified: project.property("signing.preserveLastModified"),
-                tsaurl: project.property("signing.timestampAuthority"),
-                digestalg: project.property("signing.digestAlgorithm")
-            )
-            project.logger.lifecycle("JAR Signed: ${it.name}")
-
-            signing.sign(it)
-            project.logger.lifecycle("PGP Signed: ${it.name}")
-        }
-    }
 }
