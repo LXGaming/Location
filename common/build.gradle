@@ -1,17 +1,13 @@
 plugins {
-    id "java"
     id "java-library"
 }
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-group = "io.github.lxgaming"
 archivesBaseName = "location-common"
-version = version
 
 configurations {
-    compileJava.dependsOn(":location-api:build")
 }
 
 repositories {
@@ -23,8 +19,12 @@ dependencies {
     api("com.mojang:brigadier:${brigadierVersion}")
     api("io.netty:netty-all:${nettyVersion}")
     api("net.kyori:adventure-text-serializer-legacy:${adventureVersion}")
-    testCompile("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
+    testImplementation("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
     api("org.slf4j:slf4j-api:${slf4jVersion}")
+}
+
+compileJava {
+    dependsOn(":location-api:build")
 }
 
 test {
