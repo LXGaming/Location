@@ -25,15 +25,6 @@ dependencies {
     api("org.checkerframework:checker-qual:${checkerqualVersion}")
 }
 
-java {
-    withJavadocJar()
-    withSourcesJar()
-}
-
-javadoc {
-    failOnError = false
-}
-
 processResources {
     from("../LICENSE")
     rename("LICENSE", "LICENSE-Location")
@@ -43,35 +34,6 @@ publishing {
     publications {
         mavenPublication(MavenPublication) {
             from components.java
-            groupId group
-            artifactId archivesBaseName
-            version version
-            pom {
-                name = "Location"
-                description = "Player location tracking for Waterfall and Velocity"
-                url = "https://github.com/LXGaming/Location"
-                developers {
-                    developer {
-                        id = "lxgaming"
-                        name = "LXGaming"
-                    }
-                }
-                issueManagement {
-                    system = "GitHub Issues"
-                    url = "https://github.com/LXGaming/Location/issues"
-                }
-                licenses {
-                    license {
-                        name = "The Apache License, Version 2.0"
-                        url = "http://www.apache.org/licenses/LICENSE-2.0.txt"
-                    }
-                }
-                scm {
-                    connection = "scm:git@github.com:LXGaming/Location.git"
-                    developerConnection = "scm:git@github.com:LXGaming/Location.git"
-                    url = "https://github.com/LXGaming/Location"
-                }
-            }
         }
     }
     repositories {
@@ -86,8 +48,4 @@ publishing {
             }
         }
     }
-}
-
-signing {
-    sign publishing.publications
 }
