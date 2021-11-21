@@ -108,7 +108,6 @@ public abstract class PacketHandler extends ChannelDuplexHandler {
     }
     
     public void handleServerJoinGame(ByteBuf byteBuf) {
-        throw new UnsupportedOperationException();
     }
     
     public void handleServerPlayerPositionRotation(ByteBuf byteBuf) {
@@ -152,6 +151,5 @@ public abstract class PacketHandler extends ChannelDuplexHandler {
     }
     
     public void handleServerRespawn(ByteBuf byteBuf) {
-        throw new UnsupportedOperationException();
     }
 }
