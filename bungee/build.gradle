@@ -14,7 +14,7 @@ repositories {
 }
 
 dependencies {
-    shadow(project(path: ":location-common")) {
+    implementation(project(path: ":location-common")) {
         exclude(module: "brigadier")
         exclude(module: "gson")
         exclude(module: "guava")
@@ -23,7 +23,7 @@ dependencies {
     }
     compileOnly(fileTree(dir: "libs", include: ["*.jar"]))
     compileOnly("net.md-5:bungeecord-api:${bungeecordVersion}")
-    shadow("net.kyori:adventure-platform-bungeecord:4.0.0-SNAPSHOT") {
+    implementation("net.kyori:adventure-platform-bungeecord:4.0.0-SNAPSHOT") {
         exclude(module: "gson")
     }
     compileOnly("org.slf4j:slf4j-api:${slf4jVersion}")
@@ -52,7 +52,6 @@ processResources {
 
 shadowJar {
     archiveClassifier.set(null)
-    configurations = [project.configurations.shadow]
     relocate("net.kyori.adventure", "io.github.lxgaming.location.lib.adventure")
     relocate("net.kyori.examination", "io.github.lxgaming.location.lib.examination")
     relocate("org.checkerframework", "io.github.lxgaming.location.lib.checkerframework")
