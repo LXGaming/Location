@@ -2,10 +2,13 @@ plugins {
     id "com.github.johnrengelman.shadow"
 }
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-
 archivesBaseName = "location-velocity"
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(11)
+    }
+}
 
 configurations {
 }

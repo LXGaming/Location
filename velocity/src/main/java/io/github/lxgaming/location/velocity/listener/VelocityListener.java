@@ -33,7 +33,7 @@ public class VelocityListener {
         UserImpl user = new UserImpl(
                 event.getPlayer().getUniqueId(),
                 event.getPlayer().getUsername(),
-                ProtocolVersionImpl.getProtocolVersion(event.getPlayer().getProtocolVersion().getProtocol(), event.getPlayer().getProtocolVersion().getName()));
+                ProtocolVersionImpl.getProtocolVersion(event.getPlayer().getProtocolVersion().getProtocol(), String.join(", ", event.getPlayer().getProtocolVersion().getVersionsSupportedBy())));
         LocationImpl.getInstance().addUser(user);
         
         if (VelocityToolbox.addChannel(user, event.getPlayer())) {
