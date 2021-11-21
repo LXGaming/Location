@@ -1,10 +1,11 @@
 plugins {
-    id "com.github.johnrengelman.shadow" version "7.0.0" apply false
+    id "com.github.johnrengelman.shadow" version "7.1.0" apply false
     id "net.kyori.blossom" version "1.3.0" apply false
 }
 
 subprojects {
     apply plugin: "java"
+    apply plugin: "maven-publish"
     apply plugin: "signing"
 
     group = "io.github.lxgaming"
@@ -27,6 +28,58 @@ subprojects {
             name = "velocity"
             url = "https://nexus.velocitypowered.com/repository/maven-public"
         }
+    }
+
+    dependencies {
+    }
+
+    java {
+        withJavadocJar()
+        withSourcesJar()
+    }
+
+    javadoc {
+        failOnError = false
+    }
+
+    publishing {
+        publications {
+            mavenPublication(MavenPublication) {
+                groupId group
+                artifactId archivesBaseName
+                version version
+                pom {
+                    name = "Location"
+                    description = "Player location tracking for Waterfall and Velocity"
+                    url = "https://github.com/LXGaming/Location"
+                    developers {
+                        developer {
+                            id = "lxgaming"
+                            name = "LXGaming"
+                        }
+                    }
+                    issueManagement {
+                        system = "GitHub Issues"
+                        url = "https://github.com/LXGaming/Location/issues"
+                    }
+                    licenses {
+                        license {
+                            name = "The Apache License, Version 2.0"
+                            url = "http://www.apache.org/licenses/LICENSE-2.0.txt"
+                        }
+                    }
+                    scm {
+                        connection = "scm:git@github.com:LXGaming/Location.git"
+                        developerConnection = "scm:git@github.com:LXGaming/Location.git"
+                        url = "https://github.com/LXGaming/Location"
+                    }
+                }
+            }
+        }
+    }
+
+    signing {
+        sign publishing.publications
     }
 
     task signJar {
