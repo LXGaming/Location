@@ -69,8 +69,8 @@ subprojects {
                         }
                     }
                     scm {
-                        connection = "scm:git@github.com:LXGaming/Location.git"
-                        developerConnection = "scm:git@github.com:LXGaming/Location.git"
+                        connection = "scm:git:https://github.com/LXGaming/Location.git"
+                        developerConnection = "scm:git:https://github.com/LXGaming/Location.git"
                         url = "https://github.com/LXGaming/Location"
                     }
                 }
