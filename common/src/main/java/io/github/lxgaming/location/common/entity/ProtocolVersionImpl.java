@@ -25,8 +25,8 @@ import java.util.List;
 import java.util.Objects;
 
 public class ProtocolVersionImpl implements ProtocolVersion {
-
-    private static final List <ProtocolVersionImpl> PROTOCOL_VERSIONS = ImmutableList.of(
+    
+    private static final List<ProtocolVersionImpl> PROTOCOL_VERSIONS = ImmutableList.of(
             new ProtocolVersionImpl(47, "1.8"),
             new ProtocolVersionImpl(107, "1.9"),
             new ProtocolVersionImpl(108, "1.9.1"),
@@ -53,25 +53,30 @@ public class ProtocolVersionImpl implements ProtocolVersion {
             new ProtocolVersionImpl(736, "1.16.1"),
             new ProtocolVersionImpl(751, "1.16.2"),
             new ProtocolVersionImpl(753, "1.16.3"),
-            new ProtocolVersionImpl(757, "1.18.1")
+            new ProtocolVersionImpl(753, "1.16.3"),
+            new ProtocolVersionImpl(754, "1.16.5"),
+            new ProtocolVersionImpl(755, "1.17"),
+            new ProtocolVersionImpl(756, "1.17.1"),
+            new ProtocolVersionImpl(757, "1.18.1"),
+            new ProtocolVersionImpl(758, "1.18.2")
     );
-
+    
     private final int id;
     private final String name;
-
+    
     public ProtocolVersionImpl(int id) {
         this(id, null);
     }
-
+    
     public ProtocolVersionImpl(int id, String name) {
         this.id = id;
         this.name = name;
     }
-
+    
     public static ProtocolVersion getProtocolVersion(int id) {
         return getProtocolVersion(id, null);
     }
-
+    
     @NonNull
     public static ProtocolVersion getProtocolVersion(int id, @Nullable String name) {
         for (ProtocolVersion protocolVersion : PROTOCOL_VERSIONS) {
@@ -79,39 +84,39 @@ public class ProtocolVersionImpl implements ProtocolVersion {
                 return protocolVersion;
             }
         }
-
+        
         return new ProtocolVersionImpl(id, name);
     }
-
+    
     @Override
     public int getId() {
         return id;
     }
-
+    
     @Override
     public @Nullable String getName() {
         return name;
     }
-
+    
     @Override
     public int hashCode() {
         return Objects.hash(getId(), getName());
     }
-
+    
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
             return true;
         }
-
+        
         if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-
+        
         ProtocolVersionImpl protocolVersion = (ProtocolVersionImpl) obj;
         return Objects.equals(getId(), protocolVersion.getId()) && Objects.equals(getName(), protocolVersion.getName());
     }
-
+    
     @Override
     public String toString() {
         return getName() + " (" + getId() + ")";
