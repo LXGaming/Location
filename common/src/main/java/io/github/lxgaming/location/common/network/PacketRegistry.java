@@ -59,8 +59,7 @@ public enum PacketRegistry {
             registerPacket(0x05, 66, 47, PacketHandler::handleClientPlayerRotation);
             
             // Player Position & Rotation
-            registerPacket(0x13, 757, 757, PacketHandler::handleClientPlayerPositionRotation);
-            registerPacket(0x12, 756, 755, PacketHandler::handleClientPlayerPositionRotation);
+            registerPacket(0x12, 757, 755, PacketHandler::handleClientPlayerPositionRotation);
             registerPacket(0x13, 754, 735, PacketHandler::handleClientPlayerPositionRotation);
             registerPacket(0x12, 578, 471, PacketHandler::handleClientPlayerPositionRotation);
             registerPacket(0x13, 470, 464, PacketHandler::handleClientPlayerPositionRotation);
