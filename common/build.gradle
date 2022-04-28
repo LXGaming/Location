@@ -8,6 +8,10 @@ targetCompatibility = 1.8
 archivesBaseName = "location-common"
 
 configurations {
+    // All dependencies in the "provided" configuration get merged into the final jar (not shadow jar)
+    provided
+    // Make compile extend from our provided configuration so that things added to bundled end up on the compile classpath
+    compile.extendsFrom(provided)
 }
 
 repositories {
@@ -21,6 +25,9 @@ dependencies {
     api("net.kyori:adventure-text-serializer-legacy:${adventureVersion}")
     testImplementation("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
     api("org.slf4j:slf4j-api:${slf4jVersion}")
+    
+    api("io.reactivex.rxjava3:rxjava:3.1.4")
+    provided("io.reactivex.rxjava3:rxjava:3.1.4")
 }
 
 compileJava {
