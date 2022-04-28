@@ -20,9 +20,9 @@ repositories {
 
 dependencies {
     api("com.google.guava:guava:${guavaVersion}")
+    api("io.reactivex.rxjava3:rxjava:${rxjavaVersion}")
     api("net.kyori:adventure-api:${adventureVersion}")
     api("org.checkerframework:checker-qual:${checkerqualVersion}")
-    api("io.reactivex.rxjava3:rxjava:3.1.4")
 }
 
 processResources {
