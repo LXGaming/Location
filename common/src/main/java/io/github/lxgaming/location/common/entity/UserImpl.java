@@ -19,6 +19,8 @@ package io.github.lxgaming.location.common.entity;
 import io.github.lxgaming.location.api.entity.Dimension;
 import io.github.lxgaming.location.api.entity.ProtocolVersion;
 import io.github.lxgaming.location.api.entity.User;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.subjects.BehaviorSubject;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -26,7 +28,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class UserImpl implements User {
-    
+
     private final UUID uniqueId;
     private final String username;
     private final ProtocolVersion protocolVersion;
@@ -37,110 +39,160 @@ public class UserImpl implements User {
     private float yaw;
     private Dimension dimension;
     private String server;
-    
+
+    private final BehaviorSubject <Double> xSubject = BehaviorSubject.create();
+    private final BehaviorSubject <Double> ySubject = BehaviorSubject.create();
+    private final BehaviorSubject <Double> zSubject = BehaviorSubject.create();
+    private final BehaviorSubject <Float> pitchSubject = BehaviorSubject.create();
+    private final BehaviorSubject <Float> yawSubject = BehaviorSubject.create();
+    private final BehaviorSubject <Dimension> dimensionSubject = BehaviorSubject.create();
+    private final BehaviorSubject <String> serverSubject = BehaviorSubject.create();
+
     public UserImpl(UUID uniqueId, String username, ProtocolVersion protocolVersion) {
         this.uniqueId = uniqueId;
         this.username = username;
         this.protocolVersion = protocolVersion;
     }
-    
+
     @Override
     public @NonNull UUID getUniqueId() {
         return uniqueId;
     }
-    
+
     @Override
     public @NonNull String getUsername() {
         return username;
     }
-    
+
     @Override
     public @NonNull ProtocolVersion getProtocolVersion() {
         return protocolVersion;
     }
-    
+
     @Override
     public double getX() {
         return x;
     }
-    
+
+    @Override
+    public Observable <Double> observeX() {
+        return xSubject;
+    }
+
     public void setX(double x) {
         this.x = x;
+        this.xSubject.onNext(x);
     }
-    
+
     @Override
     public double getY() {
         return y;
     }
-    
+
+    @Override
+    public Observable <Double> observeY() {
+        return ySubject;
+    }
+
     public void setY(double y) {
         this.y = y;
+        this.ySubject.onNext(y);
     }
-    
+
     @Override
     public double getZ() {
         return z;
     }
-    
+
+    @Override
+    public Observable <Double> observeZ() {
+        return zSubject;
+    }
+
     public void setZ(double z) {
         this.z = z;
+        this.zSubject.onNext(z);
     }
-    
+
     @Override
     public float getPitch() {
         return pitch;
     }
-    
+
+    @Override
+    public Observable <Float> observePitch() {
+        return pitchSubject;
+    }
+
     public void setPitch(float pitch) {
         this.pitch = pitch;
+        this.pitchSubject.onNext(pitch);
     }
-    
+
     @Override
     public float getYaw() {
         return yaw;
     }
-    
+
+    @Override
+    public Observable <Float> observeYaw() {
+        return yawSubject;
+    }
+
     public void setYaw(float yaw) {
         this.yaw = yaw;
+        this.yawSubject.onNext(yaw);
     }
-    
+
     @Override
     public @Nullable Dimension getDimension() {
         return dimension;
     }
-    
+
+    @Override
+    public Observable <Dimension> observeDimension() {
+        return dimensionSubject;
+    }
+
     public void setDimension(Dimension dimension) {
         this.dimension = dimension;
+        this.dimensionSubject.onNext(dimension);
     }
-    
+
     @Override
     public @Nullable String getServer() {
         return server;
     }
-    
+
+    @Override
+    public Observable <String> observeServer() {
+        return serverSubject;
+    }
+
     public void setServer(String server) {
         this.server = server;
+        this.serverSubject.onNext(server);
     }
-    
+
     @Override
     public int hashCode() {
         return Objects.hash(getUniqueId());
     }
-    
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
             return true;
         }
-        
+
         if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        
+
         UserImpl user = (UserImpl) obj;
         return Objects.equals(getUniqueId(), user.getUniqueId());
     }
-    
+
     @Override
     public String toString() {
         return getUsername() + " (" + getUniqueId() + ")";
