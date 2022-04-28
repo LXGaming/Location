@@ -11,10 +11,6 @@ java {
 }
 
 configurations {
-    // All dependencies in this configuration get merged into the final jar (not shadow jar)
-    provided
-    // Make compile extend from our provided configuration so that things added to bundled end up on the compile classpath
-    compile.extendsFrom(provided)
 }
 
 repositories {
@@ -34,7 +30,6 @@ dependencies {
     compileOnly(fileTree(dir: "libs", include: ["*.jar"]))
     annotationProcessor("com.velocitypowered:velocity-api:${velocityVersion}")
     compileOnly("com.velocitypowered:velocity-api:${velocityVersion}")
-    provided("io.reactivex.rxjava3:rxjava:3.1.4")
 }
 
 build {
