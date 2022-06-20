@@ -1,7 +1,7 @@
 # Location
 
-[![License](https://lxgaming.github.io/badges/License-Apache%202.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
-![Maven Central](https://img.shields.io/maven-central/v/io.github.lxgaming/location-api)
+[![License](https://img.shields.io/github/license/LXGaming/Location?label=License&cacheSeconds=86400)](https://github.com/LXGaming/Location/blob/master/LICENSE)
+![Maven Central](https://img.shields.io/maven-central/v/io.github.lxgaming/location-api?label=Maven%20Central)
 
 ## Library
 Repository: `mavenCentral()`
@@ -9,4 +9,4 @@ Repository: `mavenCentral()`
 Dependency: `io.github.lxgaming:location-api:VERSION`
 
 ## License
-Location is licensed under the [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0) license.
+Location is licensed under the [Apache 2.0](https://github.com/LXGaming/Location/blob/master/LICENSE) license.
