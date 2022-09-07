@@ -79,6 +79,10 @@ subprojects {
     }
 
     signing {
+        if (project.hasProperty("signingKey") && project.hasProperty("signingPassword")) {
+            useInMemoryPgpKeys(project.property("signingKey"), project.property("signingPassword"))
+        }
+
         sign publishing.publications
     }
 
