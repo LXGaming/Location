@@ -55,6 +55,10 @@ public class LocationCommand implements RawCommand {
         VelocitySource source = new VelocitySource(invocation.source());
 
         ParseResults<Source> parseResults = CommandManager.DISPATCHER.parse(arguments, source);
+        if (parseResults.getContext().getCommand() == null) {
+            return CompletableFuture.supplyAsync(() -> CommandManager.getSuggestions(source, arguments));
+        }
+
         return CommandManager.DISPATCHER.getCompletionSuggestions(parseResults)
                 .thenApply(suggestions -> Lists.transform(suggestions.getList(), Suggestion::getText));
     }
