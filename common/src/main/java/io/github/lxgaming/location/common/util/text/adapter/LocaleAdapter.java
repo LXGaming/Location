@@ -26,11 +26,7 @@ public class LocaleAdapter {
         source.sendActionBar(LocaleManager.serialize(locale, arguments));
     }
 
-    public static void sendChatMessage(Source source, Locale locale, Object... arguments) {
-        source.sendChatMessage(LocaleManager.serialize(locale, arguments));
-    }
-
-    public static void sendSystemMessage(Source source, Locale locale, Object... arguments) {
-        source.sendSystemMessage(LocaleManager.serialize(locale, arguments));
+    public static void sendMessage(Source source, Locale locale, Object... arguments) {
+        source.sendMessage(LocaleManager.serialize(locale, arguments));
     }
 }

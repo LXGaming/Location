@@ -44,11 +44,11 @@ public class ReloadCommand extends Command {
     private int execute(Source source) {
         if (LocationImpl.getInstance().reload()) {
             LocaleManager.prepare();
-            LocaleAdapter.sendSystemMessage(source, Locale.COMMAND_RELOAD_SUCCESS);
+            LocaleAdapter.sendMessage(source, Locale.COMMAND_RELOAD_SUCCESS);
             return 1;
         }
 
-        LocaleAdapter.sendSystemMessage(source, Locale.COMMAND_RELOAD_FAILURE);
+        LocaleAdapter.sendMessage(source, Locale.COMMAND_RELOAD_FAILURE);
         return 0;
     }
 }

@@ -55,7 +55,7 @@ public class HelpCommand extends Command {
     }
 
     private int execute(Source source) {
-        LocaleAdapter.sendSystemMessage(source, Locale.GENERAL_PREFIX);
+        LocaleAdapter.sendMessage(source, Locale.GENERAL_PREFIX);
 
         Set<Class<? extends Command>> commandClasses = Sets.newHashSet();
         commandClasses.add(getClass());
@@ -87,7 +87,7 @@ public class HelpCommand extends Command {
                     .append(LocaleManager.serialize(Locale.COMMAND_HELP, usage))
                     .build();
 
-            source.sendSystemMessage(component);
+            source.sendMessage(component);
         }
 
         return 1;

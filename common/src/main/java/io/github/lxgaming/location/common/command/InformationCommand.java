@@ -43,7 +43,7 @@ public class InformationCommand extends Command {
     }
 
     private int execute(Source source) {
-        LocaleAdapter.sendSystemMessage(source, Locale.GENERAL_INFORMATION,
+        LocaleAdapter.sendMessage(source, Locale.GENERAL_INFORMATION,
                 Location.VERSION, Location.AUTHORS, Location.SOURCE, Location.WEBSITE
         );
 
