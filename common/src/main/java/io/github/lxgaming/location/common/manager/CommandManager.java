@@ -37,6 +37,7 @@ import io.github.lxgaming.location.common.util.Toolbox;
 import io.github.lxgaming.location.common.util.brigadier.adapter.CommandAdapter;
 import io.github.lxgaming.location.common.util.text.adapter.LocaleAdapter;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -148,6 +149,23 @@ public final class CommandManager {
 
     public static String getPrefix() {
         return Location.ID;
+    }
+
+    public static List<String> getSuggestions(Source source, String arguments) {
+        List<String> suggestions = new ArrayList<>();
+        for (CommandNode<Source> commandNode : CommandManager.DISPATCHER.getRoot().getChildren()) {
+            if (!commandNode.getName().regionMatches(true, 0, arguments, 0, arguments.length())) {
+                continue;
+            }
+
+            if (!commandNode.canUse(source)) {
+                continue;
+            }
+
+            suggestions.add(commandNode.getName());
+        }
+
+        return suggestions;
     }
 
     private static Collection<CommandNode<Source>> register(Command command) {
