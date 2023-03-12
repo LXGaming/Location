@@ -19,8 +19,6 @@ package io.github.lxgaming.location.bungee.entity;
 import io.github.lxgaming.location.api.entity.Source;
 import io.github.lxgaming.location.bungee.BungeePlugin;
 import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.audience.MessageType;
-import net.kyori.adventure.identity.Identity;
 import net.kyori.adventure.text.Component;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -63,7 +61,7 @@ public class BungeeSource implements Source {
     }
 
     @Override
-    public void sendMessage(Component component, MessageType messageType) {
-        audience.sendMessage(Identity.nil(), component, messageType);
+    public void sendMessage(@NonNull Component component) {
+        audience.sendMessage(component);
     }
 }

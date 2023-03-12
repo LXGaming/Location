@@ -19,7 +19,6 @@ package io.github.lxgaming.location.velocity.entity;
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.Player;
 import io.github.lxgaming.location.api.entity.Source;
-import net.kyori.adventure.audience.MessageType;
 import net.kyori.adventure.text.Component;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
@@ -62,7 +61,7 @@ public class VelocitySource implements Source {
     }
 
     @Override
-    public void sendMessage(Component component, MessageType messageType) {
-        commandSource.sendMessage(component, messageType);
+    public void sendMessage(@NonNull Component component) {
+        commandSource.sendMessage(component);
     }
 }

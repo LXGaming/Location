@@ -58,7 +58,7 @@ public class DebugCommand extends Command {
     private int execute(Source source, Boolean state) {
         GeneralCategory generalCategory = LocationImpl.getInstance().getConfig().map(Config::getGeneralCategory).orElse(null);
         if (generalCategory == null) {
-            LocaleAdapter.sendSystemMessage(source, Locale.CONFIGURATION_ERROR);
+            LocaleAdapter.sendMessage(source, Locale.CONFIGURATION_ERROR);
             return 0;
         }
 
@@ -69,9 +69,9 @@ public class DebugCommand extends Command {
         }
 
         if (generalCategory.isDebug()) {
-            LocaleAdapter.sendSystemMessage(source, Locale.COMMAND_DEBUG_ENABLE);
+            LocaleAdapter.sendMessage(source, Locale.COMMAND_DEBUG_ENABLE);
         } else {
-            LocaleAdapter.sendSystemMessage(source, Locale.COMMAND_DEBUG_DISABLE);
+            LocaleAdapter.sendMessage(source, Locale.COMMAND_DEBUG_DISABLE);
         }
 
         return 1;

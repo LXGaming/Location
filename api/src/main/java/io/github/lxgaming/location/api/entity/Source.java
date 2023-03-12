@@ -16,7 +16,6 @@
 
 package io.github.lxgaming.location.api.entity;
 
-import net.kyori.adventure.audience.MessageType;
 import net.kyori.adventure.text.Component;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
@@ -34,13 +33,5 @@ public interface Source {
 
     void sendActionBar(@NonNull Component component);
 
-    default void sendChatMessage(@NonNull Component component) {
-        sendMessage(component, MessageType.CHAT);
-    }
-
-    default void sendSystemMessage(@NonNull Component component) {
-        sendMessage(component, MessageType.SYSTEM);
-    }
-
-    void sendMessage(Component component, MessageType messageType);
+    void sendMessage(@NonNull Component component);
 }

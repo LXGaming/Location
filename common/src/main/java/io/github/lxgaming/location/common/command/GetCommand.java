@@ -56,19 +56,19 @@ public class GetCommand extends Command {
     }
 
     private int execute(Source source) {
-        LocaleAdapter.sendSystemMessage(source, Locale.COMMAND_INVALID_ARGUMENTS, "<Player>");
+        LocaleAdapter.sendMessage(source, Locale.COMMAND_INVALID_ARGUMENTS, "<Player>");
         return 0;
     }
 
     private int execute(Source source, String username) {
         if (!Toolbox.isUsername(username)) {
-            LocaleAdapter.sendSystemMessage(source, Locale.USER_NAME_INVALID);
+            LocaleAdapter.sendMessage(source, Locale.USER_NAME_INVALID);
             return 0;
         }
 
         User user = Location.getInstance().getUser(username).orElse(null);
         if (user == null) {
-            LocaleAdapter.sendSystemMessage(source, Locale.COMMAND_GET_USER_NOT_FOUND, username);
+            LocaleAdapter.sendMessage(source, Locale.COMMAND_GET_USER_NOT_FOUND, username);
             return 0;
         }
 
@@ -87,7 +87,7 @@ public class GetCommand extends Command {
             dimension = null;
         }
 
-        LocaleAdapter.sendSystemMessage(source, Locale.COMMAND_GET,
+        LocaleAdapter.sendMessage(source, Locale.COMMAND_GET,
                 user.getUsername(), version,
                 user.getX(), user.getY(), user.getZ(),
                 user.getYaw(), user.getPitch(),

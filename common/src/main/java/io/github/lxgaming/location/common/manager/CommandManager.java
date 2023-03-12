@@ -61,7 +61,7 @@ public final class CommandManager {
 
     public static boolean execute(Source source, String message) {
         if (StringUtils.isBlank(message)) {
-            LocaleAdapter.sendSystemMessage(source, Locale.COMMAND_BASE, getPrefix());
+            LocaleAdapter.sendMessage(source, Locale.COMMAND_BASE, getPrefix());
             return false;
         }
 
@@ -71,11 +71,11 @@ public final class CommandManager {
             CommandManager.DISPATCHER.execute(message, source);
             return true;
         } catch (CommandSyntaxException ex) {
-            LocaleAdapter.sendSystemMessage(source, Locale.COMMAND_ERROR, ex.getMessage());
+            LocaleAdapter.sendMessage(source, Locale.COMMAND_ERROR, ex.getMessage());
             return false;
         } catch (Exception ex) {
             LocationImpl.getInstance().getLogger().error("Encountered an error while executing {}", message, ex);
-            LocaleAdapter.sendSystemMessage(source, Locale.COMMAND_EXCEPTION);
+            LocaleAdapter.sendMessage(source, Locale.COMMAND_EXCEPTION);
             return false;
         }
     }
