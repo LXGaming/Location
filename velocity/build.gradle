@@ -4,12 +4,6 @@ plugins {
 
 archivesBaseName = "location-velocity"
 
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(11)
-    }
-}
-
 configurations {
 }
 
@@ -43,6 +37,11 @@ compileJava {
 jar {
     enabled = false
     dependsOn("shadowJar")
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
 }
 
 shadowJar {
