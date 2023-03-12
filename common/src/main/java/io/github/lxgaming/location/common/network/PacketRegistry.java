@@ -29,6 +29,9 @@ public enum PacketRegistry {
     CLIENTBOUND("Clientbound") {
         {
             // Player Position
+            registerPacket(0x13, 761, 761, PacketHandler::handleClientPlayerPosition);
+            registerPacket(0x14, 760, 760, PacketHandler::handleClientPlayerPosition);
+            registerPacket(0x13, 759, 759, PacketHandler::handleClientPlayerPosition);
             registerPacket(0x11, 758, 755, PacketHandler::handleClientPlayerPosition);
             registerPacket(0x12, 754, 735, PacketHandler::handleClientPlayerPosition);
             registerPacket(0x11, 578, 471, PacketHandler::handleClientPlayerPosition);
@@ -44,6 +47,9 @@ public enum PacketRegistry {
             registerPacket(0x04, 66, 47, PacketHandler::handleClientPlayerPosition);
 
             // Player Rotation
+            registerPacket(0x15, 761, 761, PacketHandler::handleClientPlayerRotation);
+            registerPacket(0x16, 760, 760, PacketHandler::handleClientPlayerRotation);
+            registerPacket(0x15, 759, 759, PacketHandler::handleClientPlayerRotation);
             registerPacket(0x13, 758, 755, PacketHandler::handleClientPlayerRotation);
             registerPacket(0x14, 754, 735, PacketHandler::handleClientPlayerRotation);
             registerPacket(0x13, 578, 471, PacketHandler::handleClientPlayerRotation);
@@ -59,6 +65,9 @@ public enum PacketRegistry {
             registerPacket(0x05, 66, 47, PacketHandler::handleClientPlayerRotation);
 
             // Player Position & Rotation
+            registerPacket(0x14, 761, 761, PacketHandler::handleClientPlayerPositionRotation);
+            registerPacket(0x15, 760, 760, PacketHandler::handleClientPlayerPositionRotation);
+            registerPacket(0x14, 759, 759, PacketHandler::handleClientPlayerPositionRotation);
             registerPacket(0x12, 758, 755, PacketHandler::handleClientPlayerPositionRotation);
             registerPacket(0x13, 754, 735, PacketHandler::handleClientPlayerPositionRotation);
             registerPacket(0x12, 578, 471, PacketHandler::handleClientPlayerPositionRotation);
@@ -78,6 +87,9 @@ public enum PacketRegistry {
     SERVERBOUND("Serverbound") {
         {
             // Join Game
+            registerPacket(0x24, 761, 761, PacketHandler::handleServerJoinGame);
+            registerPacket(0x25, 760, 760, PacketHandler::handleServerJoinGame);
+            registerPacket(0x23, 759, 759, PacketHandler::handleServerJoinGame);
             registerPacket(0x26, 758, 755, PacketHandler::handleServerJoinGame);
             registerPacket(0x24, 754, 751, PacketHandler::handleServerJoinGame);
             registerPacket(0x25, 736, 735, PacketHandler::handleServerJoinGame);
@@ -91,6 +103,9 @@ public enum PacketRegistry {
             registerPacket(0x01, 66, 47, PacketHandler::handleServerJoinGame);
 
             // Player Position & Rotation
+            registerPacket(0x38, 761, 761, PacketHandler::handleServerPlayerPositionRotation);
+            registerPacket(0x39, 760, 760, PacketHandler::handleServerPlayerPositionRotation);
+            registerPacket(0x36, 759, 759, PacketHandler::handleServerPlayerPositionRotation);
             registerPacket(0x38, 758, 755, PacketHandler::handleServerPlayerPositionRotation);
             registerPacket(0x34, 754, 751, PacketHandler::handleServerPlayerPositionRotation);
             registerPacket(0x35, 736, 735, PacketHandler::handleServerPlayerPositionRotation);
@@ -109,6 +124,9 @@ public enum PacketRegistry {
             registerPacket(0x08, 66, 47, PacketHandler::handleServerPlayerPositionRotation);
 
             // Respawn
+            registerPacket(0x3D, 761, 761, PacketHandler::handleServerRespawn);
+            registerPacket(0x3E, 760, 760, PacketHandler::handleServerRespawn);
+            registerPacket(0x3B, 759, 759, PacketHandler::handleServerRespawn);
             registerPacket(0x3D, 758, 755, PacketHandler::handleServerRespawn);
             registerPacket(0x39, 754, 751, PacketHandler::handleServerRespawn);
             registerPacket(0x3A, 736, 735, PacketHandler::handleServerRespawn);
