@@ -22,31 +22,31 @@ import io.netty.buffer.ByteBuf;
 import java.util.function.BiConsumer;
 
 public class Packet {
-    
+
     private final int id;
     private final int maximumProtocol;
     private final int minimumProtocol;
     private final BiConsumer<PacketHandler, ByteBuf> consumer;
-    
+
     public Packet(int id, int maximumProtocol, int minimumProtocol, BiConsumer<PacketHandler, ByteBuf> consumer) {
         this.id = id;
         this.maximumProtocol = maximumProtocol;
         this.minimumProtocol = minimumProtocol;
         this.consumer = consumer;
     }
-    
+
     public int getId() {
         return id;
     }
-    
+
     public int getMaximumProtocol() {
         return maximumProtocol;
     }
-    
+
     public int getMinimumProtocol() {
         return minimumProtocol;
     }
-    
+
     public BiConsumer<PacketHandler, ByteBuf> getConsumer() {
         return consumer;
     }

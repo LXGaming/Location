@@ -29,39 +29,39 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import java.util.UUID;
 
 public class BungeeSource implements Source {
-    
+
     private final Audience audience;
     private final CommandSender commandSender;
-    
+
     public BungeeSource(CommandSender commandSender) {
         this.audience = BungeePlugin.getInstance().getAudiences().sender(commandSender);
         this.commandSender = commandSender;
     }
-    
+
     @Override
     public @NonNull UUID getUniqueId() {
         if (commandSender instanceof ProxiedPlayer) {
             return ((ProxiedPlayer) commandSender).getUniqueId();
         }
-        
+
         return CONSOLE_UUID;
     }
-    
+
     @Override
     public @NonNull String getName() {
         return commandSender.getName();
     }
-    
+
     @Override
     public boolean hasPermission(@NonNull String permission) {
         return commandSender.hasPermission(permission);
     }
-    
+
     @Override
     public void sendActionBar(@NonNull Component component) {
         audience.sendActionBar(component);
     }
-    
+
     @Override
     public void sendMessage(Component component, MessageType messageType) {
         audience.sendMessage(Identity.nil(), component, messageType);

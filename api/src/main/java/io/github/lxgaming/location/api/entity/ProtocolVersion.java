@@ -19,8 +19,8 @@ package io.github.lxgaming.location.api.entity;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public interface ProtocolVersion {
-    
+
     int getId();
-    
+
     @Nullable String getName();
 }

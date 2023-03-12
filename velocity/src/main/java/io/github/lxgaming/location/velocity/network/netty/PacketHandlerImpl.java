@@ -30,34 +30,34 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPromise;
 
 public class PacketHandlerImpl extends PacketHandler {
-    
+
     public PacketHandlerImpl(UserImpl user) {
         super(user);
     }
-    
+
     @Override
     public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
         if (msg instanceof JoinGame) {
             JoinGame packet = (JoinGame) msg;
-            
+
             String dimensionName;
             if (packet.getDimensionInfo() != null) {
                 dimensionName = packet.getDimensionInfo().getRegistryIdentifier();
             } else {
                 dimensionName = null;
             }
-            
+
             user.setDimension(new DimensionImpl(packet.getDimension(), dimensionName));
         }
-        
+
         super.write(ctx, msg, promise);
     }
-    
+
     @Override
     public void handleServerRespawn(ByteBuf byteBuf) {
         Respawn packet = new Respawn();
         packet.decode(byteBuf, ProtocolUtils.Direction.CLIENTBOUND, ProtocolVersion.getProtocolVersion(getProtocolVersion()));
-        
+
         DimensionInfo dimensionInfo = VelocityToolbox.getDimensionInfo(packet);
         String dimensionName;
         if (dimensionInfo != null) {
@@ -65,7 +65,7 @@ public class PacketHandlerImpl extends PacketHandler {
         } else {
             dimensionName = null;
         }
-        
+
         user.setDimension(new DimensionImpl(packet.getDimension(), dimensionName));
     }
 }

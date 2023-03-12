@@ -20,10 +20,10 @@ import com.google.gson.annotations.SerializedName;
 import io.github.lxgaming.location.common.configuration.category.GeneralCategory;
 
 public class Config {
-    
+
     @SerializedName("general")
     private GeneralCategory generalCategory = new GeneralCategory();
-    
+
     public GeneralCategory getGeneralCategory() {
         return generalCategory;
     }

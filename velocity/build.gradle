@@ -4,12 +4,6 @@ plugins {
 
 archivesBaseName = "location-velocity"
 
-configurations {
-}
-
-repositories {
-}
-
 dependencies {
     implementation(project(path: ":location-common")) {
         exclude(module: "adventure-api")

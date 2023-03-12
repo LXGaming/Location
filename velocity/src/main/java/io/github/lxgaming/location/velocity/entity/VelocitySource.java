@@ -26,41 +26,41 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import java.util.UUID;
 
 public class VelocitySource implements Source {
-    
+
     private final CommandSource commandSource;
-    
+
     public VelocitySource(CommandSource commandSource) {
         this.commandSource = commandSource;
     }
-    
+
     @Override
     public @NonNull UUID getUniqueId() {
         if (commandSource instanceof Player) {
             return ((Player) commandSource).getUniqueId();
         }
-        
+
         return CONSOLE_UUID;
     }
-    
+
     @Override
     public @NonNull String getName() {
         if (commandSource instanceof Player) {
             return ((Player) commandSource).getUsername();
         }
-        
+
         return "Console";
     }
-    
+
     @Override
     public boolean hasPermission(@NonNull String permission) {
         return commandSource.hasPermission(permission);
     }
-    
+
     @Override
     public void sendActionBar(@NonNull Component component) {
         commandSource.sendActionBar(component);
     }
-    
+
     @Override
     public void sendMessage(Component component, MessageType messageType) {
         commandSource.sendMessage(component, messageType);

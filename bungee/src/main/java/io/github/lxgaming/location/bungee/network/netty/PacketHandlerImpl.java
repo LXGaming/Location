@@ -30,11 +30,11 @@ import net.md_5.bungee.protocol.packet.Respawn;
 import se.llbit.nbt.Tag;
 
 public class PacketHandlerImpl extends PacketHandler {
-    
+
     public PacketHandlerImpl(UserImpl user) {
         super(user);
     }
-    
+
     @Override
     public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
         if (msg instanceof Login) {
@@ -42,61 +42,61 @@ public class PacketHandlerImpl extends PacketHandler {
             if (packet.getDimension() instanceof Integer) {
                 user.setDimension(new DimensionImpl((Integer) packet.getDimension()));
             }
-            
+
             // 1.16 - 1.16.1
             if (packet.getDimension() instanceof String) {
                 user.setDimension(new DimensionImpl((String) packet.getDimension()));
             }
-            
+
             // 1.16.2
             if (packet.getDimension() instanceof Tag) {
                 user.setDimension(new DimensionImpl(packet.getWorldName()));
             }
         }
-        
+
         super.write(ctx, msg, promise);
     }
-    
+
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         if (msg instanceof PacketWrapper) {
             PacketWrapper packet = (PacketWrapper) msg;
-            
+
             // Ignore known packets.
             if (packet.packet != null) {
                 super.channelRead(ctx, msg);
                 return;
             }
-            
+
             ByteBuf byteBuf = packet.buf;
             int readerIndex = byteBuf.readerIndex();
-            
+
             try {
                 PacketRegistry.CLIENTBOUND.process(this, byteBuf);
             } catch (Exception ex) {
                 // no-op
             }
-            
+
             byteBuf.readerIndex(readerIndex);
         }
-        
+
         super.channelRead(ctx, msg);
     }
-    
+
     @Override
     public void handleServerRespawn(ByteBuf byteBuf) {
         Respawn packet = new Respawn();
         packet.read(byteBuf, ProtocolConstants.Direction.TO_CLIENT, getProtocolVersion());
-        
+
         if (packet.getDimension() instanceof Integer) {
             user.setDimension(new DimensionImpl((Integer) packet.getDimension()));
         }
-        
+
         // 1.16 - 1.16.1
         if (packet.getDimension() instanceof String) {
             user.setDimension(new DimensionImpl((String) packet.getDimension()));
         }
-        
+
         // 1.16.2
         if (packet.getDimension() instanceof Tag) {
             user.setDimension(new DimensionImpl(packet.getWorldName()));

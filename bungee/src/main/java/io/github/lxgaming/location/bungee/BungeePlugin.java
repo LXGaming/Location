@@ -32,15 +32,15 @@ import java.util.Collection;
 import java.util.List;
 
 public class BungeePlugin extends Plugin implements Platform {
-    
+
     private static BungeePlugin instance;
     private BungeeAudiences audiences;
-    
+
     @Override
     public void onEnable() {
         instance = this;
         audiences = BungeeAudiences.create(this);
-        
+
         if (getProxy().getName().equalsIgnoreCase("BungeeCord")) {
             getLogger().severe("\n\n"
                     + "  BungeeCord is not supported - https://github.com/SpigotMC/BungeeCord/pull/1877\n"
@@ -49,47 +49,47 @@ public class BungeePlugin extends Plugin implements Platform {
             );
             return;
         }
-        
+
         LocationImpl location = new LocationImpl(this);
         location.load();
-        
+
         getProxy().getPluginManager().registerCommand(getInstance(), new LocationCommand());
         getProxy().getPluginManager().registerListener(getInstance(), new BungeeListener());
     }
-    
+
     @Override
     public void onDisable() {
         if (!Location.isAvailable()) {
             return;
         }
-        
+
         LocationImpl.getInstance().getLogger().info("{} v{} unloaded", Location.NAME, Location.VERSION);
     }
-    
+
     @Override
     public @NonNull Collection<String> getUsernames() {
         List<String> usernames = Lists.newArrayList();
         for (ProxiedPlayer player : getProxy().getPlayers()) {
             usernames.add(player.getName());
         }
-        
+
         return usernames;
     }
-    
+
     @Override
     public @NonNull Path getPath() {
         return getDataFolder().toPath();
     }
-    
+
     @Override
     public @NonNull Type getType() {
         return Type.BUNGEECORD;
     }
-    
+
     public static BungeePlugin getInstance() {
         return instance;
     }
-    
+
     public BungeeAudiences getAudiences() {
         return audiences;
     }

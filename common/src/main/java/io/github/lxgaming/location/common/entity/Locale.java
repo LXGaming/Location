@@ -17,45 +17,45 @@
 package io.github.lxgaming.location.common.entity;
 
 public enum Locale {
-    
+
     COMMAND_BASE("command.base"),
     COMMAND_ERROR("command.error"),
     COMMAND_EXCEPTION("command.exception"),
     COMMAND_INVALID_ARGUMENTS("command.invalid_arguments"),
     COMMAND_NO_PERMISSION("command.no_permission"),
     COMMAND_NOT_FOUND("command.not_found"),
-    
+
     COMMAND_DEBUG_DISABLE("command.debug.disable"),
     COMMAND_DEBUG_ENABLE("command.debug.enable"),
-    
+
     COMMAND_GET("command.get"),
     COMMAND_GET_USER_NOT_FOUND("command.get.user_not_found"),
-    
+
     COMMAND_HELP("command.help"),
     COMMAND_HELP_HOVER("command.help.hover"),
-    
+
     COMMAND_RELOAD_FAILURE("command.reload.failure"),
     COMMAND_RELOAD_SUCCESS("command.reload.success"),
-    
+
     CONFIGURATION_ERROR("configuration.error"),
-    
+
     GENERAL_INFORMATION("general.information"),
     GENERAL_PREFIX("general.prefix"),
-    
+
     USER_NAME_INVALID("user.name.invalid"),
-    
+
     UNKNOWN("unknown");
-    
+
     private final String key;
-    
+
     Locale(String key) {
         this.key = key;
     }
-    
+
     public String getKey() {
         return key;
     }
-    
+
     @Override
     public String toString() {
         return name().toLowerCase();

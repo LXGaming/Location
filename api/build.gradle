@@ -3,19 +3,10 @@ plugins {
     id "net.kyori.blossom"
 }
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-
 archivesBaseName = "location-api"
 
 blossom {
     replaceToken("@version@", version)
-}
-
-configurations {
-}
-
-repositories {
 }
 
 dependencies {

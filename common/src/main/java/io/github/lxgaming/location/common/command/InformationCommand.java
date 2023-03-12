@@ -23,7 +23,7 @@ import io.github.lxgaming.location.common.entity.Locale;
 import io.github.lxgaming.location.common.util.text.adapter.LocaleAdapter;
 
 public class InformationCommand extends Command {
-    
+
     @Override
     public boolean prepare() {
         addAlias("Information");
@@ -32,7 +32,7 @@ public class InformationCommand extends Command {
         permission("location.information.base");
         return true;
     }
-    
+
     @Override
     public void register(LiteralArgumentBuilder<Source> argumentBuilder) {
         argumentBuilder
@@ -41,12 +41,12 @@ public class InformationCommand extends Command {
                     return execute(context.getSource());
                 });
     }
-    
+
     private int execute(Source source) {
         LocaleAdapter.sendSystemMessage(source, Locale.GENERAL_INFORMATION,
                 Location.VERSION, Location.AUTHORS, Location.SOURCE, Location.WEBSITE
         );
-        
+
         return 1;
     }
 }

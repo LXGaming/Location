@@ -21,20 +21,20 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.github.lxgaming.location.common.command.Command;
 
 public class CommandAdapter<S> implements com.mojang.brigadier.Command<S> {
-    
+
     private final Command command;
     private final com.mojang.brigadier.Command<S> brigadierCommand;
-    
+
     public CommandAdapter(Command command, com.mojang.brigadier.Command<S> brigadierCommand) {
         this.command = command;
         this.brigadierCommand = brigadierCommand;
     }
-    
+
     @Override
     public int run(CommandContext<S> context) throws CommandSyntaxException {
         return brigadierCommand.run(context);
     }
-    
+
     public Command getCommand() {
         return command;
     }

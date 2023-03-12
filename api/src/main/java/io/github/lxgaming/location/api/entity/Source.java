@@ -23,24 +23,24 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import java.util.UUID;
 
 public interface Source {
-    
+
     UUID CONSOLE_UUID = UUID.fromString("00000000-0000-0000-0000-000000000000");
-    
+
     @NonNull UUID getUniqueId();
-    
+
     @NonNull String getName();
-    
+
     boolean hasPermission(@NonNull String permission);
-    
+
     void sendActionBar(@NonNull Component component);
-    
+
     default void sendChatMessage(@NonNull Component component) {
         sendMessage(component, MessageType.CHAT);
     }
-    
+
     default void sendSystemMessage(@NonNull Component component) {
         sendMessage(component, MessageType.SYSTEM);
     }
-    
+
     void sendMessage(Component component, MessageType messageType);
 }

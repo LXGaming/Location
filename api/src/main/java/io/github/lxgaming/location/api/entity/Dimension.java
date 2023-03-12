@@ -19,8 +19,8 @@ package io.github.lxgaming.location.api.entity;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public interface Dimension {
-    
+
     int getId();
-    
+
     @Nullable String getName();
 }

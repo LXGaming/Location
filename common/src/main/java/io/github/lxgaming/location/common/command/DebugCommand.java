@@ -26,9 +26,9 @@ import io.github.lxgaming.location.common.entity.Locale;
 import io.github.lxgaming.location.common.util.text.adapter.LocaleAdapter;
 
 public class DebugCommand extends Command {
-    
+
     private static final String STATE_ARGUMENT = "state";
-    
+
     @Override
     public boolean prepare() {
         addAlias("Debug");
@@ -36,7 +36,7 @@ public class DebugCommand extends Command {
         permission("location.debug.base");
         return true;
     }
-    
+
     @Override
     public void register(LiteralArgumentBuilder<Source> argumentBuilder) {
         argumentBuilder
@@ -50,30 +50,30 @@ public class DebugCommand extends Command {
                         })
                 );
     }
-    
+
     private int execute(Source source) {
         return execute(source, null);
     }
-    
+
     private int execute(Source source, Boolean state) {
         GeneralCategory generalCategory = LocationImpl.getInstance().getConfig().map(Config::getGeneralCategory).orElse(null);
         if (generalCategory == null) {
             LocaleAdapter.sendSystemMessage(source, Locale.CONFIGURATION_ERROR);
             return 0;
         }
-        
+
         if (state != null) {
             generalCategory.setDebug(state);
         } else {
             generalCategory.setDebug(!generalCategory.isDebug());
         }
-        
+
         if (generalCategory.isDebug()) {
             LocaleAdapter.sendSystemMessage(source, Locale.COMMAND_DEBUG_ENABLE);
         } else {
             LocaleAdapter.sendSystemMessage(source, Locale.COMMAND_DEBUG_DISABLE);
         }
-        
+
         return 1;
     }
 }

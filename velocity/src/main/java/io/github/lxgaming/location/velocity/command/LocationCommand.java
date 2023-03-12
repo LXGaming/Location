@@ -30,15 +30,15 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public class LocationCommand implements RawCommand {
-    
+
     @Override
     public void execute(Invocation invocation) {
         String arguments = invocation.arguments();
         VelocitySource source = new VelocitySource(invocation.source());
-        
+
         CommandManager.execute(source, arguments);
     }
-    
+
     @Override
     public List<String> suggest(Invocation invocation) {
         try {
@@ -48,12 +48,12 @@ public class LocationCommand implements RawCommand {
             return ImmutableList.of();
         }
     }
-    
+
     @Override
     public CompletableFuture<List<String>> suggestAsync(Invocation invocation) {
         String arguments = invocation.arguments();
         VelocitySource source = new VelocitySource(invocation.source());
-        
+
         ParseResults<Source> parseResults = CommandManager.DISPATCHER.parse(arguments, source);
         return CommandManager.DISPATCHER.getCompletionSuggestions(parseResults)
                 .thenApply(suggestions -> Lists.transform(suggestions.getList(), Suggestion::getText));

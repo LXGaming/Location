@@ -21,15 +21,15 @@ import io.github.lxgaming.location.common.entity.Locale;
 import io.github.lxgaming.location.common.manager.LocaleManager;
 
 public class LocaleAdapter {
-    
+
     public static void sendActionBar(Source source, Locale locale, Object... arguments) {
         source.sendActionBar(LocaleManager.serialize(locale, arguments));
     }
-    
+
     public static void sendChatMessage(Source source, Locale locale, Object... arguments) {
         source.sendChatMessage(LocaleManager.serialize(locale, arguments));
     }
-    
+
     public static void sendSystemMessage(Source source, Locale locale, Object... arguments) {
         source.sendSystemMessage(LocaleManager.serialize(locale, arguments));
     }

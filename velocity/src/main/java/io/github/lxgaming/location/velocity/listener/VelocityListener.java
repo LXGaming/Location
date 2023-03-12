@@ -27,7 +27,7 @@ import io.github.lxgaming.location.common.entity.UserImpl;
 import io.github.lxgaming.location.velocity.util.VelocityToolbox;
 
 public class VelocityListener {
-    
+
     @Subscribe(order = PostOrder.EARLY)
     public void onPostLogin(PostLoginEvent event) {
         UserImpl user = new UserImpl(
@@ -35,14 +35,14 @@ public class VelocityListener {
                 event.getPlayer().getUsername(),
                 ProtocolVersionImpl.getProtocolVersion(event.getPlayer().getProtocolVersion().getProtocol(), String.join(", ", event.getPlayer().getProtocolVersion().getVersionsSupportedBy())));
         LocationImpl.getInstance().addUser(user);
-        
+
         if (VelocityToolbox.addChannel(user, event.getPlayer())) {
             LocationImpl.getInstance().getLogger().debug("Successfully added channel for {} ({})", event.getPlayer().getUsername(), event.getPlayer().getUniqueId());
         } else {
             LocationImpl.getInstance().getLogger().warn("Failed to add channel for {} ({})", event.getPlayer().getUsername(), event.getPlayer().getUniqueId());
         }
     }
-    
+
     @Subscribe(order = PostOrder.EARLY)
     public void onServerConnected(ServerConnectedEvent event) {
         LocationImpl.getInstance().getUser(event.getPlayer().getUniqueId())
@@ -50,7 +50,7 @@ public class VelocityListener {
                 .map(user -> (UserImpl) user)
                 .ifPresent(user -> user.setServer(event.getServer().getServerInfo().getName()));
     }
-    
+
     @Subscribe(order = PostOrder.EARLY)
     public void onDisconnect(DisconnectEvent event) {
         LocationImpl.getInstance().getUser(event.getPlayer().getUniqueId()).ifPresent(LocationImpl.getInstance()::removeUser);

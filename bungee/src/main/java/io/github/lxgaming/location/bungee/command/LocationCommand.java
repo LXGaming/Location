@@ -22,16 +22,16 @@ import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.plugin.Command;
 
 public class LocationCommand extends Command {
-    
+
     public LocationCommand() {
         super("location");
     }
-    
+
     @Override
     public void execute(CommandSender sender, String[] args) {
         String arguments = String.join(" ", args);
         BungeeSource source = new BungeeSource(sender);
-        
+
         CommandManager.execute(source, arguments);
     }
 }

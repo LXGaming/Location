@@ -27,53 +27,53 @@ import io.github.lxgaming.location.common.manager.CommandManager;
 import java.util.Set;
 
 public abstract class Command {
-    
+
     private final Set<String> aliases = Sets.newLinkedHashSet();
     private final Set<Command> children = Sets.newLinkedHashSet();
     private String description;
     private String permission;
-    
+
     public abstract boolean prepare();
-    
+
     public abstract void register(LiteralArgumentBuilder<Source> argumentBuilder);
-    
+
     public static <T> RequiredArgumentBuilder<Source, T> argument(String name, ArgumentType<T> type) {
         return RequiredArgumentBuilder.argument(name, type);
     }
-    
+
     public static LiteralArgumentBuilder<Source> literal(String name) {
         return LiteralArgumentBuilder.literal(name);
     }
-    
+
     protected final void addAlias(String alias) {
         CommandManager.registerAlias(this, alias);
     }
-    
+
     public final Set<String> getAliases() {
         return aliases;
     }
-    
+
     protected final void addChild(Class<? extends Command> commandClass) {
         CommandManager.registerCommand(this, commandClass);
     }
-    
+
     public final Set<Command> getChildren() {
         return children;
     }
-    
+
     public final String getDescription() {
         return description;
     }
-    
+
     protected final void description(String description) {
         Preconditions.checkState(this.description == null, "Description is already set");
         this.description = description;
     }
-    
+
     public final String getPermission() {
         return permission;
     }
-    
+
     protected final void permission(String permission) {
         Preconditions.checkState(this.permission == null, "Permission is already set");
         this.permission = permission;
