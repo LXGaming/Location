@@ -23,38 +23,38 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.UUID;
 
 public interface User {
-    
+
     @NonNull UUID getUniqueId();
-    
+
     @NonNull String getUsername();
-    
+
     @NonNull ProtocolVersion getProtocolVersion();
-    
+
     double getX();
-    
+
     @NonNull Observable<Double> observeX();
-    
+
     double getY();
-    
+
     @NonNull Observable<Double> observeY();
-    
+
     double getZ();
-    
+
     @NonNull Observable<Double> observeZ();
-    
+
     float getPitch();
-    
+
     @NonNull Observable<Float> observePitch();
-    
+
     float getYaw();
-    
+
     @NonNull Observable<Float> observeYaw();
-    
+
     @Nullable Dimension getDimension();
-    
+
     @NonNull Observable<Dimension> observeDimension();
-    
+
     @Nullable String getServer();
-    
+
     @NonNull Observable<String> observeServer();
 }

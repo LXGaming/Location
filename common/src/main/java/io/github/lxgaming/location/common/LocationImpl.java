@@ -30,59 +30,59 @@ import org.slf4j.LoggerFactory;
 import java.util.Optional;
 
 public class LocationImpl extends Location {
-    
+
     private final Logger logger;
     private final Configuration configuration;
-    
+
     public LocationImpl(Platform platform) {
         super(platform);
         this.users = Sets.newConcurrentHashSet();
         this.logger = LoggerFactory.getLogger(Location.NAME);
         this.configuration = new Configuration(platform.getPath());
     }
-    
+
     public void load() {
         getLogger().info("Initializing...");
         if (!reload()) {
             getLogger().error("Failed to load");
             return;
         }
-        
+
         LocaleManager.prepare();
         CommandManager.prepare();
-        
+
         getLogger().info("{} v{} has loaded", Location.NAME, Location.VERSION);
     }
-    
+
     public boolean reload() {
         if (!getConfiguration().loadConfiguration()) {
             return false;
         }
-        
+
         getConfiguration().saveConfiguration();
         return true;
     }
-    
+
     public boolean addUser(User user) {
         return this.users.add(user);
     }
-    
+
     public boolean removeUser(User user) {
         return this.users.remove(user);
     }
-    
+
     public static LocationImpl getInstance() {
         return (LocationImpl) Location.getInstance();
     }
-    
+
     public Logger getLogger() {
         return logger;
     }
-    
+
     public Configuration getConfiguration() {
         return configuration;
     }
-    
+
     public Optional<? extends Config> getConfig() {
         return Optional.ofNullable(getConfiguration().getConfig());
     }

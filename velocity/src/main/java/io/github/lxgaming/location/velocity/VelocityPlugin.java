@@ -45,60 +45,60 @@ import java.util.List;
         authors = {Location.AUTHORS}
 )
 public class VelocityPlugin implements Platform {
-    
+
     private static VelocityPlugin instance;
-    
+
     @Inject
     private ProxyServer proxy;
-    
+
     @Inject
     @DataDirectory
     private Path path;
-    
+
     @Subscribe
     public void onProxyInitialize(ProxyInitializeEvent event) {
         instance = this;
-        
+
         LocationImpl location = new LocationImpl(this);
         location.load();
-        
+
         getProxy().getCommandManager().register(
                 getProxy().getCommandManager().metaBuilder("location").build(),
                 new LocationCommand()
         );
-        
+
         getProxy().getEventManager().register(getInstance(), new VelocityListener());
     }
-    
+
     @Subscribe
     public void onProxyShutdown(ProxyShutdownEvent event) {
         LocationImpl.getInstance().getLogger().info("{} v{} unloaded", Location.NAME, Location.VERSION);
     }
-    
+
     @Override
     public @NonNull Collection<String> getUsernames() {
         List<String> usernames = Lists.newArrayList();
         for (Player player : getProxy().getAllPlayers()) {
             usernames.add(player.getUsername());
         }
-        
+
         return usernames;
     }
-    
+
     @Override
     public @NonNull Path getPath() {
         return path;
     }
-    
+
     @Override
     public @NonNull Type getType() {
         return Type.VELOCITY;
     }
-    
+
     public static VelocityPlugin getInstance() {
         return instance;
     }
-    
+
     public ProxyServer getProxy() {
         return proxy;
     }

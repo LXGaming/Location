@@ -28,7 +28,7 @@ import net.md_5.bungee.event.EventHandler;
 import net.md_5.bungee.event.EventPriority;
 
 public class BungeeListener implements Listener {
-    
+
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPostLogin(PostLoginEvent event) {
         UserImpl user = new UserImpl(
@@ -36,14 +36,14 @@ public class BungeeListener implements Listener {
                 event.getPlayer().getName(),
                 ProtocolVersionImpl.getProtocolVersion(event.getPlayer().getPendingConnection().getVersion()));
         LocationImpl.getInstance().addUser(user);
-        
+
         if (BungeeToolbox.addChannel(user, event.getPlayer())) {
             LocationImpl.getInstance().getLogger().debug("Successfully added channel for {} ({})", event.getPlayer().getName(), event.getPlayer().getUniqueId());
         } else {
             LocationImpl.getInstance().getLogger().warn("Failed to add channel for {} ({})", event.getPlayer().getName(), event.getPlayer().getUniqueId());
         }
     }
-    
+
     @EventHandler(priority = EventPriority.LOWEST)
     public void onServerConnected(ServerConnectedEvent event) {
         LocationImpl.getInstance().getUser(event.getPlayer().getUniqueId())
@@ -51,11 +51,11 @@ public class BungeeListener implements Listener {
                 .map(user -> (UserImpl) user)
                 .ifPresent(user -> user.setServer(event.getServer().getInfo().getName()));
     }
-    
+
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerDisconnect(PlayerDisconnectEvent event) {
         LocationImpl.getInstance().getUser(event.getPlayer().getUniqueId()).ifPresent(LocationImpl.getInstance()::removeUser);
-        
+
         if (BungeeToolbox.removeChannel(event.getPlayer())) {
             LocationImpl.getInstance().getLogger().debug("Successfully removed channel for {} ({})", event.getPlayer().getName(), event.getPlayer().getUniqueId());
         } else {

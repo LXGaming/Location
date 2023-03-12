@@ -24,14 +24,14 @@ import io.github.lxgaming.location.common.manager.LocaleManager;
 import io.github.lxgaming.location.common.util.text.adapter.LocaleAdapter;
 
 public class ReloadCommand extends Command {
-    
+
     @Override
     public boolean prepare() {
         addAlias("Reload");
         permission("location.reload.base");
         return true;
     }
-    
+
     @Override
     public void register(LiteralArgumentBuilder<Source> argumentBuilder) {
         argumentBuilder
@@ -40,14 +40,14 @@ public class ReloadCommand extends Command {
                     return execute(context.getSource());
                 });
     }
-    
+
     private int execute(Source source) {
         if (LocationImpl.getInstance().reload()) {
             LocaleManager.prepare();
             LocaleAdapter.sendSystemMessage(source, Locale.COMMAND_RELOAD_SUCCESS);
             return 1;
         }
-        
+
         LocaleAdapter.sendSystemMessage(source, Locale.COMMAND_RELOAD_FAILURE);
         return 0;
     }

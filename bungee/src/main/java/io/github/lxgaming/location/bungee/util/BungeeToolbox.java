@@ -25,24 +25,24 @@ import net.md_5.bungee.netty.ChannelWrapper;
 import net.md_5.bungee.netty.PipelineUtils;
 
 public class BungeeToolbox {
-    
+
     public static boolean addChannel(UserImpl user, Object object) {
         Channel channel = Toolbox.getField(object, ChannelWrapper.class).map(ChannelWrapper::getHandle).orElse(null);
         if (channel != null && channel.pipeline().get(PacketHandler.NAME) == null) {
             channel.pipeline().addBefore(PipelineUtils.BOSS_HANDLER, PacketHandler.NAME, new PacketHandlerImpl(user));
             return true;
         }
-        
+
         return false;
     }
-    
+
     public static boolean removeChannel(Object object) {
         Channel channel = Toolbox.getField(object, ChannelWrapper.class).map(ChannelWrapper::getHandle).orElse(null);
         if (channel != null && channel.pipeline().get(PacketHandler.NAME) != null) {
             channel.pipeline().remove(PacketHandler.NAME);
             return true;
         }
-        
+
         return false;
     }
 }

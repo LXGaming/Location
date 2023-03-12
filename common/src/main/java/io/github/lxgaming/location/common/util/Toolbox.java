@@ -23,20 +23,20 @@ import java.lang.reflect.Field;
 import java.util.Optional;
 
 public class Toolbox {
-    
+
     public static final Gson GSON = new GsonBuilder()
             .disableHtmlEscaping()
             .enableComplexMapKeySerialization()
             .create();
-    
+
     public static boolean isUsername(String string) {
         return string.matches("^[a-zA-Z0-9_]{3,16}$");
     }
-    
+
     public static float normalizeYaw(float value) {
         return (float) (value + Math.ceil(-value / 360) * 360);
     }
-    
+
     public static <T> Optional<T> getField(Object instance, Class<T> typeOfT) {
         try {
             for (Field field : instance.getClass().getDeclaredFields()) {
@@ -45,21 +45,21 @@ public class Toolbox {
                     return Optional.ofNullable(typeOfT.cast(field.get(instance)));
                 }
             }
-            
+
             return Optional.empty();
         } catch (Exception ex) {
             return Optional.empty();
         }
     }
-    
+
     public static String getClassSimpleName(Class<?> type) {
         if (type.getEnclosingClass() != null) {
             return getClassSimpleName(type.getEnclosingClass()) + "." + type.getSimpleName();
         }
-        
+
         return type.getSimpleName();
     }
-    
+
     public static <T> T newInstance(Class<? extends T> type) {
         try {
             return type.newInstance();

@@ -27,16 +27,16 @@ import io.github.lxgaming.location.common.util.Toolbox;
 import io.github.lxgaming.location.common.util.text.adapter.LocaleAdapter;
 
 public class GetCommand extends Command {
-    
+
     private static final String USERNAME_ARGUMENT = "username";
-    
+
     @Override
     public boolean prepare() {
         addAlias("Get");
         permission("location.get.base");
         return true;
     }
-    
+
     @Override
     public void register(LiteralArgumentBuilder<Source> argumentBuilder) {
         argumentBuilder
@@ -54,29 +54,29 @@ public class GetCommand extends Command {
                         })
                 );
     }
-    
+
     private int execute(Source source) {
         LocaleAdapter.sendSystemMessage(source, Locale.COMMAND_INVALID_ARGUMENTS, "<Player>");
         return 0;
     }
-    
+
     private int execute(Source source, String username) {
         if (!Toolbox.isUsername(username)) {
             LocaleAdapter.sendSystemMessage(source, Locale.USER_NAME_INVALID);
             return 0;
         }
-        
+
         User user = Location.getInstance().getUser(username).orElse(null);
         if (user == null) {
             LocaleAdapter.sendSystemMessage(source, Locale.COMMAND_GET_USER_NOT_FOUND, username);
             return 0;
         }
-        
+
         String version = StringUtils.defaultIfBlank(
                 user.getProtocolVersion().getName(),
                 String.valueOf(user.getProtocolVersion().getId())
         );
-        
+
         String dimension;
         if (user.getDimension() != null) {
             dimension = StringUtils.defaultIfBlank(
@@ -86,7 +86,7 @@ public class GetCommand extends Command {
         } else {
             dimension = null;
         }
-        
+
         LocaleAdapter.sendSystemMessage(source, Locale.COMMAND_GET,
                 user.getUsername(), version,
                 user.getX(), user.getY(), user.getZ(),
@@ -94,7 +94,7 @@ public class GetCommand extends Command {
                 dimension,
                 user.getServer()
         );
-        
+
         return 1;
     }
 }

@@ -2,16 +2,7 @@ plugins {
     id "java-library"
 }
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-
 archivesBaseName = "location-common"
-
-configurations {
-}
-
-repositories {
-}
 
 dependencies {
     api(project(path: ":location-api"))

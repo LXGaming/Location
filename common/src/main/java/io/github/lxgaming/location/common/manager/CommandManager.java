@@ -42,31 +42,31 @@ import java.util.List;
 import java.util.Set;
 
 public final class CommandManager {
-    
+
     public static final CommandDispatcher<Source> DISPATCHER = new CommandDispatcher<>();
     private static final Set<Command> COMMANDS = Sets.newLinkedHashSet();
     private static final Set<Class<? extends Command>> COMMAND_CLASSES = Sets.newHashSet();
-    
+
     public static void prepare() {
         registerCommand(DebugCommand.class);
         registerCommand(GetCommand.class);
         registerCommand(HelpCommand.class);
         registerCommand(InformationCommand.class);
         registerCommand(ReloadCommand.class);
-        
+
         for (Command command : CommandManager.COMMANDS) {
             register(command).forEach(DISPATCHER.getRoot()::addChild);
         }
     }
-    
+
     public static boolean execute(Source source, String message) {
         if (StringUtils.isBlank(message)) {
             LocaleAdapter.sendSystemMessage(source, Locale.COMMAND_BASE, getPrefix());
             return false;
         }
-        
+
         LocationImpl.getInstance().getLogger().debug("Processing {} for {} ({})", message, source.getName(), source.getUniqueId());
-        
+
         try {
             CommandManager.DISPATCHER.execute(message, source);
             return true;
@@ -79,56 +79,56 @@ public final class CommandManager {
             return false;
         }
     }
-    
+
     public static boolean registerAlias(Command command, String alias) {
         if (StringUtils.containsIgnoreCase(command.getAliases(), alias)) {
             LocationImpl.getInstance().getLogger().warn("{} is already registered for {}", alias, Toolbox.getClassSimpleName(command.getClass()));
             return false;
         }
-        
+
         command.getAliases().add(alias);
         LocationImpl.getInstance().getLogger().debug("{} registered for {}", alias, Toolbox.getClassSimpleName(command.getClass()));
         return true;
     }
-    
+
     public static boolean registerCommand(Class<? extends Command> commandClass) {
         Command command = registerCommand(COMMANDS, commandClass);
         if (command != null) {
             LocationImpl.getInstance().getLogger().debug("{} registered", Toolbox.getClassSimpleName(commandClass));
             return true;
         }
-        
+
         return false;
     }
-    
+
     public static boolean registerCommand(Command parentCommand, Class<? extends Command> commandClass) {
         if (parentCommand.getClass() == commandClass) {
             LocationImpl.getInstance().getLogger().warn("{} attempted to register itself", Toolbox.getClassSimpleName(parentCommand.getClass()));
             return false;
         }
-        
+
         Command command = registerCommand(parentCommand.getChildren(), commandClass);
         if (command != null) {
             LocationImpl.getInstance().getLogger().debug("{} registered for {}", Toolbox.getClassSimpleName(commandClass), Toolbox.getClassSimpleName(parentCommand.getClass()));
             return true;
         }
-        
+
         return false;
     }
-    
+
     private static Command registerCommand(Collection<Command> commands, Class<? extends Command> commandClass) {
         if (COMMAND_CLASSES.contains(commandClass)) {
             LocationImpl.getInstance().getLogger().warn("{} is already registered", Toolbox.getClassSimpleName(commandClass));
             return null;
         }
-        
+
         COMMAND_CLASSES.add(commandClass);
         Command command = Toolbox.newInstance(commandClass);
         if (command == null) {
             LocationImpl.getInstance().getLogger().error("{} failed to initialize", Toolbox.getClassSimpleName(commandClass));
             return null;
         }
-        
+
         try {
             if (!command.prepare()) {
                 LocationImpl.getInstance().getLogger().warn("{} failed to prepare", Toolbox.getClassSimpleName(commandClass));
@@ -138,18 +138,18 @@ public final class CommandManager {
             LocationImpl.getInstance().getLogger().error("Encountered an error while preparing {}", Toolbox.getClassSimpleName(commandClass), ex);
             return null;
         }
-        
+
         if (commands.add(command)) {
             return command;
         }
-        
+
         return null;
     }
-    
+
     public static String getPrefix() {
         return Location.ID;
     }
-    
+
     private static Collection<CommandNode<Source>> register(Command command) {
         List<CommandNode<Source>> commandNodes = Lists.newArrayList();
         for (String alias : command.getAliases()) {
@@ -158,23 +158,23 @@ public final class CommandManager {
             if (argumentBuilder.getCommand() != null) {
                 argumentBuilder.executes(new CommandAdapter<>(command, argumentBuilder.getCommand()));
             }
-            
+
             commandNodes.add(argumentBuilder.build());
         }
-        
+
         for (Command childCommand : command.getChildren()) {
             Collection<CommandNode<Source>> childCommandNodes = register(childCommand);
             addChildren(commandNodes, childCommandNodes);
         }
-        
+
         return commandNodes;
     }
-    
+
     private static <T> void addChildren(Collection<CommandNode<T>> parentCommandNodes, Collection<CommandNode<T>> childCommandNodes) {
         if (parentCommandNodes.isEmpty() || childCommandNodes.isEmpty()) {
             return;
         }
-        
+
         for (CommandNode<T> parentCommandNode : parentCommandNodes) {
             for (CommandNode<T> childCommandNode : childCommandNodes) {
                 parentCommandNode.addChild(childCommandNode);

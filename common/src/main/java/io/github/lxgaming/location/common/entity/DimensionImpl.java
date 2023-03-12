@@ -22,52 +22,52 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.Objects;
 
 public class DimensionImpl implements Dimension {
-    
+
     private final int id;
     private final String name;
-    
+
     public DimensionImpl(int id) {
         this(id, null);
     }
-    
+
     public DimensionImpl(String name) {
         this(0, name);
     }
-    
+
     public DimensionImpl(int id, String name) {
         this.id = id;
         this.name = name;
     }
-    
+
     @Override
     public int getId() {
         return id;
     }
-    
+
     @Override
     public @Nullable String getName() {
         return name;
     }
-    
+
     @Override
     public int hashCode() {
         return Objects.hash(getId(), getName());
     }
-    
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
             return true;
         }
-        
+
         if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        
+
         DimensionImpl dimension = (DimensionImpl) obj;
         return Objects.equals(getId(), dimension.getId()) && Objects.equals(getName(), dimension.getName());
     }
-    
+
     @Override
     public String toString() {
         return getName() + " (" + getId() + ")";

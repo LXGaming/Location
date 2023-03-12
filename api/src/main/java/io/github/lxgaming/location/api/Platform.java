@@ -22,29 +22,29 @@ import java.nio.file.Path;
 import java.util.Collection;
 
 public interface Platform {
-    
+
     @NonNull Collection<String> getUsernames();
-    
+
     @NonNull Path getPath();
-    
+
     @NonNull Type getType();
-    
+
     enum Type {
-        
+
         BUNGEECORD("BungeeCord"),
         VELOCITY("Velocity");
-        
+
         private final String name;
-        
+
         Type(String name) {
             this.name = name;
         }
-        
+
         @NonNull
         public String getName() {
             return name;
         }
-        
+
         @Override
         public String toString() {
             return name().toLowerCase();

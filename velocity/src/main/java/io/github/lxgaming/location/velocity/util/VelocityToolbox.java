@@ -31,56 +31,56 @@ import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Field;
 
 public class VelocityToolbox {
-    
+
     private static final MethodHandle dimensionInfoMethodHandle;
-    
+
     static {
         MethodHandles.Lookup lookup = MethodHandles.lookup();
         MethodHandle dimensionInfoMethodHandleTemporary;
-        
+
         try {
             Field field = Respawn.class.getDeclaredField("dimensionInfo");
             field.setAccessible(true);
-            
+
             dimensionInfoMethodHandleTemporary = lookup.unreflectGetter(field);
         } catch (Throwable throwable) {
             dimensionInfoMethodHandleTemporary = null;
         }
-        
+
         dimensionInfoMethodHandle = dimensionInfoMethodHandleTemporary;
     }
-    
+
     public static boolean addChannel(UserImpl user, Object object) {
         Channel channel = Toolbox.getField(object, MinecraftConnection.class).map(MinecraftConnection::getChannel).orElse(null);
         if (channel != null && channel.pipeline().get(PacketHandler.NAME) == null) {
             channel.pipeline().addBefore(Connections.HANDLER, PacketHandler.NAME, new PacketHandlerImpl(user));
             return true;
         }
-        
+
         return false;
     }
-    
+
     public static boolean removeChannel(Object object) {
         Channel channel = Toolbox.getField(object, MinecraftConnection.class).map(MinecraftConnection::getChannel).orElse(null);
         if (channel != null && channel.pipeline().get(PacketHandler.NAME) != null) {
             channel.pipeline().remove(PacketHandler.NAME);
             return true;
         }
-        
+
         return false;
     }
-    
+
     public static DimensionInfo getDimensionInfo(Respawn respawn) {
         try {
             if (dimensionInfoMethodHandle == null) {
                 return null;
             }
-            
+
             Object object = dimensionInfoMethodHandle.invoke(respawn);
             if (object != null) {
                 return (DimensionInfo) object;
             }
-            
+
             return null;
         } catch (Throwable ex) {
             return null;

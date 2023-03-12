@@ -29,56 +29,56 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 
 public class Configuration {
-    
+
     private static final Gson GSON = new GsonBuilder()
             .disableHtmlEscaping()
             .enableComplexMapKeySerialization()
             .serializeNulls()
             .setPrettyPrinting()
             .create();
-    
+
     private final Path path;
     private Config config;
-    
+
     public Configuration(Path path) {
         this.path = path;
     }
-    
+
     public boolean loadConfiguration() {
         Config config = loadFile(this.path.resolve("config.json"), Config.class);
         if (config != null) {
             this.config = config;
             return true;
         }
-        
+
         return false;
     }
-    
+
     public boolean saveConfiguration() {
         return saveFile(this.path.resolve("config.json"), config);
     }
-    
+
     public static <T> T loadFile(Path path, Class<T> type) {
         if (Files.exists(path)) {
             return deserializeFile(path, type);
         }
-        
+
         T object = Toolbox.newInstance(type);
         if (object != null && saveFile(path, object)) {
             return object;
         }
-        
+
         return null;
     }
-    
+
     public static boolean saveFile(Path path, Object object) {
         if (Files.exists(path) || createFile(path)) {
             return serializeFile(path, object);
         }
-        
+
         return false;
     }
-    
+
     public static <T> T deserializeFile(Path path, Class<T> type) {
         try (Reader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
             return GSON.fromJson(reader, type);
@@ -87,7 +87,7 @@ public class Configuration {
             return null;
         }
     }
-    
+
     public static boolean serializeFile(Path path, Object object) {
         try (Writer writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE)) {
             GSON.toJson(object, writer);
@@ -97,13 +97,13 @@ public class Configuration {
             return false;
         }
     }
-    
+
     private static boolean createFile(Path path) {
         try {
             if (path.getParent() != null) {
                 Files.createDirectories(path.getParent());
             }
-            
+
             Files.createFile(path);
             return true;
         } catch (Exception ex) {
@@ -111,7 +111,7 @@ public class Configuration {
             return false;
         }
     }
-    
+
     public Config getConfig() {
         return config;
     }

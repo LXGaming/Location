@@ -28,7 +28,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class UserImpl implements User {
-    
+
     private final UUID uniqueId;
     private final String username;
     private final ProtocolVersion protocolVersion;
@@ -46,7 +46,7 @@ public class UserImpl implements User {
     private float yaw;
     private Dimension dimension;
     private String server;
-    
+
     public UserImpl(UUID uniqueId, String username, ProtocolVersion protocolVersion) {
         this.uniqueId = uniqueId;
         this.username = username;
@@ -59,146 +59,146 @@ public class UserImpl implements User {
         this.dimensionSubject = BehaviorSubject.create();
         this.serverSubject = BehaviorSubject.create();
     }
-    
+
     @Override
     public @NonNull UUID getUniqueId() {
         return uniqueId;
     }
-    
+
     @Override
     public @NonNull String getUsername() {
         return username;
     }
-    
+
     @Override
     public @NonNull ProtocolVersion getProtocolVersion() {
         return protocolVersion;
     }
-    
+
     @Override
     public double getX() {
         return x;
     }
-    
+
     @Override
     public @NonNull Observable<Double> observeX() {
         return xSubject;
     }
-    
+
     public void setX(double x) {
         this.x = x;
         this.xSubject.onNext(x);
     }
-    
+
     @Override
     public double getY() {
         return y;
     }
-    
+
     @Override
     public @NonNull Observable<Double> observeY() {
         return ySubject;
     }
-    
+
     public void setY(double y) {
         this.y = y;
         this.ySubject.onNext(y);
     }
-    
+
     @Override
     public double getZ() {
         return z;
     }
-    
+
     @Override
     public @NonNull Observable<Double> observeZ() {
         return zSubject;
     }
-    
+
     public void setZ(double z) {
         this.z = z;
         this.zSubject.onNext(z);
     }
-    
+
     @Override
     public float getPitch() {
         return pitch;
     }
-    
+
     @Override
     public @NonNull Observable<Float> observePitch() {
         return pitchSubject;
     }
-    
+
     public void setPitch(float pitch) {
         this.pitch = pitch;
         this.pitchSubject.onNext(pitch);
     }
-    
+
     @Override
     public float getYaw() {
         return yaw;
     }
-    
+
     @Override
     public @NonNull Observable<Float> observeYaw() {
         return yawSubject;
     }
-    
+
     public void setYaw(float yaw) {
         this.yaw = yaw;
         this.yawSubject.onNext(yaw);
     }
-    
+
     @Override
     public @Nullable Dimension getDimension() {
         return dimension;
     }
-    
+
     @Override
     public @NonNull Observable<Dimension> observeDimension() {
         return dimensionSubject;
     }
-    
+
     public void setDimension(Dimension dimension) {
         this.dimension = dimension;
         this.dimensionSubject.onNext(dimension);
     }
-    
+
     @Override
     public @Nullable String getServer() {
         return server;
     }
-    
+
     @Override
     public @NonNull Observable<String> observeServer() {
         return serverSubject;
     }
-    
+
     public void setServer(String server) {
         this.server = server;
         this.serverSubject.onNext(server);
     }
-    
+
     @Override
     public int hashCode() {
         return Objects.hash(getUniqueId());
     }
-    
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
             return true;
         }
-        
+
         if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        
+
         UserImpl user = (UserImpl) obj;
         return Objects.equals(getUniqueId(), user.getUniqueId());
     }
-    
+
     @Override
     public String toString() {
         return getUsername() + " (" + getUniqueId() + ")";

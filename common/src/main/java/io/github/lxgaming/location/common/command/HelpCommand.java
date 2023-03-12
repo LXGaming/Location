@@ -36,7 +36,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class HelpCommand extends Command {
-    
+
     @Override
     public boolean prepare() {
         addAlias("Help");
@@ -44,7 +44,7 @@ public class HelpCommand extends Command {
         permission("location.help.base");
         return true;
     }
-    
+
     @Override
     public void register(LiteralArgumentBuilder<Source> argumentBuilder) {
         argumentBuilder
@@ -53,26 +53,26 @@ public class HelpCommand extends Command {
                     return execute(context.getSource());
                 });
     }
-    
+
     private int execute(Source source) {
         LocaleAdapter.sendSystemMessage(source, Locale.GENERAL_PREFIX);
-        
+
         Set<Class<? extends Command>> commandClasses = Sets.newHashSet();
         commandClasses.add(getClass());
-        
+
         Map<CommandNode<Source>, String> usages = CommandManager.DISPATCHER.getSmartUsage(CommandManager.DISPATCHER.getRoot(), source);
         for (Map.Entry<CommandNode<Source>, String> entry : usages.entrySet()) {
             if (!(entry.getKey().getCommand() instanceof CommandAdapter)) {
                 continue;
             }
-            
+
             Command command = ((CommandAdapter<Source>) entry.getKey().getCommand()).getCommand();
             if (commandClasses.contains(command.getClass()) || !(StringUtils.isNotBlank(command.getPermission()) && source.hasPermission(command.getPermission()))) {
                 continue;
             }
-            
+
             commandClasses.add(command.getClass());
-            
+
             String usage = "/" + CommandManager.getPrefix() + " " + entry.getValue();
             Component description = LocaleManager.serialize(Locale.COMMAND_HELP_HOVER,
                     Iterables.getFirst(command.getAliases(), "Unknown"),
@@ -80,16 +80,16 @@ public class HelpCommand extends Command {
                     usage,
                     StringUtils.defaultIfEmpty(command.getPermission(), "None")
             );
-            
+
             TextComponent component = Component.text()
                     .clickEvent(ClickEvent.suggestCommand(usage))
                     .hoverEvent(HoverEvent.showText(description))
                     .append(LocaleManager.serialize(Locale.COMMAND_HELP, usage))
                     .build();
-            
+
             source.sendSystemMessage(component);
         }
-        
+
         return 1;
     }
 }

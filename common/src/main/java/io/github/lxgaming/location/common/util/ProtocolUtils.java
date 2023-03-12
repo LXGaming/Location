@@ -26,7 +26,7 @@ import io.netty.buffer.ByteBuf;
  * @see <a href="https://github.com/VelocityPowered/Velocity/blob/1dd900194d181fc771157d9b58015449d572158e/proxy/src/main/java/com/velocitypowered/proxy/protocol/ProtocolUtils.java">ProtocolUtils</a>
  */
 public class ProtocolUtils {
-    
+
     /**
      * Reads a Minecraft-style VarInt from the specified {@code buf}.
      *

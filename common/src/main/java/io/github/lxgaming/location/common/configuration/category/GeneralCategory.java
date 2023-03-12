@@ -23,34 +23,34 @@ import java.util.List;
 import java.util.Map;
 
 public class GeneralCategory {
-    
+
     public static final String DEFAULT_LOCALE = "en_us";
-    
+
     @SerializedName("debug")
     private boolean debug = false;
-    
+
     @SerializedName("locale")
     private String locale = DEFAULT_LOCALE;
-    
+
     @SerializedName("localeOverrides")
     private Map<String, List<String>> localeOverrides = Maps.newHashMap();
-    
+
     public boolean isDebug() {
         return debug;
     }
-    
+
     public void setDebug(boolean debug) {
         this.debug = debug;
     }
-    
+
     public String getLocale() {
         return locale;
     }
-    
+
     public void setLocale(String locale) {
         this.locale = locale;
     }
-    
+
     public Map<String, List<String>> getLocaleOverrides() {
         return localeOverrides;
     }
