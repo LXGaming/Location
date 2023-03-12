@@ -25,8 +25,8 @@ subprojects {
             url = "https://oss.sonatype.org/content/repositories/snapshots"
         }
         maven {
-            name = "velocity"
-            url = "https://nexus.velocitypowered.com/repository/maven-public"
+            name = "papermc"
+            url = "https://repo.papermc.io/repository/maven-public"
         }
     }
 
