@@ -4,10 +4,6 @@ plugins {
 
 archivesBaseName = "location-api"
 
-blossom {
-    replaceToken("@version@", version)
-}
-
 dependencies {
     api("com.google.guava:guava:${guavaVersion}")
     api("io.reactivex.rxjava3:rxjava:${rxjavaVersion}")
@@ -35,6 +31,16 @@ publishing {
                     username project.property("sonatypeUsername")
                     password project.property("sonatypePassword")
                 }
+            }
+        }
+    }
+}
+
+sourceSets {
+    main {
+        blossom {
+            javaSources {
+                property("version", version)
             }
         }
     }

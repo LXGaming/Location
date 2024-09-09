@@ -19,6 +19,7 @@ package io.github.lxgaming.location.api;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSet;
 import io.github.lxgaming.location.api.entity.User;
+import io.github.lxgaming.location.api.util.BuildParameters;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Optional;
@@ -29,7 +30,7 @@ public abstract class Location {
 
     public static final String ID = "location";
     public static final String NAME = "Location";
-    public static final String VERSION = "@version@";
+    public static final String VERSION = BuildParameters.VERSION;
     public static final String DESCRIPTION = "Player Tracking";
     public static final String AUTHORS = "LX_Gaming";
     public static final String SOURCE = "https://github.com/LXGaming/Location";
