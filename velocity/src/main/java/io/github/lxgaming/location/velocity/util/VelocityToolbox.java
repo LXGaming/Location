@@ -19,7 +19,7 @@ package io.github.lxgaming.location.velocity.util;
 import com.velocitypowered.proxy.connection.MinecraftConnection;
 import com.velocitypowered.proxy.connection.registry.DimensionInfo;
 import com.velocitypowered.proxy.network.Connections;
-import com.velocitypowered.proxy.protocol.packet.Respawn;
+import com.velocitypowered.proxy.protocol.packet.RespawnPacket;
 import io.github.lxgaming.location.common.entity.UserImpl;
 import io.github.lxgaming.location.common.network.netty.PacketHandler;
 import io.github.lxgaming.location.common.util.Toolbox;
@@ -39,7 +39,7 @@ public class VelocityToolbox {
         MethodHandle dimensionInfoMethodHandleTemporary;
 
         try {
-            Field field = Respawn.class.getDeclaredField("dimensionInfo");
+            Field field = RespawnPacket.class.getDeclaredField("dimensionInfo");
             field.setAccessible(true);
 
             dimensionInfoMethodHandleTemporary = lookup.unreflectGetter(field);
@@ -70,7 +70,7 @@ public class VelocityToolbox {
         return false;
     }
 
-    public static DimensionInfo getDimensionInfo(Respawn respawn) {
+    public static DimensionInfo getDimensionInfo(RespawnPacket respawn) {
         try {
             if (dimensionInfoMethodHandle == null) {
                 return null;

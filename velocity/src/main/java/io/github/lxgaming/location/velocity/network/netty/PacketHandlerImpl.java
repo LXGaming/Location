@@ -19,8 +19,8 @@ package io.github.lxgaming.location.velocity.network.netty;
 import com.velocitypowered.api.network.ProtocolVersion;
 import com.velocitypowered.proxy.connection.registry.DimensionInfo;
 import com.velocitypowered.proxy.protocol.ProtocolUtils;
-import com.velocitypowered.proxy.protocol.packet.JoinGame;
-import com.velocitypowered.proxy.protocol.packet.Respawn;
+import com.velocitypowered.proxy.protocol.packet.JoinGamePacket;
+import com.velocitypowered.proxy.protocol.packet.RespawnPacket;
 import io.github.lxgaming.location.common.entity.DimensionImpl;
 import io.github.lxgaming.location.common.entity.UserImpl;
 import io.github.lxgaming.location.common.network.netty.PacketHandler;
@@ -37,9 +37,7 @@ public class PacketHandlerImpl extends PacketHandler {
 
     @Override
     public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
-        if (msg instanceof JoinGame) {
-            JoinGame packet = (JoinGame) msg;
-
+        if (msg instanceof JoinGamePacket packet) {
             String dimensionName;
             if (packet.getDimensionInfo() != null) {
                 dimensionName = packet.getDimensionInfo().getRegistryIdentifier();
@@ -55,7 +53,7 @@ public class PacketHandlerImpl extends PacketHandler {
 
     @Override
     public void handleServerRespawn(ByteBuf byteBuf) {
-        Respawn packet = new Respawn();
+        RespawnPacket packet = new RespawnPacket();
         packet.decode(byteBuf, ProtocolUtils.Direction.CLIENTBOUND, ProtocolVersion.getProtocolVersion(getProtocolVersion()));
 
         DimensionInfo dimensionInfo = VelocityToolbox.getDimensionInfo(packet);
