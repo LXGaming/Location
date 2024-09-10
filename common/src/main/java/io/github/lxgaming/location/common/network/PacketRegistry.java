@@ -28,7 +28,11 @@ public enum PacketRegistry {
 
     CLIENTBOUND("Clientbound") {
         {
-            // Player Position
+            // Set Player Position
+            registerPacket(0x1A, 767, 766, PacketHandler::handleClientPlayerPosition);
+            registerPacket(0x17, 765, 765, PacketHandler::handleClientPlayerPosition);
+            registerPacket(0x16, 764, 764, PacketHandler::handleClientPlayerPosition);
+            registerPacket(0x14, 763, 762, PacketHandler::handleClientPlayerPosition);
             registerPacket(0x13, 761, 761, PacketHandler::handleClientPlayerPosition);
             registerPacket(0x14, 760, 760, PacketHandler::handleClientPlayerPosition);
             registerPacket(0x13, 759, 759, PacketHandler::handleClientPlayerPosition);
@@ -46,7 +50,11 @@ public enum PacketRegistry {
             registerPacket(0x0B, 76, 67, PacketHandler::handleClientPlayerPosition);
             registerPacket(0x04, 66, 47, PacketHandler::handleClientPlayerPosition);
 
-            // Player Rotation
+            // Set Player Rotation
+            registerPacket(0x1C, 767, 766, PacketHandler::handleClientPlayerRotation);
+            registerPacket(0x19, 765, 765, PacketHandler::handleClientPlayerRotation);
+            registerPacket(0x18, 764, 764, PacketHandler::handleClientPlayerRotation);
+            registerPacket(0x16, 763, 762, PacketHandler::handleClientPlayerRotation);
             registerPacket(0x15, 761, 761, PacketHandler::handleClientPlayerRotation);
             registerPacket(0x16, 760, 760, PacketHandler::handleClientPlayerRotation);
             registerPacket(0x15, 759, 759, PacketHandler::handleClientPlayerRotation);
@@ -64,7 +72,11 @@ public enum PacketRegistry {
             registerPacket(0x0D, 76, 67, PacketHandler::handleClientPlayerRotation);
             registerPacket(0x05, 66, 47, PacketHandler::handleClientPlayerRotation);
 
-            // Player Position & Rotation
+            // Set Player Position and Rotation
+            registerPacket(0x1B, 767, 766, PacketHandler::handleClientPlayerPositionRotation);
+            registerPacket(0x18, 765, 765, PacketHandler::handleClientPlayerPositionRotation);
+            registerPacket(0x17, 764, 764, PacketHandler::handleClientPlayerPositionRotation);
+            registerPacket(0x15, 763, 762, PacketHandler::handleClientPlayerPositionRotation);
             registerPacket(0x14, 761, 761, PacketHandler::handleClientPlayerPositionRotation);
             registerPacket(0x15, 760, 760, PacketHandler::handleClientPlayerPositionRotation);
             registerPacket(0x14, 759, 759, PacketHandler::handleClientPlayerPositionRotation);
@@ -86,7 +98,10 @@ public enum PacketRegistry {
 
     SERVERBOUND("Serverbound") {
         {
-            // Join Game
+            // Login (play)
+            registerPacket(0x2B, 767, 766, PacketHandler::handleServerJoinGame);
+            registerPacket(0x29, 765, 764, PacketHandler::handleServerJoinGame);
+            registerPacket(0x28, 763, 762, PacketHandler::handleServerJoinGame);
             registerPacket(0x24, 761, 761, PacketHandler::handleServerJoinGame);
             registerPacket(0x25, 760, 760, PacketHandler::handleServerJoinGame);
             registerPacket(0x23, 759, 759, PacketHandler::handleServerJoinGame);
@@ -102,7 +117,10 @@ public enum PacketRegistry {
             registerPacket(0x24, 85, 67, PacketHandler::handleServerJoinGame);
             registerPacket(0x01, 66, 47, PacketHandler::handleServerJoinGame);
 
-            // Player Position & Rotation
+            // Synchronize Player Position
+            registerPacket(0x40, 767, 766, PacketHandler::handleServerPlayerPositionRotation);
+            registerPacket(0x3E, 765, 764, PacketHandler::handleServerPlayerPositionRotation);
+            registerPacket(0x3C, 763, 762, PacketHandler::handleServerPlayerPositionRotation);
             registerPacket(0x38, 761, 761, PacketHandler::handleServerPlayerPositionRotation);
             registerPacket(0x39, 760, 760, PacketHandler::handleServerPlayerPositionRotation);
             registerPacket(0x36, 759, 759, PacketHandler::handleServerPlayerPositionRotation);
@@ -124,6 +142,10 @@ public enum PacketRegistry {
             registerPacket(0x08, 66, 47, PacketHandler::handleServerPlayerPositionRotation);
 
             // Respawn
+            registerPacket(0x47, 767, 766, PacketHandler::handleServerRespawn);
+            registerPacket(0x45, 765, 765, PacketHandler::handleServerRespawn);
+            registerPacket(0x43, 764, 764, PacketHandler::handleServerRespawn);
+            registerPacket(0x41, 763, 762, PacketHandler::handleServerRespawn);
             registerPacket(0x3D, 761, 761, PacketHandler::handleServerRespawn);
             registerPacket(0x3E, 760, 760, PacketHandler::handleServerRespawn);
             registerPacket(0x3B, 759, 759, PacketHandler::handleServerRespawn);
