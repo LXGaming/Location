@@ -58,7 +58,16 @@ public class ProtocolVersionImpl implements ProtocolVersion {
             new ProtocolVersionImpl(755, "1.17"),
             new ProtocolVersionImpl(756, "1.17.1"),
             new ProtocolVersionImpl(757, "1.18.1"),
-            new ProtocolVersionImpl(758, "1.18.2")
+            new ProtocolVersionImpl(758, "1.18.2"),
+            new ProtocolVersionImpl(759, "1.19"),
+            new ProtocolVersionImpl(760, "1.19.2"),
+            new ProtocolVersionImpl(761, "1.19.3"),
+            new ProtocolVersionImpl(762, "1.19.4"),
+            new ProtocolVersionImpl(763, "1.20.1"),
+            new ProtocolVersionImpl(764, "1.20.2"),
+            new ProtocolVersionImpl(765, "1.20.4"),
+            new ProtocolVersionImpl(766, "1.20.6"),
+            new ProtocolVersionImpl(767, "1.21.1")
     );
 
     private final int id;
