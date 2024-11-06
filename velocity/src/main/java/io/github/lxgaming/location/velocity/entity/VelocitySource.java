@@ -20,7 +20,7 @@ import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.Player;
 import io.github.lxgaming.location.api.entity.Source;
 import net.kyori.adventure.text.Component;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
@@ -33,7 +33,7 @@ public class VelocitySource implements Source {
     }
 
     @Override
-    public @NonNull UUID getUniqueId() {
+    public @NotNull UUID getUniqueId() {
         if (commandSource instanceof Player) {
             return ((Player) commandSource).getUniqueId();
         }
@@ -42,7 +42,7 @@ public class VelocitySource implements Source {
     }
 
     @Override
-    public @NonNull String getName() {
+    public @NotNull String getName() {
         if (commandSource instanceof Player) {
             return ((Player) commandSource).getUsername();
         }
@@ -51,17 +51,17 @@ public class VelocitySource implements Source {
     }
 
     @Override
-    public boolean hasPermission(@NonNull String permission) {
+    public boolean hasPermission(@NotNull String permission) {
         return commandSource.hasPermission(permission);
     }
 
     @Override
-    public void sendActionBar(@NonNull Component component) {
+    public void sendActionBar(@NotNull Component component) {
         commandSource.sendActionBar(component);
     }
 
     @Override
-    public void sendMessage(@NonNull Component component) {
+    public void sendMessage(@NotNull Component component) {
         commandSource.sendMessage(component);
     }
 }

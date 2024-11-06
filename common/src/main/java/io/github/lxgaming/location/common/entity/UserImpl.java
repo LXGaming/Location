@@ -21,8 +21,8 @@ import io.github.lxgaming.location.api.entity.ProtocolVersion;
 import io.github.lxgaming.location.api.entity.User;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -47,7 +47,7 @@ public class UserImpl implements User {
     private Dimension dimension;
     private String server;
 
-    public UserImpl(UUID uniqueId, String username, ProtocolVersion protocolVersion) {
+    public UserImpl(@NotNull UUID uniqueId, @NotNull String username, @NotNull ProtocolVersion protocolVersion) {
         this.uniqueId = uniqueId;
         this.username = username;
         this.protocolVersion = protocolVersion;
@@ -61,17 +61,17 @@ public class UserImpl implements User {
     }
 
     @Override
-    public @NonNull UUID getUniqueId() {
+    public @NotNull UUID getUniqueId() {
         return uniqueId;
     }
 
     @Override
-    public @NonNull String getUsername() {
+    public @NotNull String getUsername() {
         return username;
     }
 
     @Override
-    public @NonNull ProtocolVersion getProtocolVersion() {
+    public @NotNull ProtocolVersion getProtocolVersion() {
         return protocolVersion;
     }
 
@@ -81,7 +81,7 @@ public class UserImpl implements User {
     }
 
     @Override
-    public @NonNull Observable<Double> observeX() {
+    public @NotNull Observable<Double> observeX() {
         return xSubject;
     }
 
@@ -96,7 +96,7 @@ public class UserImpl implements User {
     }
 
     @Override
-    public @NonNull Observable<Double> observeY() {
+    public @NotNull Observable<Double> observeY() {
         return ySubject;
     }
 
@@ -111,7 +111,7 @@ public class UserImpl implements User {
     }
 
     @Override
-    public @NonNull Observable<Double> observeZ() {
+    public @NotNull Observable<Double> observeZ() {
         return zSubject;
     }
 
@@ -126,7 +126,7 @@ public class UserImpl implements User {
     }
 
     @Override
-    public @NonNull Observable<Float> observePitch() {
+    public @NotNull Observable<Float> observePitch() {
         return pitchSubject;
     }
 
@@ -141,7 +141,7 @@ public class UserImpl implements User {
     }
 
     @Override
-    public @NonNull Observable<Float> observeYaw() {
+    public @NotNull Observable<Float> observeYaw() {
         return yawSubject;
     }
 
@@ -156,11 +156,11 @@ public class UserImpl implements User {
     }
 
     @Override
-    public @NonNull Observable<Dimension> observeDimension() {
+    public @NotNull Observable<Dimension> observeDimension() {
         return dimensionSubject;
     }
 
-    public void setDimension(Dimension dimension) {
+    public void setDimension(@NotNull Dimension dimension) {
         this.dimension = dimension;
         this.dimensionSubject.onNext(dimension);
     }
@@ -171,11 +171,11 @@ public class UserImpl implements User {
     }
 
     @Override
-    public @NonNull Observable<String> observeServer() {
+    public @NotNull Observable<String> observeServer() {
         return serverSubject;
     }
 
-    public void setServer(String server) {
+    public void setServer(@NotNull String server) {
         this.server = server;
         this.serverSubject.onNext(server);
     }

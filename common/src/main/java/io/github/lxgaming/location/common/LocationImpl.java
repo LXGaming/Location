@@ -24,6 +24,7 @@ import io.github.lxgaming.location.common.configuration.Config;
 import io.github.lxgaming.location.common.configuration.Configuration;
 import io.github.lxgaming.location.common.manager.CommandManager;
 import io.github.lxgaming.location.common.manager.LocaleManager;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,7 +35,7 @@ public class LocationImpl extends Location {
     private final Logger logger;
     private final Configuration configuration;
 
-    public LocationImpl(Platform platform) {
+    public LocationImpl(@NotNull Platform platform) {
         super(platform);
         this.users = Sets.newConcurrentHashSet();
         this.logger = LoggerFactory.getLogger(Location.NAME);
@@ -71,7 +72,7 @@ public class LocationImpl extends Location {
         return this.users.remove(user);
     }
 
-    public static LocationImpl getInstance() {
+    public static @NotNull LocationImpl getInstance() {
         return (LocationImpl) Location.getInstance();
     }
 

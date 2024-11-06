@@ -18,8 +18,8 @@ package io.github.lxgaming.location.common.entity;
 
 import com.google.common.collect.ImmutableList;
 import io.github.lxgaming.location.api.entity.ProtocolVersion;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Objects;
@@ -68,7 +68,7 @@ public class ProtocolVersionImpl implements ProtocolVersion {
         this(id, null);
     }
 
-    public ProtocolVersionImpl(int id, String name) {
+    public ProtocolVersionImpl(int id, @Nullable String name) {
         this.id = id;
         this.name = name;
     }
@@ -77,8 +77,7 @@ public class ProtocolVersionImpl implements ProtocolVersion {
         return getProtocolVersion(id, null);
     }
 
-    @NonNull
-    public static ProtocolVersion getProtocolVersion(int id, @Nullable String name) {
+    public static @NotNull ProtocolVersion getProtocolVersion(int id, @Nullable String name) {
         for (ProtocolVersion protocolVersion : PROTOCOL_VERSIONS) {
             if (protocolVersion.getId() == id) {
                 return protocolVersion;

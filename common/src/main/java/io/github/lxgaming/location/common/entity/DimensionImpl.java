@@ -17,7 +17,7 @@
 package io.github.lxgaming.location.common.entity;
 
 import io.github.lxgaming.location.api.entity.Dimension;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
@@ -30,11 +30,11 @@ public class DimensionImpl implements Dimension {
         this(id, null);
     }
 
-    public DimensionImpl(String name) {
+    public DimensionImpl(@Nullable String name) {
         this(0, name);
     }
 
-    public DimensionImpl(int id, String name) {
+    public DimensionImpl(int id, @Nullable String name) {
         this.id = id;
         this.name = name;
     }

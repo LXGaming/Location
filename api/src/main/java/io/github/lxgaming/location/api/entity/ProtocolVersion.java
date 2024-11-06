@@ -16,7 +16,7 @@
 
 package io.github.lxgaming.location.api.entity;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public interface ProtocolVersion {
 

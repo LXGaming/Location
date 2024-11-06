@@ -17,7 +17,7 @@
 package io.github.lxgaming.location.api.entity;
 
 import net.kyori.adventure.text.Component;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
@@ -25,13 +25,13 @@ public interface Source {
 
     UUID CONSOLE_UUID = UUID.fromString("00000000-0000-0000-0000-000000000000");
 
-    @NonNull UUID getUniqueId();
+    @NotNull UUID getUniqueId();
 
-    @NonNull String getName();
+    @NotNull String getName();
 
-    boolean hasPermission(@NonNull String permission);
+    boolean hasPermission(@NotNull String permission);
 
-    void sendActionBar(@NonNull Component component);
+    void sendActionBar(@NotNull Component component);
 
-    void sendMessage(@NonNull Component component);
+    void sendMessage(@NotNull Component component);
 }

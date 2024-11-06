@@ -3,7 +3,6 @@ plugins {
 }
 
 val adventureVersion: String by project
-val checkerqualVersion: String by project
 val guavaVersion: String by project
 val rxjavaVersion: String by project
 
@@ -12,10 +11,11 @@ base {
 }
 
 dependencies {
-    api("com.google.guava:guava:${guavaVersion}")
+    api("com.google.guava:guava:${guavaVersion}") {
+        exclude(module = "checker-qual")
+    }
     api("io.reactivex.rxjava3:rxjava:${rxjavaVersion}")
     api("net.kyori:adventure-api:${adventureVersion}")
-    api("org.checkerframework:checker-qual:${checkerqualVersion}")
 }
 
 java {

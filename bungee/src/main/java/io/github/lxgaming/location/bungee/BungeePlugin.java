@@ -25,7 +25,7 @@ import io.github.lxgaming.location.common.LocationImpl;
 import net.kyori.adventure.platform.bungeecord.BungeeAudiences;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
 import java.util.Collection;
@@ -67,7 +67,7 @@ public class BungeePlugin extends Plugin implements Platform {
     }
 
     @Override
-    public @NonNull Collection<String> getUsernames() {
+    public @NotNull Collection<String> getUsernames() {
         List<String> usernames = Lists.newArrayList();
         for (ProxiedPlayer player : getProxy().getPlayers()) {
             usernames.add(player.getName());
@@ -77,12 +77,12 @@ public class BungeePlugin extends Plugin implements Platform {
     }
 
     @Override
-    public @NonNull Path getPath() {
+    public @NotNull Path getPath() {
         return getDataFolder().toPath();
     }
 
     @Override
-    public @NonNull Type getType() {
+    public @NotNull Type getType() {
         return Type.BUNGEECORD;
     }
 

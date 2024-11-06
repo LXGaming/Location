@@ -22,7 +22,7 @@ import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
@@ -37,7 +37,7 @@ public class BungeeSource implements Source {
     }
 
     @Override
-    public @NonNull UUID getUniqueId() {
+    public @NotNull UUID getUniqueId() {
         if (commandSender instanceof ProxiedPlayer) {
             return ((ProxiedPlayer) commandSender).getUniqueId();
         }
@@ -46,22 +46,22 @@ public class BungeeSource implements Source {
     }
 
     @Override
-    public @NonNull String getName() {
+    public @NotNull String getName() {
         return commandSender.getName();
     }
 
     @Override
-    public boolean hasPermission(@NonNull String permission) {
+    public boolean hasPermission(@NotNull String permission) {
         return commandSender.hasPermission(permission);
     }
 
     @Override
-    public void sendActionBar(@NonNull Component component) {
+    public void sendActionBar(@NotNull Component component) {
         audience.sendActionBar(component);
     }
 
     @Override
-    public void sendMessage(@NonNull Component component) {
+    public void sendMessage(@NotNull Component component) {
         audience.sendMessage(component);
     }
 }

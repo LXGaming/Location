@@ -17,44 +17,44 @@
 package io.github.lxgaming.location.api.entity;
 
 import io.reactivex.rxjava3.core.Observable;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
 public interface User {
 
-    @NonNull UUID getUniqueId();
+    @NotNull UUID getUniqueId();
 
-    @NonNull String getUsername();
+    @NotNull String getUsername();
 
-    @NonNull ProtocolVersion getProtocolVersion();
+    @NotNull ProtocolVersion getProtocolVersion();
 
     double getX();
 
-    @NonNull Observable<Double> observeX();
+    @NotNull Observable<Double> observeX();
 
     double getY();
 
-    @NonNull Observable<Double> observeY();
+    @NotNull Observable<Double> observeY();
 
     double getZ();
 
-    @NonNull Observable<Double> observeZ();
+    @NotNull Observable<Double> observeZ();
 
     float getPitch();
 
-    @NonNull Observable<Float> observePitch();
+    @NotNull Observable<Float> observePitch();
 
     float getYaw();
 
-    @NonNull Observable<Float> observeYaw();
+    @NotNull Observable<Float> observeYaw();
 
     @Nullable Dimension getDimension();
 
-    @NonNull Observable<Dimension> observeDimension();
+    @NotNull Observable<Dimension> observeDimension();
 
     @Nullable String getServer();
 
-    @NonNull Observable<String> observeServer();
+    @NotNull Observable<String> observeServer();
 }

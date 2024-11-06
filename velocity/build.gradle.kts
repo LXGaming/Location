@@ -16,7 +16,6 @@ dependencies {
         exclude(module = "adventure-api")
         exclude(module = "adventure-text-serializer-legacy")
         exclude(module = "brigadier")
-        exclude(module = "checker-qual")
         exclude(module = "gson")
         exclude(module = "guava")
         exclude(module = "netty-all")

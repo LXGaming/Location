@@ -20,7 +20,8 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSet;
 import io.github.lxgaming.location.api.entity.User;
 import io.github.lxgaming.location.api.util.BuildParameters;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 import java.util.Set;
@@ -54,19 +55,19 @@ public abstract class Location {
         return instance != null;
     }
 
-    public static Location getInstance() {
+    public static @NotNull Location getInstance() {
         return check(instance);
     }
 
-    public static Platform getPlatform() {
+    public static @NotNull Platform getPlatform() {
         return check(platform);
     }
 
-    public Set<User> getUsers() {
+    public @NotNull Set<User> getUsers() {
         return ImmutableSet.copyOf(this.users);
     }
 
-    public Optional<User> getUser(UUID uniqueId) {
+    public @NotNull Optional<User> getUser(@NotNull UUID uniqueId) {
         for (User user : this.users) {
             if (user.getUniqueId().equals(uniqueId)) {
                 return Optional.of(user);
@@ -76,7 +77,7 @@ public abstract class Location {
         return Optional.empty();
     }
 
-    public Optional<User> getUser(String username) {
+    public @NotNull Optional<User> getUser(@NotNull String username) {
         for (User user : this.users) {
             if (user.getUsername().equals(username)) {
                 return Optional.of(user);

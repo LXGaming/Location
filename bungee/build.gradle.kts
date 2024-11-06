@@ -69,7 +69,6 @@ tasks.shadowJar {
     relocate("net.kyori.adventure", "io.github.lxgaming.location.lib.adventure")
     relocate("net.kyori.examination", "io.github.lxgaming.location.lib.examination")
     relocate("net.kyori.option", "io.github.lxgaming.location.lib.option")
-    relocate("org.checkerframework", "io.github.lxgaming.location.lib.checkerframework")
 }
 
 tasks.withType<AbstractPublishToMaven>().forEach {

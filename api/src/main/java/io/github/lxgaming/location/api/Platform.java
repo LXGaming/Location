@@ -16,18 +16,18 @@
 
 package io.github.lxgaming.location.api;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
 import java.util.Collection;
 
 public interface Platform {
 
-    @NonNull Collection<String> getUsernames();
+    @NotNull Collection<String> getUsernames();
 
-    @NonNull Path getPath();
+    @NotNull Path getPath();
 
-    @NonNull Type getType();
+    @NotNull Type getType();
 
     enum Type {
 
@@ -36,12 +36,11 @@ public interface Platform {
 
         private final String name;
 
-        Type(String name) {
+        Type(@NotNull String name) {
             this.name = name;
         }
 
-        @NonNull
-        public String getName() {
+        public @NotNull String getName() {
             return name;
         }
 

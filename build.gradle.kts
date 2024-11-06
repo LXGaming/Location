@@ -16,6 +16,7 @@ subprojects {
     apply(plugin = "org.jetbrains.gradle.plugin.idea-ext")
     apply(plugin = "signing")
 
+    val annotationsVersion: String by project
     val junitVersion: String by project
 
     group = "io.github.lxgaming"
@@ -42,6 +43,7 @@ subprojects {
     }
 
     dependencies {
+        implementation("org.jetbrains:annotations:${annotationsVersion}")
         testImplementation("org.junit.jupiter:junit-jupiter:${junitVersion}")
         testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     }

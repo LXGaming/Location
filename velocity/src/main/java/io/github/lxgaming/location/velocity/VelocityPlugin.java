@@ -30,7 +30,7 @@ import io.github.lxgaming.location.api.Platform;
 import io.github.lxgaming.location.common.LocationImpl;
 import io.github.lxgaming.location.velocity.command.LocationCommand;
 import io.github.lxgaming.location.velocity.listener.VelocityListener;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
 import java.util.Collection;
@@ -76,7 +76,7 @@ public class VelocityPlugin implements Platform {
     }
 
     @Override
-    public @NonNull Collection<String> getUsernames() {
+    public @NotNull Collection<String> getUsernames() {
         List<String> usernames = Lists.newArrayList();
         for (Player player : getProxy().getAllPlayers()) {
             usernames.add(player.getUsername());
@@ -86,12 +86,12 @@ public class VelocityPlugin implements Platform {
     }
 
     @Override
-    public @NonNull Path getPath() {
+    public @NotNull Path getPath() {
         return path;
     }
 
     @Override
-    public @NonNull Type getType() {
+    public @NotNull Type getType() {
         return Type.VELOCITY;
     }
 
