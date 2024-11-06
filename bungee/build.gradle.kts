@@ -1,5 +1,7 @@
+val adventureVersion: String by project
 val adventurePlatformVersion: String by project
 val bungeecordVersion: String by project
+val rxjavaVersion: String by project
 val slf4jVersion: String by project
 
 base {
@@ -7,21 +9,25 @@ base {
 }
 
 dependencies {
+    compileJar(project(path = ":location-api")) {
+        isTransitive = false
+    }
     compileJar(project(path = ":location-common")) {
-        exclude(module = "brigadier")
-        exclude(module = "gson")
-        exclude(module = "guava")
-        exclude(module = "netty-all")
-        exclude(module = "slf4j-api")
+        isTransitive = false
     }
     implementation(fileTree("libs") {
         include("*.jar")
     })
     implementation("net.md-5:bungeecord-api:${bungeecordVersion}")
+    implementation("org.slf4j:slf4j-api:${slf4jVersion}")
+
+    // Libraries
+    compileJar("net.kyori:adventure-api:${adventureVersion}")
     compileJar("net.kyori:adventure-platform-bungeecord:${adventurePlatformVersion}") {
         exclude(module = "gson")
     }
-    implementation("org.slf4j:slf4j-api:${slf4jVersion}")
+    compileJar("net.kyori:adventure-text-serializer-legacy:${adventureVersion}")
+    compileJar("io.reactivex.rxjava3:rxjava:${rxjavaVersion}")
 }
 
 artifacts {
@@ -33,7 +39,7 @@ tasks.build {
 }
 
 tasks.compileJava {
-    dependsOn(":location-common:build")
+    dependsOn(":location-api:build", ":location-common:build")
 }
 
 tasks.jar {

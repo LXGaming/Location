@@ -1,3 +1,4 @@
+val rxjavaVersion: String by project
 val velocityVersion: String by project
 
 base {
@@ -12,20 +13,20 @@ repositories {
 }
 
 dependencies {
+    compileJar(project(path = ":location-api")) {
+        isTransitive = false
+    }
     compileJar(project(path = ":location-common")) {
-        exclude(module = "adventure-api")
-        exclude(module = "adventure-text-serializer-legacy")
-        exclude(module = "brigadier")
-        exclude(module = "gson")
-        exclude(module = "guava")
-        exclude(module = "netty-all")
-        exclude(module = "slf4j-api")
+        isTransitive = false
     }
     implementation(fileTree("libs") {
         include("*.jar")
     })
     annotationProcessor("com.velocitypowered:velocity-api:${velocityVersion}")
     implementation("com.velocitypowered:velocity-api:${velocityVersion}")
+
+    // Libraries
+    compileJar("io.reactivex.rxjava3:rxjava:${rxjavaVersion}")
 }
 
 artifacts {
@@ -42,7 +43,7 @@ tasks.build {
 }
 
 tasks.compileJava {
-    dependsOn(":location-common:build")
+    dependsOn(":location-api:build", ":location-common:build")
 }
 
 tasks.jar {
