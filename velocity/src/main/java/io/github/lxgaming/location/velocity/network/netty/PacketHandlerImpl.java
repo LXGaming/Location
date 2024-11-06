@@ -52,7 +52,7 @@ public class PacketHandlerImpl extends PacketHandler {
     }
 
     @Override
-    public void handleServerRespawn(ByteBuf byteBuf) {
+    public void handleClientRespawn(ByteBuf byteBuf) {
         RespawnPacket packet = new RespawnPacket();
         packet.decode(byteBuf, ProtocolUtils.Direction.CLIENTBOUND, ProtocolVersion.getProtocolVersion(getProtocolVersion()));
 

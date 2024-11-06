@@ -42,7 +42,7 @@ public abstract class PacketHandler extends ChannelDuplexHandler {
             int readerIndex = byteBuf.readerIndex();
 
             try {
-                PacketRegistry.SERVERBOUND.process(this, byteBuf);
+                PacketRegistry.CLIENTBOUND.process(this, byteBuf);
             } catch (Exception ex) {
                 // no-op
             }
@@ -60,7 +60,7 @@ public abstract class PacketHandler extends ChannelDuplexHandler {
             int readerIndex = byteBuf.readerIndex();
 
             try {
-                PacketRegistry.CLIENTBOUND.process(this, byteBuf);
+                PacketRegistry.SERVERBOUND.process(this, byteBuf);
             } catch (Exception ex) {
                 // no-op
             }
@@ -75,42 +75,10 @@ public abstract class PacketHandler extends ChannelDuplexHandler {
         return user.getProtocolVersion().getId();
     }
 
-    public void handleClientPlayerRotation(ByteBuf byteBuf) {
-        float yaw = byteBuf.readFloat();
-        float pitch = byteBuf.readFloat();
-
-        user.setYaw(Toolbox.normalizeYaw(yaw));
-        user.setPitch(pitch);
-    }
-
-    public void handleClientPlayerPosition(ByteBuf byteBuf) {
-        double x = byteBuf.readDouble();
-        double y = byteBuf.readDouble();
-        double z = byteBuf.readDouble();
-
-        user.setX(x);
-        user.setY(y);
-        user.setZ(z);
+    public void handleClientLogin(ByteBuf byteBuf) {
     }
 
     public void handleClientPlayerPositionRotation(ByteBuf byteBuf) {
-        double x = byteBuf.readDouble();
-        double y = byteBuf.readDouble();
-        double z = byteBuf.readDouble();
-        float yaw = byteBuf.readFloat();
-        float pitch = byteBuf.readFloat();
-
-        user.setX(x);
-        user.setY(y);
-        user.setZ(z);
-        user.setYaw(Toolbox.normalizeYaw(yaw));
-        user.setPitch(pitch);
-    }
-
-    public void handleServerJoinGame(ByteBuf byteBuf) {
-    }
-
-    public void handleServerPlayerPositionRotation(ByteBuf byteBuf) {
         double x = byteBuf.readDouble();
         double y = byteBuf.readDouble();
         double z = byteBuf.readDouble();
@@ -150,6 +118,38 @@ public abstract class PacketHandler extends ChannelDuplexHandler {
         user.setPitch(pitch);
     }
 
-    public void handleServerRespawn(ByteBuf byteBuf) {
+    public void handleClientRespawn(ByteBuf byteBuf) {
+    }
+
+    public void handleServerPlayerPosition(ByteBuf byteBuf) {
+        double x = byteBuf.readDouble();
+        double y = byteBuf.readDouble();
+        double z = byteBuf.readDouble();
+
+        user.setX(x);
+        user.setY(y);
+        user.setZ(z);
+    }
+
+    public void handleServerPlayerPositionRotation(ByteBuf byteBuf) {
+        double x = byteBuf.readDouble();
+        double y = byteBuf.readDouble();
+        double z = byteBuf.readDouble();
+        float yaw = byteBuf.readFloat();
+        float pitch = byteBuf.readFloat();
+
+        user.setX(x);
+        user.setY(y);
+        user.setZ(z);
+        user.setYaw(Toolbox.normalizeYaw(yaw));
+        user.setPitch(pitch);
+    }
+
+    public void handleServerPlayerRotation(ByteBuf byteBuf) {
+        float yaw = byteBuf.readFloat();
+        float pitch = byteBuf.readFloat();
+
+        user.setYaw(Toolbox.normalizeYaw(yaw));
+        user.setPitch(pitch);
     }
 }

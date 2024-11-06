@@ -72,7 +72,7 @@ public class PacketHandlerImpl extends PacketHandler {
             int readerIndex = byteBuf.readerIndex();
 
             try {
-                PacketRegistry.CLIENTBOUND.process(this, byteBuf);
+                PacketRegistry.SERVERBOUND.process(this, byteBuf);
             } catch (Exception ex) {
                 // no-op
             }
@@ -84,7 +84,7 @@ public class PacketHandlerImpl extends PacketHandler {
     }
 
     @Override
-    public void handleServerRespawn(ByteBuf byteBuf) {
+    public void handleClientRespawn(ByteBuf byteBuf) {
         Respawn packet = new Respawn();
         packet.read(byteBuf, ProtocolConstants.Direction.TO_CLIENT, getProtocolVersion());
 
