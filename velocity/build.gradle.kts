@@ -1,3 +1,7 @@
+import de.undercouch.gradle.tasks.download.Download
+import org.jetbrains.gradle.ext.settings
+import org.jetbrains.gradle.ext.taskTriggers
+
 val rxjavaVersion: String by project
 val velocityVersion: String by project
 
@@ -20,7 +24,7 @@ dependencies {
         isTransitive = false
     }
     implementation(fileTree("libs") {
-        include("*.jar")
+        include("velocity.jar")
     })
     annotationProcessor("com.velocitypowered:velocity-api:${velocityVersion}")
     implementation("com.velocitypowered:velocity-api:${velocityVersion}")
@@ -43,7 +47,7 @@ tasks.build {
 }
 
 tasks.compileJava {
-    dependsOn(":location-api:build", ":location-common:build")
+    dependsOn(":location-api:build", ":location-common:build", downloadLibraries)
 }
 
 tasks.jar {
@@ -76,3 +80,12 @@ tasks.withType<AbstractPublishToMaven>().forEach {
 tasks.withType<GenerateMavenPom>().forEach {
     it.enabled = false
 }
+
+val downloadLibraries = tasks.register<Download>("downloadLibraries") {
+    src("https://api.papermc.io/v2/projects/velocity/versions/3.4.0-SNAPSHOT/builds/449/downloads/velocity-3.4.0-SNAPSHOT-449.jar")
+    dest("libs/velocity.jar")
+    onlyIfModified(true)
+}
+
+rootProject.idea.project.settings.taskTriggers.afterSync(downloadLibraries)
+project.eclipse.synchronizationTasks(downloadLibraries)

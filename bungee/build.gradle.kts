@@ -1,3 +1,7 @@
+import de.undercouch.gradle.tasks.download.Download
+import org.jetbrains.gradle.ext.settings
+import org.jetbrains.gradle.ext.taskTriggers
+
 val adventureVersion: String by project
 val adventurePlatformVersion: String by project
 val bungeecordVersion: String by project
@@ -16,7 +20,7 @@ dependencies {
         isTransitive = false
     }
     implementation(fileTree("libs") {
-        include("*.jar")
+        include("BungeeCord.jar")
     })
     implementation("net.md-5:bungeecord-api:${bungeecordVersion}")
     implementation("org.slf4j:slf4j-api:${slf4jVersion}")
@@ -39,7 +43,7 @@ tasks.build {
 }
 
 tasks.compileJava {
-    dependsOn(":location-api:build", ":location-common:build")
+    dependsOn(":location-api:build", ":location-common:build", downloadLibraries)
 }
 
 tasks.jar {
@@ -84,3 +88,12 @@ tasks.withType<AbstractPublishToMaven>().forEach {
 tasks.withType<GenerateMavenPom>().forEach {
     it.enabled = false
 }
+
+val downloadLibraries = tasks.register<Download>("downloadLibraries") {
+    src("https://ci.md-5.net/job/BungeeCord/1881/artifact/bootstrap/target/BungeeCord.jar")
+    dest("libs/BungeeCord.jar")
+    onlyIfModified(true)
+}
+
+rootProject.idea.project.settings.taskTriggers.afterSync(downloadLibraries)
+project.eclipse.synchronizationTasks(downloadLibraries)

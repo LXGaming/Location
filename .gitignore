@@ -279,5 +279,6 @@ $RECYCLE.BIN/
 
 # Project
 .idea/
+libs/*.jar
 run/
 build.ps1
