@@ -46,7 +46,7 @@ public class GetCommand extends Command {
                 })
                 .then(argument(USERNAME_ARGUMENT, StringArgumentType.word())
                         .suggests((context, builder) -> {
-                            Location.getPlatform().getUsernames().forEach(builder::suggest);
+                            Location.getInstance().getPlatform().getUsernames().forEach(builder::suggest);
                             return builder.buildFuture();
                         })
                         .executes(context -> {

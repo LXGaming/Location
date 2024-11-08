@@ -21,7 +21,6 @@ import com.google.common.collect.ImmutableSet;
 import io.github.lxgaming.location.api.entity.User;
 import io.github.lxgaming.location.api.util.BuildParameters;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 import java.util.Set;
@@ -38,17 +37,13 @@ public abstract class Location {
     public static final String WEBSITE = "https://lxgaming.github.io/";
 
     private static Location instance;
-    private static Platform platform;
+    private final Platform platform;
     protected Set<User> users;
 
-    public Location(Platform platform) {
-        Location.instance = this;
-        Location.platform = platform;
-    }
-
-    private static <T> T check(@Nullable T instance) {
-        Preconditions.checkState(instance != null, "%s has not been initialized!", Location.NAME);
-        return instance;
+    public Location(@NotNull Platform platform) {
+        Preconditions.checkState(instance == null, "Location has already been initialised!");
+        instance = this;
+        this.platform = platform;
     }
 
     public static boolean isAvailable() {
@@ -56,11 +51,12 @@ public abstract class Location {
     }
 
     public static @NotNull Location getInstance() {
-        return check(instance);
+        Preconditions.checkState(instance != null, "Location has not been initialised!");
+        return instance;
     }
 
-    public static @NotNull Platform getPlatform() {
-        return check(platform);
+    public @NotNull Platform getPlatform() {
+        return platform;
     }
 
     public @NotNull Set<User> getUsers() {
