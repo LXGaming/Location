@@ -7,7 +7,7 @@ plugins {
     id("com.gradleup.shadow") version "8.3.4" apply false
     id("de.undercouch.download") version "5.6.0" apply false
     id("net.kyori.blossom") version "2.1.0" apply false
-    id("org.jetbrains.gradle.plugin.idea-ext") version "1.1.9" apply false
+    id("org.jetbrains.gradle.plugin.idea-ext") version "1.1.9"
 }
 
 subprojects {
